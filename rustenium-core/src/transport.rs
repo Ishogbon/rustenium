@@ -1,6 +1,6 @@
 use std::{error::Error, future::Future};
 
-use fastwebsockets::{handshake, WebSocket};
+use fastwebsockets::{handshake, Frame, WebSocket};
 use hyper::{
     body::Bytes,
     header::{CONNECTION, UPGRADE},
@@ -38,8 +38,8 @@ impl From<ConnectionConfig> for String {
 }
 
 pub trait ConnectionTransport {
-    fn send(&self, message: String) -> ();
-    fn on_message(&self, message: String) -> ();
+    fn send(&mut self, message: String) -> ();
+    fn listen(&self) -> ();
     fn close(&self) -> ();
     fn on_close(&self) -> ();
 }
@@ -49,11 +49,12 @@ pub struct WebsocketConnectionTransport {
     client: WebSocket<TokioIo<Upgraded>>,
 }
 impl ConnectionTransport for WebsocketConnectionTransport {
-    fn send(&self, message: String) -> () {
-        todo!()
+    fn send(&mut self, message: String) -> () {
+        let frame = Frame::text(fastwebsockets::Payload::from(message.as_bytes()));
+        self.client.write_frame(frame);
     }
 
-    fn on_message(&self, message: String) -> () {
+    fn listen(&self) -> () {
         todo!()
     }
 
