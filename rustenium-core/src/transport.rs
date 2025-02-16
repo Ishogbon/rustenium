@@ -11,7 +11,7 @@ use hyper_util::rt::TokioIo;
 use tokio::net::TcpStream;
 
 #[derive(Debug, Clone)]
-enum ConnectionProtocol {
+pub enum ConnectionTransportProtocol {
     Http,
     Https,
     Ws,
@@ -19,19 +19,19 @@ enum ConnectionProtocol {
 }
 
 #[derive(Debug, Clone)]
-struct ConnectionConfig {
-    pub protocol: ConnectionProtocol,
+pub struct ConnectionTransportConfig {
+    pub protocol: ConnectionTransportProtocol,
     pub host: String,
     pub port: u16,
 }
 
-impl From<ConnectionConfig> for String {
-    fn from(config: ConnectionConfig) -> Self {
+impl From<ConnectionTransportConfig> for String {
+    fn from(config: ConnectionTransportConfig) -> Self {
         let protocol = match config.protocol {
-            ConnectionProtocol::Http => "http",
-            ConnectionProtocol::Ws => "ws",
-            ConnectionProtocol::Https => "https",
-            ConnectionProtocol::Wss => "wss",
+            ConnectionTransportProtocol::Http => "http",
+            ConnectionTransportProtocol::Ws => "ws",
+            ConnectionTransportProtocol::Https => "https",
+            ConnectionTransportProtocol::Wss => "wss",
         };
         format!("{}://{}:{}", protocol, config.host, config.port)
     }
@@ -45,7 +45,7 @@ pub trait ConnectionTransport {
 }
 
 pub struct WebsocketConnectionTransport {
-    pub config: ConnectionConfig,
+    pub config: ConnectionTransportConfig,
     client: WebSocket<TokioIo<Upgraded>>,
 }
 impl ConnectionTransport for WebsocketConnectionTransport {
@@ -68,7 +68,7 @@ impl ConnectionTransport for WebsocketConnectionTransport {
 }
 
 impl WebsocketConnectionTransport {
-    async fn new(connection_config: ConnectionConfig) -> Result<Self, Box<dyn Error>> {
+    pub async fn new(connection_config: ConnectionTransportConfig) -> Result<Self, Box<dyn Error>> {
         let ws_url: String = connection_config.clone().into();
         let stream = TcpStream::connect(ws_url.clone()).await?;
 
