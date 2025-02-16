@@ -460,6 +460,10 @@ checksum = "719b953e2095829ee67db738b3bfa9fa368c94900df327b3f07fe6e794d2fe1f"
 [[package]]
 name = "rustenium"
 version = "0.1.0"
+dependencies = [
+ "rustenium-core",
+ "tokio",
+]
 
 [[package]]
 name = "rustenium-core"

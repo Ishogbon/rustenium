@@ -1,6 +1,8 @@
 mod connection;
-mod session;
-mod transport;
+pub mod session;
+pub mod transport;
+
+pub use session::Session;
 
 pub fn add(left: u64, right: u64) -> u64 {
     left + right
