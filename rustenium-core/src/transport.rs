@@ -18,22 +18,44 @@ pub enum ConnectionTransportProtocol {
     Wss,
 }
 
+pub enum UrlFormat {
+    HostPort,
+    ProtocolHostPort,
+    Full, // protocol://host:port/path
+}
+
 #[derive(Debug, Clone)]
 pub struct ConnectionTransportConfig {
     pub protocol: ConnectionTransportProtocol,
     pub host: String,
+    pub path: String,
     pub port: u16,
 }
 
-impl From<ConnectionTransportConfig> for String {
-    fn from(config: ConnectionTransportConfig) -> Self {
-        let protocol = match config.protocol {
+impl ConnectionTransportConfig {
+    pub fn to_string(&self, format: UrlFormat) -> String {
+        match format {
+            UrlFormat::HostPort => format!("{}:{}", self.host, self.port),
+            UrlFormat::ProtocolHostPort => {
+                format!("{}://{}:{}", self.protocol_str(), self.host, self.port)
+            }
+            UrlFormat::Full => format!(
+                "{}://{}:{}{}",
+                self.protocol_str(),
+                self.host,
+                self.port,
+                self.path
+            ),
+        }
+    }
+
+    fn protocol_str(&self) -> &str {
+        match self.protocol {
             ConnectionTransportProtocol::Http => "http",
             ConnectionTransportProtocol::Ws => "ws",
             ConnectionTransportProtocol::Https => "https",
             ConnectionTransportProtocol::Wss => "wss",
-        };
-        format!("{}://{}:{}", protocol, config.host, config.port)
+        }
     }
 }
 
@@ -69,13 +91,11 @@ impl ConnectionTransport for WebsocketConnectionTransport {
 
 impl WebsocketConnectionTransport {
     pub async fn new(connection_config: ConnectionTransportConfig) -> Result<Self, Box<dyn Error>> {
-        let ws_url: String = connection_config.clone().into();
-        let stream = TcpStream::connect(ws_url.clone()).await?;
+        let stream = TcpStream::connect(connection_config.to_string(UrlFormat::HostPort)).await?;
 
         let req = Request::builder()
             .method("GET")
-            .uri(ws_url)
-            .header("Host", "localhost:9001")
+            .uri(connection_config.to_string(UrlFormat::Full))
             .header(UPGRADE, "websocket")
             .header(CONNECTION, "upgrade")
             .header(
