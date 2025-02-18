@@ -1,4 +1,9 @@
-use std::{process::Command, thread, time::Duration};
+use std::{
+    io::{self, Write},
+    process::Command,
+    thread,
+    time::Duration,
+};
 
 use rustenium_core::{
     process::Process,
@@ -29,11 +34,11 @@ impl Default for Browser {
 
 impl Browser {
     pub async fn open(&mut self) {
-        let browser_process = Process::create(self.exe_path, self.get_flags());
-        let browserWsEndpoint = browser_process.wait_for_pattern(CDP_WEBSOCKET_ENDPOINT_REGEX);
-        if let Some(browserWsEndpoint) = browserWsEndpoint {
-            println!("ws endpoint: {}", browserWsEndpoint);
-        }
+        let mut browser_process = Process::create(self.exe_path, self.get_flags());
+        let browserWsEndpoint = browser_process
+            .wait_for_pattern(CDP_WEBSOCKET_ENDPOINT_REGEX, None)
+            .await;
+        println!("ws endpoint: {}", browserWsEndpoint);
         self.session = Some(
             Session::<WebsocketConnectionTransport>::ws_new(ConnectionTransportConfig {
                 protocol: rustenium_core::transport::ConnectionTransportProtocol::Ws,

@@ -1,11 +1,12 @@
+use std::process::Stdio;
+
 use regex::Regex;
-use std::io::{BufRead, BufReader};
-use std::process::{Child, Command, Stdio};
-use std::sync::{Arc, Mutex};
-use std::thread;
+use tokio::io::{AsyncBufReadExt, BufReader};
+use tokio::process::{Child, Command};
+use tokio::time::{timeout, Duration};
 
 pub struct Process {
-    child: Arc<Mutex<Option<Child>>>,
+    child: Option<Child>,
 }
 
 impl Process {
@@ -14,40 +15,71 @@ impl Process {
         S: AsRef<str>,
         I: IntoIterator<Item = S>,
     {
+        println!("Here");
         let child = Command::new(exe_path.as_ref())
             .args(args.into_iter().map(|s| s.as_ref().to_string()))
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
             .spawn()
             .expect("Failed to start process");
 
-        let child = Arc::new(Mutex::new(Some(child)));
+        let child = Some(child);
 
         return Self { child };
     }
 
-    pub fn wait_for_pattern(&self, pattern: &str) -> Option<String> {
+    pub async fn wait_for_pattern(&mut self, pattern: &str, timeout_secs: Option<u64>) -> String {
+        let timeout_secs = timeout_secs.unwrap_or(10);
         let regex = Regex::new(pattern).expect("Invalid regex pattern");
-        let mut child = self.child.lock().unwrap();
-        let child = child.as_mut().expect("Process is not running");
-        let stdout = child.stdout.as_mut().expect("Failed to access stdout");
-        let reader = BufReader::new(stdout);
+        let mut child = self.child.as_mut().unwrap();
 
-        for line in reader.lines() {
-            if let Ok(line) = line {
-                println!("{}", line);
-                if let Some(caps) = regex.captures(&line) {
-                    if let Some(matched) = caps.get(1) {
-                        return Some(matched.as_str().to_string());
+        let stdout = child.stdout.as_mut().expect("Failed to access stdout");
+        let stderr = child.stderr.as_mut().expect("Failed to access stderr");
+
+        let mut stdout_lines = BufReader::new(stdout).lines();
+        let mut stderr_lines = BufReader::new(stderr).lines();
+
+        let mut check_line = |label: &str, line: Result<Option<String>, _>| -> Option<String> {
+            if let Ok(Some(line)) = line {
+                println!("{}: {}", label, line);
+                if regex.is_match(&line) {
+                    return Some(line);
+                }
+            }
+            None
+        };
+
+        let timeout_duration = Duration::from_secs(timeout_secs);
+
+        let timeout_result = timeout(timeout_duration, async {
+            loop {
+                tokio::select! {
+                    stdout_line = stdout_lines.next_line() => {
+                        if let Some(line) = check_line("stdout", stdout_line) {
+                            return Some(line);
+                        }
+                    },
+                    stderr_line = stderr_lines.next_line() => {
+                        if let Some(line) = check_line("stderr", stderr_line) {
+                            return  Some(line);
+                        }
                     }
                 }
             }
+        })
+        .await;
+
+        match timeout_result {
+            Ok(Some(matched)) => matched,
+            Ok(None) => panic!("Found a pattern but None"),
+            Err(_) => panic!("Timeout reached without finding pattern"),
         }
-        None
     }
 }
 
 impl Drop for Process {
     fn drop(&mut self) {
-        if let Some(mut child) = self.child.lock().unwrap().take() {
+        if let Some(mut child) = self.child.take() {
             let _ = child.kill(); // Ensure cleanup
         }
     }
