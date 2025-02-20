@@ -15,7 +15,6 @@ impl Process {
         S: AsRef<str>,
         I: IntoIterator<Item = S>,
     {
-        println!("Here");
         let child = Command::new(exe_path.as_ref())
             .args(args.into_iter().map(|s| s.as_ref().to_string()))
             .stdout(Stdio::piped())
@@ -29,7 +28,7 @@ impl Process {
     }
 
     pub async fn wait_for_pattern(&mut self, pattern: &str, timeout_secs: Option<u64>) -> String {
-        let timeout_secs = timeout_secs.unwrap_or(10);
+        let timeout_secs = timeout_secs.unwrap_or(20);
         let regex = Regex::new(pattern).expect("Invalid regex pattern");
         let mut child = self.child.as_mut().unwrap();
 
@@ -41,9 +40,10 @@ impl Process {
 
         let mut check_line = |label: &str, line: Result<Option<String>, _>| -> Option<String> {
             if let Ok(Some(line)) = line {
-                println!("{}: {}", label, line);
-                if regex.is_match(&line) {
-                    return Some(line);
+                if let Some(captures) = regex.captures(&line) {
+                    if let Some(url) = captures.get(1) {
+                        return Some(url.as_str().into());
+                    }
                 }
             }
             None
