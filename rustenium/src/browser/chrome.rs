@@ -59,7 +59,7 @@ impl Default for ChromeBrowser {
 
 impl ChromeBrowser {
     pub async fn launch(&mut self) -> () {
-        let result = BrowserTrait::open(self).await;
+        let result = self.open().await;
         self.browser.session = Some(result.0);
         self.browser.browser_process = Some(result.1);
     }
