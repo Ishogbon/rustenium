@@ -32,7 +32,7 @@ impl BrowserTrait<WebsocketConnectionTransport> for ChromeBrowser {
             "--disable-renderer-backgrounding",
             "--disable-search-engine-choice-screen",
             "--disable-sync",
-            "--enable-automation",
+            // "--enable-automation",
             "--export-tagged-pdf",
             "--force-color-profile=srgb",
             "--generate-pdf-document-outline",
