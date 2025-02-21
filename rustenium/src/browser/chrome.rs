@@ -40,6 +40,7 @@ impl BrowserTrait<WebsocketConnectionTransport> for ChromeBrowser {
             "--no-first-run",
             "--password-store=basic",
             "--use-mock-keychain",
+            "--remote-debugging-port=0",
         ];
     }
 }

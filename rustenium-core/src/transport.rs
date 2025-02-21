@@ -9,6 +9,7 @@ use hyper::{
 };
 use hyper_util::rt::TokioIo;
 use tokio::net::TcpStream;
+use url::Url;
 
 #[derive(Debug, Clone)]
 pub enum ConnectionTransportProtocol {
@@ -26,36 +27,19 @@ pub enum UrlFormat {
 
 #[derive(Debug, Clone)]
 pub struct ConnectionTransportConfig {
-    pub protocol: ConnectionTransportProtocol,
-    pub host: String,
-    pub path: String,
-    pub port: u16,
+    pub endpoint: String,
 }
 
 impl ConnectionTransportConfig {
-    pub fn to_string(&self, format: UrlFormat) -> String {
-        match format {
-            UrlFormat::HostPort => format!("{}:{}", self.host, self.port),
-            UrlFormat::ProtocolHostPort => {
-                format!("{}://{}:{}", self.protocol_str(), self.host, self.port)
+    pub fn to_host_port(&self) -> Option<String> {
+        if let Ok(url) = Url::parse(&self.endpoint) {
+            if let Some(host) = url.host_str() {
+                if let Some(port) = url.port() {
+                    return Some(format!("{}:{}", host, port));
+                }
             }
-            UrlFormat::Full => format!(
-                "{}://{}:{}{}",
-                self.protocol_str(),
-                self.host,
-                self.port,
-                self.path
-            ),
         }
-    }
-
-    fn protocol_str(&self) -> &str {
-        match self.protocol {
-            ConnectionTransportProtocol::Http => "http",
-            ConnectionTransportProtocol::Ws => "ws",
-            ConnectionTransportProtocol::Https => "https",
-            ConnectionTransportProtocol::Wss => "wss",
-        }
+        None
     }
 }
 
@@ -91,11 +75,11 @@ impl ConnectionTransport for WebsocketConnectionTransport {
 
 impl WebsocketConnectionTransport {
     pub async fn new(connection_config: ConnectionTransportConfig) -> Result<Self, Box<dyn Error>> {
-        let stream = TcpStream::connect(connection_config.to_string(UrlFormat::HostPort)).await?;
+        let stream = TcpStream::connect(connection_config.to_host_port().unwrap()).await?;
 
         let req = Request::builder()
             .method("GET")
-            .uri(connection_config.to_string(UrlFormat::Full))
+            .uri(connection_config.endpoint.as_str())
             .header(UPGRADE, "websocket")
             .header(CONNECTION, "upgrade")
             .header(

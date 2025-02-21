@@ -14,13 +14,9 @@ pub trait Browser<T: ConnectionTransport> {
         let browserWsEndpoint = browser_process
             .wait_for_pattern(CDP_WEBSOCKET_ENDPOINT_REGEX, None)
             .await;
-        println!("ws endpoint: {}", browserWsEndpoint);
         let session = Some(
             Session::<T>::ws_new(ConnectionTransportConfig {
-                protocol: rustenium_core::transport::ConnectionTransportProtocol::Ws,
-                host: String::from("127.0.0.1"),
-                path: String::from("/devtools/browser"),
-                port: 0,
+                endpoint: browserWsEndpoint,
             })
             .await,
         )
