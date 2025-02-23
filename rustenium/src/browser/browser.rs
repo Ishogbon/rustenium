@@ -14,6 +14,7 @@ pub trait Browser<T: ConnectionTransport> {
         let browserWsEndpoint = browser_process
             .wait_for_pattern(CDP_WEBSOCKET_ENDPOINT_REGEX, None)
             .await;
+        println!("{}", browserWsEndpoint);
         let session = Some(
             Session::<T>::ws_new(ConnectionTransportConfig {
                 endpoint: browserWsEndpoint,

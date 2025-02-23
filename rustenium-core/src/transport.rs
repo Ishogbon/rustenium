@@ -95,7 +95,7 @@ impl WebsocketConnectionTransport {
             client,
         })
     }
-}
+} //
 
 struct SpawnExecutor;
 

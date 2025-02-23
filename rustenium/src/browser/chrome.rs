@@ -41,6 +41,7 @@ impl BrowserTrait<WebsocketConnectionTransport> for ChromeBrowser {
             "--password-store=basic",
             "--use-mock-keychain",
             "--remote-debugging-port=0",
+            "--enable-logging",
         ];
     }
 }
