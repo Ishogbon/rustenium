@@ -1,0 +1,89 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Documents\\m-workspace\\rustenium\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Documents\\m-workspace\\rustenium\\rustenium\\tests\\browser.rs||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:rustenium\\tests\\browser.rs||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Documents\\m-workspace\\rustenium\\rustenium\\src\\browser\\browser.rs||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:rustenium\\src\\browser\\browser.rs||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Documents\\m-workspace\\rustenium\\rustenium\\src\\lib.rs||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:rustenium\\src\\lib.rs||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Documents\\m-workspace\\rustenium\\rustenium\\Cargo.toml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:rustenium\\Cargo.toml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "browser.rs",
+              "DocumentMoniker": "D:\\Documents\\m-workspace\\rustenium\\rustenium\\tests\\browser.rs",
+              "RelativeDocumentMoniker": "rustenium\\tests\\browser.rs",
+              "ToolTip": "D:\\Documents\\m-workspace\\rustenium\\rustenium\\tests\\browser.rs",
+              "RelativeToolTip": "rustenium\\tests\\browser.rs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-03-11T09:43:15.058Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "browser.rs",
+              "DocumentMoniker": "D:\\Documents\\m-workspace\\rustenium\\rustenium\\src\\browser\\browser.rs",
+              "RelativeDocumentMoniker": "rustenium\\src\\browser\\browser.rs",
+              "ToolTip": "D:\\Documents\\m-workspace\\rustenium\\rustenium\\src\\browser\\browser.rs",
+              "RelativeToolTip": "rustenium\\src\\browser\\browser.rs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-03-11T09:38:55.728Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Cargo.toml",
+              "DocumentMoniker": "D:\\Documents\\m-workspace\\rustenium\\rustenium\\Cargo.toml",
+              "RelativeDocumentMoniker": "rustenium\\Cargo.toml",
+              "ToolTip": "D:\\Documents\\m-workspace\\rustenium\\rustenium\\Cargo.toml",
+              "RelativeToolTip": "rustenium\\Cargo.toml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-03-11T09:38:45.17Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "lib.rs",
+              "DocumentMoniker": "D:\\Documents\\m-workspace\\rustenium\\rustenium\\src\\lib.rs",
+              "RelativeDocumentMoniker": "rustenium\\src\\lib.rs",
+              "ToolTip": "D:\\Documents\\m-workspace\\rustenium\\rustenium\\src\\lib.rs",
+              "RelativeToolTip": "rustenium\\src\\lib.rs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-03-11T09:36:42.428Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -75,11 +75,12 @@ impl ConnectionTransport for WebsocketConnectionTransport {
 
 impl WebsocketConnectionTransport {
     pub async fn new(connection_config: ConnectionTransportConfig) -> Result<Self, Box<dyn Error>> {
-        let stream = TcpStream::connect(connection_config.to_host_port().unwrap()).await?;
-
+        let addr_host = connection_config.to_host_port().unwrap();
+        let stream = TcpStream::connect(&addr_host).await.unwrap();
         let req = Request::builder()
             .method("GET")
             .uri(connection_config.endpoint.as_str())
+            .header("Host", &addr_host)
             .header(UPGRADE, "websocket")
             .header(CONNECTION, "upgrade")
             .header(
@@ -87,9 +88,12 @@ impl WebsocketConnectionTransport {
                 fastwebsockets::handshake::generate_key(),
             )
             .header("Sec-WebSocket-Version", "13")
-            .body(http_body_util::Empty::<Bytes>::new())?;
+            .body(http_body_util::Empty::<Bytes>::new()).unwrap();
 
-        let (client, _) = handshake::client(&SpawnExecutor, req, stream).await?;
+        let (client, _) = handshake::client(&SpawnExecutor, req, stream).await.unwrap();
+
+        println!("Client connected");
+
         Ok(Self {
             config: connection_config,
             client,
