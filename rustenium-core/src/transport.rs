@@ -31,7 +31,8 @@ pub struct ConnectionTransportConfig {
 }
 
 impl ConnectionTransportConfig {
-    pub fn to_host_port(&self) -> Option<String> {
+    // These two methods below might need optimization, calling url::parse multiple times might not be efficient
+    pub fn endpoint_to_host_port(&self) -> Option<String> {
         if let Ok(url) = Url::parse(&self.endpoint) {
             if let Some(host) = url.host_str() {
                 if let Some(port) = url.port() {
@@ -40,6 +41,10 @@ impl ConnectionTransportConfig {
             }
         }
         None
+    }
+    pub fn get_endpoint_path(&self) -> String {
+        let url = Url::parse(&self.endpoint);
+        return url.unwrap().path().to_owned();
     }
 }
 
@@ -75,9 +80,9 @@ impl ConnectionTransport for WebsocketConnectionTransport {
 
 impl WebsocketConnectionTransport {
     pub async fn new(connection_config: ConnectionTransportConfig) -> Result<Self, Box<dyn Error>> {
-        let addr_host = connection_config.to_host_port().unwrap();
+        let addr_host = connection_config.endpoint_to_host_port().unwrap();
         let stream = TcpStream::connect(&addr_host).await.unwrap();
-        let uri = connection_config.endpoint.as_str();
+        let uri = connection_config.get_endpoint_path();
         let req = Request::builder()
             .method("GET")
             .uri(uri)
@@ -93,7 +98,7 @@ impl WebsocketConnectionTransport {
 
         let (client, _) = handshake::client(&SpawnExecutor, req, stream).await.unwrap();
 
-        println!("Client connected");
+        println!("Successfully connected to browser");
 
         Ok(Self {
             config: connection_config,

@@ -11,13 +11,12 @@ pub trait Browser<T: ConnectionTransport> {
     fn flags(&self) -> Vec<&str>;
     async fn open(&mut self) -> (Session<WebsocketConnectionTransport>, Process) {
         let mut browser_process = Process::create(self.exe_path(), self.flags());
-        let browserWsEndpoint = browser_process
+        let browser_ws_endpoint = browser_process
             .wait_for_pattern(CDP_WEBSOCKET_ENDPOINT_REGEX, None)
             .await;
-        println!("{}", browserWsEndpoint);
         let session = Some(
             Session::<T>::ws_new(ConnectionTransportConfig {
-                endpoint: browserWsEndpoint,
+                endpoint: browser_ws_endpoint,
             })
             .await,
         )
