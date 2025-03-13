@@ -77,9 +77,10 @@ impl WebsocketConnectionTransport {
     pub async fn new(connection_config: ConnectionTransportConfig) -> Result<Self, Box<dyn Error>> {
         let addr_host = connection_config.to_host_port().unwrap();
         let stream = TcpStream::connect(&addr_host).await.unwrap();
+        let uri = connection_config.endpoint.as_str();
         let req = Request::builder()
             .method("GET")
-            .uri(connection_config.endpoint.as_str())
+            .uri(uri)
             .header("Host", &addr_host)
             .header(UPGRADE, "websocket")
             .header(CONNECTION, "upgrade")
