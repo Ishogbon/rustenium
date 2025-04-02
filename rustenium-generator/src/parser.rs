@@ -6,7 +6,9 @@ pub fn parse_bs_file(content: &str) {
     let re_module = Regex::new(r"##\s+(?:The\s+)?(\w+)\s+Module\s+##\s+\{#module-([^}]+)\}").unwrap();
 
     // New regex to find ALL type definitions under a module
-    let re_type = Regex::new(r"####\s+The\s+([^\s.]+)\.([^\s]+)\s+Type\s+####\s+\{#(?:type|types)-([^}]+)-([^}]+)\}").unwrap();
+    let re_type = Regex::new(
+        r"####\s+(?:The\s+)?([^\s.]+)\.([^\s]+)(?:\s+Type)?\s+####\s+\{#(?:type|types)-([^}]+)-([^}]+)\}"
+    ).unwrap();
     let re_command = Regex::new(r"####\s+The\s+([^\s.]+)\.([^\s]+)\s+Command\s+####\s+\{#command-([^}]+)-([^}]+)\}").unwrap();
     let re_event = Regex::new(r"####\s+The\s+([^\s.]+)\.([^\s]+)\s+Event\s+####\s+\{#event-([^}]+)-([^}]+)\}").unwrap();
 
