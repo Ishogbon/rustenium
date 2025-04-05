@@ -59,7 +59,7 @@ pub fn parse_bs_file(content: &str) {
                 let remaining_content = &content[command_end..];
 
                 if let Some(cddl_caps) = re_pre_cddl.captures(remaining_content) {
-                    let commands_file = fs::File::create(codes_dir.clone() + "/" + module_keyword + "/commands.rs").unwrap();
+                    let mut commands_file = fs::File::create(codes_dir.clone() + "/" + module_keyword + "/commands.rs").unwrap();
                     let cddl_content = cddl_caps.get(1).unwrap().as_str();
                     let parsed = conv_to_code_save_to_file(cddl_content, &mut commands_file);
                     println!("Command CDDL content: {}", parsed);
@@ -92,38 +92,44 @@ pub fn parse_bs_file(content: &str) {
 
 fn conv_to_code_save_to_file(tag: &str, file: &mut fs::File) -> String {
     let code = conv_to_code(tag); // Get the string from conv_to_code
-
+println!("code: {}", code);
     // Write the contents to the file
     file.write_all(code.as_bytes()).unwrap(); // Write the code to the file
 
     code
 }
 
-fn conv_to_code(cddl_content: &str)  -> String {
-    let re_assignment = Regex::new(r"\w+\.\w+\s+=\{").unwrap();
-    let re_choice_attr = Regex::new(r"\w+\.\w+\s+//").unwrap();
-    let mut code = String::from("");
+fn conv_to_code(cddl_content: &str) -> String {
+    let re_assignment = Regex::new(r"(\w+)\.(\w+)\s+=\s+\{").unwrap();
+    let re_choice_attr = Regex::new(r"(\w+)\.(\w+)\s+//").unwrap();
+
+    let mut code = String::new();
     let mut enum_activated = false;
-    let cddl_content_lines = cddl_content.lines();
-    for (index, str_line) in cddl_content_lines.enumerate() {
-        if let Some(json_cap) =  re_assignment.captures(str_line) {
-            let attribute = json_cap.get(2);
-            if let Some(attribute_name) = attribute.unwrap().as_str() {
-                if re_choice_attr.is_match(cddl_content_lines[index + 1].as_str()) {
-                    code.push_str(&format!("enum {} {{\n", attribute_name ));
-                    enum_activated = true;
-                }
+
+    let cddl_lines: Vec<&str> = cddl_content.lines().collect();
+
+    for (index, line) in cddl_lines.iter().enumerate() {
+        if let Some(assign_cap) = re_assignment.captures(line) {
+            let attribute_name = assign_cap.get(2).unwrap().as_str();
+
+            // Check next line safely
+            if index + 1 < cddl_lines.len() && re_choice_attr.is_match(cddl_lines[index + 1]) {
+                code.push_str(&format!("enum {} {{\n", attribute_name));
+                enum_activated = true;
+                continue;
             }
-            if enum_activated  {
-                if let Some(choice_cap) = re_choice_attr.captures(str_line) {
-                    let choice_str = choice_cap.get(1).unwrap().as_str();
-                    code.push_str(&format!("{}({}),\n", choice_str, choice_str));
-                }
-            }
-            if enum_activated && str_line == "}\n" {
+        }
+
+        if enum_activated {
+            if let Some(choice_cap) = re_choice_attr.captures(line) {
+                let variant_name = choice_cap.get(2).unwrap().as_str();
+                code.push_str(&format!("    {}({}),\n", variant_name, variant_name));
+            } else if line.trim() == "}" {
                 code.push_str("}\n");
+                enum_activated = false;
             }
         }
     }
+
     code
 }
