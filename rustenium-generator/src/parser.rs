@@ -2,9 +2,22 @@ use regex::Regex;
 use std::fs;
 use std::io::Write;
 
+fn to_lowercase_first(s: &str) -> String {
+    if s.is_empty() {
+        return s.to_string(); // Return an empty string as is
+    }
+
+    let mut chars = s.chars();
+    let first_char = chars.next().unwrap().to_lowercase().to_string(); // Convert the first character to lowercase
+    let rest_of_string: String = chars.collect(); // Collect the rest of the string unchanged
+
+    first_char + &rest_of_string // Concatenate the lowercase first char with the rest of the string
+}
 pub fn parse_bs_file(content: &str) {
     // Regex to find module declarations
     let re_module = Regex::new(r"##\s+(?:The\s+)?(\w+)\s+Module\s+##\s+\{#module-([^}]+)\}").unwrap();
+    let re_general = Regex::new(r"([A-Z]\w+)([A-Z][a-z]+)\s*=\s*\(([^)]*)\)").unwrap();
+
 
     // Regex to find definitions
     let re_type = Regex::new(
@@ -23,6 +36,40 @@ pub fn parse_bs_file(content: &str) {
         println!("Found module: '{}'", module_keyword);
         fs::create_dir_all(codes_dir.clone() + "/" + module_keyword).unwrap();
 
+        for general_caps in re_general.captures_iter(content) {
+            let general_module = general_caps.get(1).unwrap().as_str();
+            let general_type = general_caps.get(2).unwrap().as_str();
+
+            if to_lowercase_first(general_module) == module_keyword {
+                if general_type == "Command" {
+                    println!("Found general: '{} {}'", general_module, general_type);
+                    let mut commands_file = fs::OpenOptions::new()
+                        .append(true)
+                        .create(true)
+                        .open(codes_dir.clone() + "/" + module_keyword + "/commands.rs").unwrap();
+                    let parsed = conv_to_code_save_to_file(general_caps.get(0).unwrap().as_str(), &mut commands_file);
+                    println!("General Command CDDL content: {}", parsed);
+                } else if general_type == "Result" {
+                    println!("Found general: '{} {}'", general_module, general_type);
+                    let mut commands_file = fs::OpenOptions::new()
+                        .append(true)
+                        .create(true)
+                        .open(codes_dir.clone() + "/" + module_keyword + "/commands.rs").unwrap();
+                    let parsed = conv_to_code_save_to_file(general_caps.get(0).unwrap().as_str(), &mut commands_file);
+                    println!("General Result CDDL content: {}", parsed);
+                } else if general_type == "Event" {
+                    println!("Found general: '{} {}'", general_module, general_type);
+                    let mut commands_file = fs::OpenOptions::new()
+                        .append(true)
+                        .create(true)
+                        .open(codes_dir.clone() + "/" + module_keyword + "/events.rs").unwrap();
+                    let parsed = conv_to_code_save_to_file(general_caps.get(0).unwrap().as_str(), &mut commands_file);
+                    println!("General Event CDDL content: {}", parsed);
+                }
+            }
+
+        }
+
         // Now find all types belonging to this module
         for type_caps in re_type.captures_iter(content) {
             let type_module = type_caps.get(1).unwrap().as_str();
@@ -38,7 +85,10 @@ pub fn parse_bs_file(content: &str) {
 
                 // Find the first CDDL pre tag after this definition
                 if let Some(cddl_caps) = re_pre_cddl.captures(remaining_content) {
-                    let mut types_file = fs::File::create(codes_dir.clone() + "/" + module_keyword + "/types.rs").unwrap();
+                    let mut types_file = fs::OpenOptions::new()
+                        .append(true)
+                        .create(true)
+                        .open(codes_dir.clone() + "/" + module_keyword + "/types.rs").unwrap();
                     let cddl_content = cddl_caps.get(1).unwrap().as_str();
                     let parsed = conv_to_code_save_to_file(cddl_content, &mut types_file);
                     println!("Type CDDL content: {}", parsed);
@@ -59,7 +109,10 @@ pub fn parse_bs_file(content: &str) {
                 let remaining_content = &content[command_end..];
 
                 if let Some(cddl_caps) = re_pre_cddl.captures(remaining_content) {
-                    let mut commands_file = fs::File::create(codes_dir.clone() + "/" + module_keyword + "/commands.rs").unwrap();
+                    let mut commands_file =  fs::OpenOptions::new()
+                        .append(true)
+                        .create(true)
+                        .open(codes_dir.clone() + "/" + module_keyword + "/commands.rs").unwrap();
                     let cddl_content = cddl_caps.get(1).unwrap().as_str();
                     let parsed = conv_to_code_save_to_file(cddl_content, &mut commands_file);
                     println!("Command CDDL content: {}", parsed);
@@ -80,7 +133,10 @@ pub fn parse_bs_file(content: &str) {
                 let remaining_content = &content[event_end..];
 
                 if let Some(cddl_caps) = re_pre_cddl.captures(remaining_content) {
-                    let mut events_file = fs::File::create(codes_dir.clone() + "/" + module_keyword + "/events.rs").unwrap();
+                    let mut events_file =  fs::OpenOptions::new()
+                        .append(true)
+                        .create(true)
+                        .open(codes_dir.clone() + "/" + module_keyword + "/events.rs").unwrap();
                     let cddl_content = cddl_caps.get(1).unwrap().as_str();
                     let parsed = conv_to_code_save_to_file(cddl_content, &mut events_file);
                     println!("Event CDDL content: {}", parsed);
@@ -95,38 +151,60 @@ fn conv_to_code_save_to_file(tag: &str, file: &mut fs::File) -> String {
 println!("code: {}", code);
     // Write the contents to the file
     file.write_all(code.as_bytes()).unwrap(); // Write the code to the file
-
     code
 }
 
 fn conv_to_code(cddl_content: &str) -> String {
-    let re_assignment = Regex::new(r"(\w+)\.(\w+)\s+=\s+\{").unwrap();
-    let re_choice_attr = Regex::new(r"(\w+)\.(\w+)\s+//").unwrap();
+    let re_assignment_w_curl_brace = Regex::new(r"(\w+)\.(\w+)\s+=\s+\{").unwrap();
+    let re_assignment_w_brace = Regex::new(r"(\w+)\s+=\s+\(").unwrap();
+    let re_choice_next_attr = Regex::new(r"(\w+)\.(\w+)\s+/").unwrap();
+    let re_choice_attr = Regex::new(r"(\w+)\.(\w+)").unwrap();
 
     let mut code = String::new();
-    let mut enum_activated = false;
+    let mut enum_curl_brace_activated = false;
+    let mut enum_brace_activated = false;
 
     let cddl_lines: Vec<&str> = cddl_content.lines().collect();
 
     for (index, line) in cddl_lines.iter().enumerate() {
-        if let Some(assign_cap) = re_assignment.captures(line) {
+        if let Some(assign_cap) = re_assignment_w_curl_brace.captures(line) {
             let attribute_name = assign_cap.get(2).unwrap().as_str();
 
             // Check next line safely
-            if index + 1 < cddl_lines.len() && re_choice_attr.is_match(cddl_lines[index + 1]) {
+            if index + 1 < cddl_lines.len() && re_choice_next_attr.is_match(cddl_lines[index + 1]) {
                 code.push_str(&format!("enum {} {{\n", attribute_name));
-                enum_activated = true;
+                enum_curl_brace_activated = true;
                 continue;
             }
         }
 
-        if enum_activated {
+        if let Some(assign_cap) = re_assignment_w_brace.captures(line) {
+            let attribute_name = assign_cap.get(1).unwrap().as_str();
+
+            // Check next line safely
+            if index + 1 < cddl_lines.len() && re_choice_next_attr.is_match(cddl_lines[index + 1]) {
+                code.push_str(&format!("enum {} {{\n", attribute_name));
+                enum_brace_activated = true;
+                continue;
+            }
+        }
+
+        if enum_curl_brace_activated {
             if let Some(choice_cap) = re_choice_attr.captures(line) {
                 let variant_name = choice_cap.get(2).unwrap().as_str();
                 code.push_str(&format!("    {}({}),\n", variant_name, variant_name));
             } else if line.trim() == "}" {
                 code.push_str("}\n");
-                enum_activated = false;
+                enum_curl_brace_activated = false;
+            }
+        }
+        if enum_brace_activated {
+            if let Some(choice_cap) = re_choice_attr.captures(line) {
+                let variant_name = choice_cap.get(2).unwrap().as_str();
+                code.push_str(&format!("    {}({}),\n", variant_name, variant_name));
+            } else if line.trim() == ")" {
+                code.push_str("}\n");
+                enum_curl_brace_activated = false;
             }
         }
     }
