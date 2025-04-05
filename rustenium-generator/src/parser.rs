@@ -1,5 +1,6 @@
 use regex::Regex;
 use std::fs;
+use std::io::Write;
 
 pub fn parse_bs_file(content: &str) {
     // Regex to find module declarations
@@ -37,9 +38,9 @@ pub fn parse_bs_file(content: &str) {
 
                 // Find the first CDDL pre tag after this definition
                 if let Some(cddl_caps) = re_pre_cddl.captures(remaining_content) {
-                    let types_file = fs::File::create(codes_dir.clone() + "/" + module_keyword + "/types.rs").unwrap();
+                    let mut types_file = fs::File::create(codes_dir.clone() + "/" + module_keyword + "/types.rs").unwrap();
                     let cddl_content = cddl_caps.get(1).unwrap().as_str();
-                    let parsed = parse_pre_tag(cddl_content);
+                    let parsed = conv_to_code_save_to_file(cddl_content, &mut types_file);
                     println!("Type CDDL content: {}", parsed);
                 }
             }
@@ -53,14 +54,14 @@ pub fn parse_bs_file(content: &str) {
                 println!("Found Command: '{}.{}'", module_keyword, command_name);
 
                 // Find the position where this command definition ends
-                let command_end = command_caps.get(0).unwrap().end();
+                let mut command_end = command_caps.get(0).unwrap().end();
                 // Look at the content after this definition
                 let remaining_content = &content[command_end..];
 
                 if let Some(cddl_caps) = re_pre_cddl.captures(remaining_content) {
                     let commands_file = fs::File::create(codes_dir.clone() + "/" + module_keyword + "/commands.rs").unwrap();
                     let cddl_content = cddl_caps.get(1).unwrap().as_str();
-                    let parsed = parse_pre_tag(cddl_content);
+                    let parsed = conv_to_code_save_to_file(cddl_content, &mut commands_file);
                     println!("Command CDDL content: {}", parsed);
                 }
             }
@@ -79,9 +80,9 @@ pub fn parse_bs_file(content: &str) {
                 let remaining_content = &content[event_end..];
 
                 if let Some(cddl_caps) = re_pre_cddl.captures(remaining_content) {
-                    let events_file = fs::File::create(codes_dir.clone() + "/" + module_keyword + "/events.rs").unwrap();
+                    let mut events_file = fs::File::create(codes_dir.clone() + "/" + module_keyword + "/events.rs").unwrap();
                     let cddl_content = cddl_caps.get(1).unwrap().as_str();
-                    let parsed = parse_pre_tag(cddl_content);
+                    let parsed = conv_to_code_save_to_file(cddl_content, &mut events_file);
                     println!("Event CDDL content: {}", parsed);
                 }
             }
@@ -89,7 +90,40 @@ pub fn parse_bs_file(content: &str) {
     }
 }
 
-fn parse_pre_tag(tag: &str) -> String {
-    // Basic implementation - you might want to add more processing here
-    tag.trim().to_string()
+fn conv_to_code_save_to_file(tag: &str, file: &mut fs::File) -> String {
+    let code = conv_to_code(tag); // Get the string from conv_to_code
+
+    // Write the contents to the file
+    file.write_all(code.as_bytes()).unwrap(); // Write the code to the file
+
+    code
+}
+
+fn conv_to_code(cddl_content: &str)  -> String {
+    let re_assignment = Regex::new(r"\w+\.\w+\s+=\{").unwrap();
+    let re_choice_attr = Regex::new(r"\w+\.\w+\s+//").unwrap();
+    let mut code = String::from("");
+    let mut enum_activated = false;
+    let cddl_content_lines = cddl_content.lines();
+    for (index, str_line) in cddl_content_lines.enumerate() {
+        if let Some(json_cap) =  re_assignment.captures(str_line) {
+            let attribute = json_cap.get(2);
+            if let Some(attribute_name) = attribute.unwrap().as_str() {
+                if re_choice_attr.is_match(cddl_content_lines[index + 1].as_str()) {
+                    code.push_str(&format!("enum {} {{\n", attribute_name ));
+                    enum_activated = true;
+                }
+            }
+            if enum_activated  {
+                if let Some(choice_cap) = re_choice_attr.captures(str_line) {
+                    let choice_str = choice_cap.get(1).unwrap().as_str();
+                    code.push_str(&format!("{}({}),\n", choice_str, choice_str));
+                }
+            }
+            if enum_activated && str_line == "}\n" {
+                code.push_str("}\n");
+            }
+        }
+    }
+    code
 }
