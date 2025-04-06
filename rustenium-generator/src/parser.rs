@@ -160,9 +160,11 @@ fn conv_to_code(cddl_content: &str) -> String {
     let re_choice_next_attr = Regex::new(r"(\w+)\.(\w+)\s+/").unwrap();
     let re_choice_attr = Regex::new(r"(\w+)\.(\w+)").unwrap();
 
+    let re_assignment_attr = Regex::new(r"(\w+):\s+(\w+)").unwrap();
+
     let mut code = String::new();
-    let mut enum_curl_brace_activated = false;
-    let mut enum_brace_activated = false;
+    let mut curl_brace_activated = 0;
+    let mut brace_activated = 0;
 
     let cddl_lines: Vec<&str> = cddl_content.lines().collect();
 
@@ -171,10 +173,15 @@ fn conv_to_code(cddl_content: &str) -> String {
             let attribute_name = assign_cap.get(2).unwrap().as_str();
 
             // Check next line safely
-            if index + 1 < cddl_lines.len() && re_choice_next_attr.is_match(cddl_lines[index + 1]) {
-                code.push_str(&format!("enum {} {{\n", attribute_name));
-                enum_curl_brace_activated = true;
-                continue;
+            if index + 1 < cddl_lines.len() {
+                if re_choice_next_attr.is_match(cddl_lines[index + 1]) {
+                    code.push_str(&format!("enum {} {{\n", attribute_name));
+                    curl_brace_activated += 1;
+                    continue;
+                } else if re_assignment_attr.is_match(cddl_lines[index + 1]) {
+                    code.push_str(&format!("struct {} {{\n", attribute_name));
+                    curl_brace_activated += 1;
+                }
             }
         }
 
@@ -182,32 +189,58 @@ fn conv_to_code(cddl_content: &str) -> String {
             let attribute_name = assign_cap.get(1).unwrap().as_str();
 
             // Check next line safely
-            if index + 1 < cddl_lines.len() && re_choice_next_attr.is_match(cddl_lines[index + 1]) {
-                code.push_str(&format!("enum {} {{\n", attribute_name));
-                enum_brace_activated = true;
-                continue;
+            if index + 1 < cddl_lines.len() {
+                if re_choice_next_attr.is_match(cddl_lines[index + 1]) {
+                    code.push_str(&format!("enum {} {{\n", attribute_name));
+                    brace_activated += 1;
+                    continue;
+                } else if re_assignment_attr.is_match(cddl_lines[index + 1]) {
+                    code.push_str(&format!("struct {} {{\n", attribute_name));
+                    brace_activated += 1;
+                }
             }
         }
 
-        if enum_curl_brace_activated {
+        if curl_brace_activated > 0 {
             if let Some(choice_cap) = re_choice_attr.captures(line) {
                 let variant_name = choice_cap.get(2).unwrap().as_str();
-                code.push_str(&format!("    {}({}),\n", variant_name, variant_name));
+                code.push_str(&format!("{}({}),\n", variant_name, variant_name));
+            } else if let Some(attr_cap) = re_assignment_attr.captures(line) {
+                let (attr_name, attr_value) = parse_value(attr_cap.get(0).unwrap().as_str());
+                code.push_str(&format!("{}({}),\n", attr_name, attr_value));
             } else if line.trim() == "}" {
                 code.push_str("}\n");
-                enum_curl_brace_activated = false;
+                curl_brace_activated -= 1;
             }
         }
-        if enum_brace_activated {
+        if brace_activated > 0 {
             if let Some(choice_cap) = re_choice_attr.captures(line) {
                 let variant_name = choice_cap.get(2).unwrap().as_str();
-                code.push_str(&format!("    {}({}),\n", variant_name, variant_name));
+                code.push_str(&format!("{}({}),\n", variant_name, variant_name));
             } else if line.trim() == ")" {
                 code.push_str("}\n");
-                enum_curl_brace_activated = false;
+                brace_activated -= 1;
             }
         }
     }
 
     code
+}
+
+fn parse_value (value: &str) -> (&str, &str) {
+    let value_determiner = |value| {
+        let re_struct_type_match = Regex::new(r"\w+\.(\w+)").unwrap();
+        if let Some(cap) = re_struct_type_match.captures(value) {
+            return cap.get(1).unwrap().as_str().to_string()
+        }
+        return String::new();
+    };
+    let re_optional_type = Regex::new(r"\?\s+(\w+):\s+(\w+)").unwrap();
+
+    if let Some(re_optional_type_cap) = re_optional_type.captures(value) {
+        let attr_name = String::from(re_optional_type_cap.get(1).unwrap().as_str());
+        let attr_value = value_determiner(re_optional_type_cap.get(2).unwrap().as_str());
+        (attr_name, attr_value);
+    }
+    ("", "")
 }
