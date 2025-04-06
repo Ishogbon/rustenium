@@ -229,8 +229,11 @@ fn conv_to_code(cddl_content: &str) -> String {
 
 fn parse_value (value: &str) -> (&str, &str) {
     let value_determiner = |value| {
-        let re_struct_type_match = Regex::new(r"\w+\.(\w+)").unwrap();
-        if let Some(cap) = re_struct_type_match.captures(value) {
+        let re_struct_type = Regex::new(r"\w+\.(\w+)").unwrap();
+        let re_primitive_type = Regex::new(r"^(js-int)$|^(text)$|^(js-uint)$|^(null)$|^(\{*text => text})$|^(\[\s*\*\s*\w+])$|^(\[\s*\+\s*\w+])$").unwrap();
+        let re_string_type = Regex::new(r#"".*""#).unwrap();
+        let re
+        if let Some(cap) = re_struct_type.captures(value) {
             return cap.get(1).unwrap().as_str().to_string()
         }
         return String::new();
@@ -239,7 +242,7 @@ fn parse_value (value: &str) -> (&str, &str) {
 
     if let Some(re_optional_type_cap) = re_optional_type.captures(value) {
         let attr_name = String::from(re_optional_type_cap.get(1).unwrap().as_str());
-        let attr_value = value_determiner(re_optional_type_cap.get(2).unwrap().as_str());
+        let attr_value = format!("Option<{}>", value_determiner(re_optional_type_cap.get(2).unwrap().as_str()));
         (attr_name, attr_value);
     }
     ("", "")
