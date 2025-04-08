@@ -1,3 +1,4 @@
+use std::ffi::c_int;
 use regex::Regex;
 use std::fs;
 use std::io::Write;
@@ -232,9 +233,29 @@ fn parse_value (value: &str) -> (&str, &str) {
         let re_struct_type = Regex::new(r"\w+\.(\w+)").unwrap();
         let re_primitive_type = Regex::new(r"^(js-int)$|^(text)$|^(js-uint)$|^(null)$|^(\{*text => text})$|^(\[\s*\*\s*\w+])$|^(\[\s*\+\s*\w+])$").unwrap();
         let re_string_type = Regex::new(r#"".*""#).unwrap();
-        let re
+        let re_multi_union_type = Regex::new(r"\s*\\\s*").unwrap();
         if let Some(cap) = re_struct_type.captures(value) {
             return cap.get(1).unwrap().as_str().to_string()
+        }
+        if let Some (primitive_cap) = re_primitive_type.captures(value) {
+            return match primitive_cap.get(1).map(|m| m.as_str()) {
+                Some("js-int") => "i32".to_string(),
+                Some("js-uint") => "u32".to_string(),
+                Some("text") => "String".to_string(),
+                Some("null") => "None".to_string(),
+                Some("{*text => text}") => "HashMap<String, String>".to_string(),
+                _ => {
+                    if let Some(inner) = primitive_cap.get(7) {
+                        let type_str = inner.as_str().split('.').last().unwrap();
+                        format!("Vec<{}>", type_str)
+                    } else if let Some(inner) = primitive_cap.get(8) {
+                        let type_str = inner.as_str().split('.').last().unwrap();
+                        format!("Vec<{}>", type_str)
+                    } else {
+                        return value.to_string();
+                    }
+                }
+            }
         }
         return String::new();
     };
