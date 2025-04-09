@@ -200,7 +200,7 @@ fn conv_to_code(cddl_content: &str) -> String {
                     brace_activated += 1;
                 }
             }
-        }
+        }//
 
         if curl_brace_activated > 0 {
             if let Some(choice_cap) = re_choice_attr.captures(line) {
