@@ -163,6 +163,8 @@ fn conv_to_code(cddl_content: &str) -> String {
 
     let re_assignment_attr = Regex::new(r"(\w+):\s+(\w+)").unwrap();
 
+    // let re_nested_attr = Regex::new()
+
     let mut code = String::new();
     let mut curl_brace_activated = 0;
     let mut brace_activated = 0;
@@ -182,6 +184,7 @@ fn conv_to_code(cddl_content: &str) -> String {
                 } else if re_assignment_attr.is_match(cddl_lines[index + 1]) {
                     code.push_str(&format!("struct {} {{\n", attribute_name));
                     curl_brace_activated += 1;
+                    continue;
                 }
             }
         }
@@ -198,19 +201,20 @@ fn conv_to_code(cddl_content: &str) -> String {
                 } else if re_assignment_attr.is_match(cddl_lines[index + 1]) {
                     code.push_str(&format!("struct {} {{\n", attribute_name));
                     brace_activated += 1;
+                    continue;
                 }
             }
         }//
 
         if curl_brace_activated > 0 {
-            if let Some(choice_cap) = re_choice_attr.captures(line) {
+            if let Some(attr_cap) = re_assignment_attr.captures(line) {
+                let (attr_name, attr_value) = parse_value(line);
+                code.push_str(&format!("{}: {},\n", attr_name, attr_value));
+            } else if let Some(choice_cap) = re_choice_attr.captures(line) {
                 let variant_name = choice_cap.get(2).unwrap().as_str();
                 code.push_str(&format!("{}({}),\n", variant_name, variant_name));
-            } else if let Some(attr_cap) = re_assignment_attr.captures(line) {
-                let (attr_name, attr_value) = parse_value(attr_cap.get(0).unwrap().as_str());
-                code.push_str(&format!("{}({}),\n", attr_name, attr_value));
-            } else if line.trim() == "}" {
-                code.push_str("}\n");
+            }  else if line.trim() == "}" {
+                code.push_str("}\n\n");
                 curl_brace_activated -= 1;
             }
         }
@@ -219,7 +223,7 @@ fn conv_to_code(cddl_content: &str) -> String {
                 let variant_name = choice_cap.get(2).unwrap().as_str();
                 code.push_str(&format!("{}({}),\n", variant_name, variant_name));
             } else if line.trim() == ")" {
-                code.push_str("}\n");
+                code.push_str("}\n\n");
                 brace_activated -= 1;
             }
         }
@@ -228,52 +232,66 @@ fn conv_to_code(cddl_content: &str) -> String {
     code
 }
 
-fn parse_value (value: &str) -> (&str, &str) {
+fn parse_value (value: &str) -> (String, String) {
     fn value_determiner(value: &str) -> String {
         let re_struct_type = Regex::new(r"\w+\.(\w+)").unwrap();
-        let re_primitive_type = Regex::new(r"^(js-int)$|^(text)$|^(js-uint)$|^(null)$|^(\{*text => text})$|^(\[\s*\*\s*\w+])$|^(\[\s*\+\s*\w+])$").unwrap();
-        let re_string_type = Regex::new(r#"".*""#).unwrap();
+        let re_primitive_type = Regex::new(r"^(bool),*$|^(js-int),*$|^(text),*$|^(js-uint),*$|^(null),*$|^(\{*text => text}),*$|^(\[\s*\*\s*\w+]),*$|^(\[\s*\+\s*\w+]),*$").unwrap();
+        let re_string_type = Regex::new(r"([A-Za-z0-9]+)").unwrap();
         let re_multi_union_type = Regex::new(r"\\{1,2}").unwrap();
         if let Some(cap) = re_struct_type.captures(value) {
-            if re_multi_union_type.is_match(value) {
-                let parts: Vec<&str> = value.split(|c| c == '\\' || c == '/')
-                    .map(|s| s.trim())
-                    .collect();
-                let mapped_types: Vec<String> = parts.iter().map(|part| value_determiner(part)).collect();
-                return mapped_types.join(" | ");
-            }
+            return cap.get(1).unwrap().as_str().to_string();
+        }
+        if re_multi_union_type.is_match(value) {
+            let parts: Vec<&str> = value.split(|c| c == '\\' || c == '/')
+                .map(|s| s.trim())
+                .collect();
+            let mapped_types: Vec<String> = parts.iter().map(|part| value_determiner(part)).collect();
+            return mapped_types.join(" | ");
         }
         if let Some (primitive_cap) = re_primitive_type.captures(value) {
-            return match primitive_cap.get(1).map(|m| m.as_str()) {
-                Some("js-int") => "i32".to_string(),
-                Some("js-uint") => "u32".to_string(),
-                Some("text") => "String".to_string(),
-                Some("null") => "None".to_string(),
-                Some("{*text => text}") => "HashMap<String, String>".to_string(),
-                _ => {
-                    if let Some(inner) = primitive_cap.get(7) {
-                        let type_str = inner.as_str().split('.').last().unwrap();
-                        format!("Vec<{}>", type_str)
-                    } else if let Some(inner) = primitive_cap.get(8) {
-                        let type_str = inner.as_str().split('.').last().unwrap();
-                        format!("Vec<{}>", type_str)
-                    } else {
-                        return value.to_string();
+            for i in 1..=primitive_cap.len() {
+                if let Some(matched) = primitive_cap.get(i) {
+                    return match matched.as_str() {
+                        "js-int" => "i32".to_string(),
+                        "js-uint" => "u32".to_string(),
+                        "text" => "String".to_string(),
+                        "bool" => "bool".to_string(),
+                        "null" => "None".to_string(),
+                        "{*text => text}" => "HashMap<String, String>".to_string(),
+                        val => {
+                            if val == primitive_cap.get(6).map(|m| m.as_str()).unwrap_or("") {
+                                let type_str = val.split('.').last().unwrap();
+                                format!("Vec<{}>", type_str)
+                            } else if val == primitive_cap.get(7).map(|m| m.as_str()).unwrap_or("") {
+                                let type_str = val.split('.').last().unwrap();
+                                format!("Vec<{}>", type_str)
+                            } else {
+                                return value.to_string();
+                            }
+                        }
                     }
                 }
             }
         }
         if let Some (string_cap) = re_string_type.captures(value) {
-            return value.to_string();
+            return format!("\"{}\"", string_cap.get(1).unwrap().as_str().to_string());
         }
         return String::new();
     };
     let re_optional_type = Regex::new(r"\?\s+(\w+):\s+(\w+)").unwrap();
+    let re_type = Regex::new(r"(\w+):\s*(.+)").unwrap();
 
     if let Some(re_optional_type_cap) = re_optional_type.captures(value) {
         let attr_name = String::from(re_optional_type_cap.get(1).unwrap().as_str());
         let attr_value = format!("Option<{}>", value_determiner(re_optional_type_cap.get(2).unwrap().as_str()));
-        (attr_name, attr_value);
+        println!("Attr Optional - Name: {}, Value: {}", attr_name, attr_value);
+        return (attr_name, attr_value);
     }
-    ("", "")
+    else if let Some(re_type_cap) = re_type.captures(value) {
+        let attr_name = String::from(re_type_cap.get(1).unwrap().as_str());
+        let attr_value = format!("{}", value_determiner(re_type_cap.get(2).unwrap().as_str()));
+        println!("Attr - Name: {}, Value: {}", attr_name, attr_value);
+        return (attr_name, attr_value);
+    }
+    (String::from(""), String::from(""))
 }
