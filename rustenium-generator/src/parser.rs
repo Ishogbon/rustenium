@@ -252,7 +252,7 @@ fn conv_to_code(cddl_content: &str) -> String {
 fn parse_value (value: &str) -> (String, String) {
     fn value_determiner(value: &str) -> String {
         let re_struct_type = Regex::new(r"\w+\.(\w+)").unwrap();
-        let re_primitive_type = Regex::new(r"^(bool),*$|^(js-int),*$|^(text),*$|^(js-uint),*$|^(null),*$|^(\{*text => text}),*$|^(\[\s*\*\s*[\w.]+]),*$|^(\[\s*\+\s*[\w.]+]),*$").unwrap();
+        let re_primitive_type = Regex::new(r"^(bool),*$|^(js-int),*$|^(text),*$|^(js-uint),*$|^(null),*$|^(\{*text => text}),*$|^\[\s*\*\s*([\w.]+)],*$|^\[\s*\+\s*([\w.]+)],*$").unwrap();
         let re_string_type = Regex::new(r"([A-Za-z0-9]+)").unwrap();
         let re_multi_union_type = Regex::new(r"\\{1,2}").unwrap();
         if re_multi_union_type.is_match(value) {
@@ -273,10 +273,10 @@ fn parse_value (value: &str) -> (String, String) {
                         "null" => "None".to_string(),
                         "{*text => text}" => "HashMap<String, String>".to_string(),
                         val => {
-                            if val == primitive_cap.get(6).map(|m| m.as_str()).unwrap_or("") {
+                            if val == primitive_cap.get(7).map(|m| m.as_str()).unwrap_or("") {
                                 let type_str = val.split('.').last().unwrap();
                                 format!("Vec<{}>", type_str)
-                            } else if val == primitive_cap.get(7).map(|m| m.as_str()).unwrap_or("") {
+                            } else if val == primitive_cap.get(8).map(|m| m.as_str()).unwrap_or("") {
                                 let type_str = val.split('.').last().unwrap();
                                 format!("Vec<{}>", type_str)
                             } else {
@@ -291,12 +291,12 @@ fn parse_value (value: &str) -> (String, String) {
             return cap.get(1).unwrap().as_str().to_string();
         }
         if let Some (string_cap) = re_string_type.captures(value) {
-            return format!("\"{}\"", string_cap.get(1).unwrap().as_str().to_string());
-            // return "&str".to_string()
+            // return format!("\"{}\"", string_cap.get(1).unwrap().as_str().to_string());
+            return "&str".to_string()
         }
         return String::new();
     };
-    let re_optional_type = Regex::new(r"\?\s+(\w+):\s+(\w+)").unwrap();
+    let re_optional_type = Regex::new(r"\?\s+(\w+):\s*(.+)").unwrap();
     let re_type = Regex::new(r"(\w+):\s*(.+)").unwrap();
 
     let re_no_assignment = Regex::new(r"(\w+)\.(\w+)").unwrap();
