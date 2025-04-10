@@ -161,7 +161,7 @@ fn conv_to_code(cddl_content: &str) -> String {
     let re_choice_next_attr = Regex::new(r"(\w+)\.(\w+)\s+/").unwrap();
     let re_choice_attr = Regex::new(r"(\w+)\.(\w+)").unwrap();
 
-    let re_assignment_attr = Regex::new(r"(\w+):\s+(\w+)").unwrap();
+    let re_assignment_attr = Regex::new(r"(\w+):\s+(.+)").unwrap();
 
     // let re_nested_attr = Regex::new()
 
@@ -211,17 +211,34 @@ fn conv_to_code(cddl_content: &str) -> String {
                 let (attr_name, attr_value) = parse_value(line);
                 code.push_str(&format!("{}: {},\n", attr_name, attr_value));
             } else if let Some(choice_cap) = re_choice_attr.captures(line) {
-                let variant_name = choice_cap.get(2).unwrap().as_str();
-                code.push_str(&format!("{}({}),\n", variant_name, variant_name));
-            }  else if line.trim() == "}" {
+                if re_assignment_attr.is_match(cddl_lines[index + 1]) {
+                    let (attr_name, attr_value) = parse_value(line);
+                    code.push_str(&format!("{}: {},\n", attr_name, attr_value));
+                } else {
+                    let variant_name = choice_cap.get(2).unwrap().as_str();
+                    code.push_str(&format!("{}({}),\n", variant_name, variant_name));
+                }
+            } else if (line.to_string().contains("Extensible")) {
+                code.push_str(&format!("extension: Option<serde_cbor::Value>,\n"));
+            } else if line.trim() == "}" {
                 code.push_str("}\n\n");
                 curl_brace_activated -= 1;
             }
         }
         if brace_activated > 0 {
-            if let Some(choice_cap) = re_choice_attr.captures(line) {
-                let variant_name = choice_cap.get(2).unwrap().as_str();
-                code.push_str(&format!("{}({}),\n", variant_name, variant_name));
+            if let Some(attr_cap) = re_assignment_attr.captures(line) {
+                let (attr_name, attr_value) = parse_value(line);
+                code.push_str(&format!("{}: {},\n", attr_name, attr_value));
+            } else if let Some(choice_cap) = re_choice_attr.captures(line) {
+                if re_assignment_attr.is_match(cddl_lines[index + 1]) {
+                    let (attr_name, attr_value) = parse_value(line);
+                    code.push_str(&format!("{}: {},\n", attr_name, attr_value));
+                } else {
+                    let variant_name = choice_cap.get(2).unwrap().as_str();
+                    code.push_str(&format!("{}({}),\n", variant_name, variant_name));
+                }
+            }  else if (line.to_string().contains("Extensible")) {
+                code.push_str(&format!("extension: Option<serde_cbor::Value>,\n"));
             } else if line.trim() == ")" {
                 code.push_str("}\n\n");
                 brace_activated -= 1;
@@ -235,12 +252,9 @@ fn conv_to_code(cddl_content: &str) -> String {
 fn parse_value (value: &str) -> (String, String) {
     fn value_determiner(value: &str) -> String {
         let re_struct_type = Regex::new(r"\w+\.(\w+)").unwrap();
-        let re_primitive_type = Regex::new(r"^(bool),*$|^(js-int),*$|^(text),*$|^(js-uint),*$|^(null),*$|^(\{*text => text}),*$|^(\[\s*\*\s*\w+]),*$|^(\[\s*\+\s*\w+]),*$").unwrap();
+        let re_primitive_type = Regex::new(r"^(bool),*$|^(js-int),*$|^(text),*$|^(js-uint),*$|^(null),*$|^(\{*text => text}),*$|^(\[\s*\*\s*[\w.]+]),*$|^(\[\s*\+\s*[\w.]+]),*$").unwrap();
         let re_string_type = Regex::new(r"([A-Za-z0-9]+)").unwrap();
         let re_multi_union_type = Regex::new(r"\\{1,2}").unwrap();
-        if let Some(cap) = re_struct_type.captures(value) {
-            return cap.get(1).unwrap().as_str().to_string();
-        }
         if re_multi_union_type.is_match(value) {
             let parts: Vec<&str> = value.split(|c| c == '\\' || c == '/')
                 .map(|s| s.trim())
@@ -273,25 +287,38 @@ fn parse_value (value: &str) -> (String, String) {
                 }
             }
         }
+        if let Some(cap) = re_struct_type.captures(value) {
+            return cap.get(1).unwrap().as_str().to_string();
+        }
         if let Some (string_cap) = re_string_type.captures(value) {
             return format!("\"{}\"", string_cap.get(1).unwrap().as_str().to_string());
+            // return "&str".to_string()
         }
         return String::new();
     };
     let re_optional_type = Regex::new(r"\?\s+(\w+):\s+(\w+)").unwrap();
     let re_type = Regex::new(r"(\w+):\s*(.+)").unwrap();
 
+    let re_no_assignment = Regex::new(r"(\w+)\.(\w+)").unwrap();
+    let re_no_assignment_optional = Regex::new(r"\s*\?\s*(\w+)\.(\w+)").unwrap();
+
     if let Some(re_optional_type_cap) = re_optional_type.captures(value) {
         let attr_name = String::from(re_optional_type_cap.get(1).unwrap().as_str());
         let attr_value = format!("Option<{}>", value_determiner(re_optional_type_cap.get(2).unwrap().as_str()));
-        println!("Attr Optional - Name: {}, Value: {}", attr_name, attr_value);
         return (attr_name, attr_value);
     }
     else if let Some(re_type_cap) = re_type.captures(value) {
         let attr_name = String::from(re_type_cap.get(1).unwrap().as_str());
         let attr_value = format!("{}", value_determiner(re_type_cap.get(2).unwrap().as_str()));
-        println!("Attr - Name: {}, Value: {}", attr_name, attr_value);
         return (attr_name, attr_value);
+    } else if let Some(re_no_assignment_caps_optional) = re_no_assignment_optional.captures(value) {
+        let attr_name = re_no_assignment_caps_optional.get(2).unwrap().as_str();
+        let attr_value = format!("Option<{}>", attr_name);
+        return (attr_name.to_string(), attr_value);
+    } else if let Some(re_no_assignment_cap) = re_no_assignment.captures(value) {
+        let attr_name = re_no_assignment_cap.get(2).unwrap().as_str();
+        let attr_value = format!("{}", attr_name);
+        return (attr_name.to_string(), attr_value);
     }
     (String::from(""), String::from(""))
 }
