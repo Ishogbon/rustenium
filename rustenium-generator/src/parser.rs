@@ -251,10 +251,12 @@ fn conv_to_code(cddl_content: &str) -> String {
 
 fn parse_value (value: &str) -> (String, String) {
     fn value_determiner(value: &str) -> String {
-        let re_struct_type = Regex::new(r"\w+\.(\w+)").unwrap();
+        let re_struct_type = Regex::new(r"^\w+\.(\w+),*$").unwrap();
         let re_primitive_type = Regex::new(r"^(bool),*$|^(js-int),*$|^(text),*$|^(js-uint),*$|^(null),*$|^(\{*text => text}),*$|^\[\s*\*\s*([\w.]+)],*$|^\[\s*\+\s*([\w.]+)],*$").unwrap();
-        let re_string_type = Regex::new(r"([A-Za-z0-9]+)").unwrap();
+        let re_string_type = Regex::new(r#""([A-Za-z0-9.]+)""#).unwrap();
         let re_multi_union_type = Regex::new(r"\\{1,2}").unwrap();
+
+        let re_array_primitive_type = Regex::new(r"\s*\[\s*\s*[*+](text)],*").unwrap();
         if re_multi_union_type.is_match(value) {
             let parts: Vec<&str> = value.split(|c| c == '\\' || c == '/')
                 .map(|s| s.trim())
@@ -262,6 +264,12 @@ fn parse_value (value: &str) -> (String, String) {
             let mapped_types: Vec<String> = parts.iter().map(|part| value_determiner(part)).collect();
             return mapped_types.join(" | ");
         }
+        if let Some(primitive_array_cap) = re_array_primitive_type.captures(value) {
+            let cap = primitive_array_cap.get(1).unwrap().as_str();
+            let value = value_determiner(cap);
+            return format!("Vec<{}>", value);
+        }
+
         if let Some (primitive_cap) = re_primitive_type.captures(value) {
             for i in 1..=primitive_cap.len() {
                 if let Some(matched) = primitive_cap.get(i) {
