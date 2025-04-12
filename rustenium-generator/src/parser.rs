@@ -3,6 +3,24 @@ use regex::Regex;
 use std::fs;
 use std::io::Write;
 
+fn snakify(input: &str) -> String {
+    let mut snake = String::new();
+
+    for (i, c) in input.chars().enumerate() {
+        if c.is_uppercase() {
+            if i != 0 {
+                snake.push('_');
+            }
+            snake.push(c.to_ascii_lowercase());
+        } else if c == '-' {
+            snake.push('_');
+        } else {
+            snake.push(c);
+        }
+    }
+
+    snake
+}
 fn to_lowercase_first(s: &str) -> String {
     if s.is_empty() {
         return s.to_string(); // Return an empty string as is
@@ -199,7 +217,7 @@ fn conv_to_code(cddl_content: &str) -> String {
                     brace_activated += 1;
                     continue;
                 } else if re_assignment_attr.is_match(cddl_lines[index + 1]) {
-                    code.push_str(&format!("struct {} {{\n", attribute_name));
+                    code.push_str(&format!("#[derive(Debug, Serialize, Deserialize)]\nstruct {} {{\n", attribute_name));
                     brace_activated += 1;
                     continue;
                 }
@@ -209,17 +227,25 @@ fn conv_to_code(cddl_content: &str) -> String {
         if curl_brace_activated > 0 {
             if let Some(attr_cap) = re_assignment_attr.captures(line) {
                 let (attr_name, attr_value) = parse_value(line);
-                code.push_str(&format!("{}: {},\n", attr_name, attr_value));
+                let mut snakified = snakify(attr_name.as_str());
+                if snakified == "type" {
+                    snakified = String::from("type_");
+                }
+                code.push_str(&format!("\t#[serde(rename = \"{}\")]\n\t{}: {},\n", attr_name, snakified, attr_value));
             } else if let Some(choice_cap) = re_choice_attr.captures(line) {
                 if re_assignment_attr.is_match(cddl_lines[index + 1]) {
                     let (attr_name, attr_value) = parse_value(line);
-                    code.push_str(&format!("{}: {},\n", attr_name, attr_value));
+                    let mut snakified = snakify(attr_name.as_str());
+                    if snakified == "type" {
+                        snakified = String::from("type_");
+                    }
+                    code.push_str(&format!("\t#[serde(rename = \"{}\")]\n\t{}: {},\n", attr_name, snakified, attr_value));
                 } else {
                     let variant_name = choice_cap.get(2).unwrap().as_str();
-                    code.push_str(&format!("{}({}),\n", variant_name, variant_name));
+                    code.push_str(&format!("\t{}({}),\n", variant_name, variant_name));
                 }
             } else if (line.to_string().contains("Extensible")) {
-                code.push_str(&format!("extension: Option<serde_cbor::Value>,\n"));
+                code.push_str(&format!("\t#[serde(flatten)]\n\textension: Option<serde_cbor::Value>,\n"));
             } else if line.trim() == "}" {
                 code.push_str("}\n\n");
                 curl_brace_activated -= 1;
@@ -228,17 +254,25 @@ fn conv_to_code(cddl_content: &str) -> String {
         if brace_activated > 0 {
             if let Some(attr_cap) = re_assignment_attr.captures(line) {
                 let (attr_name, attr_value) = parse_value(line);
-                code.push_str(&format!("{}: {},\n", attr_name, attr_value));
+                let mut snakified = snakify(attr_name.as_str());
+                if snakified == "type" {
+                    snakified = String::from("type_");
+                }
+                code.push_str(&format!("\t#[serde(rename = \"{}\")]\n\t{}: {},\n", attr_name, snakified, attr_value));
             } else if let Some(choice_cap) = re_choice_attr.captures(line) {
                 if re_assignment_attr.is_match(cddl_lines[index + 1]) {
                     let (attr_name, attr_value) = parse_value(line);
-                    code.push_str(&format!("{}: {},\n", attr_name, attr_value));
+                    let mut snakified = snakify(attr_name.as_str());
+                    if snakified == "type" {
+                        snakified = String::from("type_");
+                    }
+                    code.push_str(&format!("\t#[serde(rename = \"{}\")]\n\t{}: {},\n", attr_name, snakified, attr_value));
                 } else {
                     let variant_name = choice_cap.get(2).unwrap().as_str();
-                    code.push_str(&format!("{}({}),\n", variant_name, variant_name));
+                    code.push_str(&format!("\t{}({}),\n", variant_name, variant_name));
                 }
             }  else if (line.to_string().contains("Extensible")) {
-                code.push_str(&format!("extension: Option<serde_cbor::Value>,\n"));
+                code.push_str(&format!("\t#[serde(flatten)]\n\textension: Option<serde_cbor::Value>,\n"));
             } else if line.trim() == ")" {
                 code.push_str("}\n\n");
                 brace_activated -= 1;
@@ -251,12 +285,20 @@ fn conv_to_code(cddl_content: &str) -> String {
 
 fn parse_value (value: &str) -> (String, String) {
     fn value_determiner(value: &str) -> String {
-        let re_struct_type = Regex::new(r"^\w+\.(\w+),*$").unwrap();
-        let re_primitive_type = Regex::new(r"^(bool),*$|^(js-int),*$|^(text),*$|^(js-uint),*$|^(null),*$|^(\{*text => text}),*$|^\[\s*\*\s*([\w.]+)],*$|^\[\s*\+\s*([\w.]+)],*$").unwrap();
+        let re_struct_type = Regex::new(r"^\w+\.(\w+)[,;]*$").unwrap();
+        let re_primitive_type = Regex::new(r"^(bool),*$|^(js-int),*$|^(text),*$|^(js-uint),*$|^(float),*$|^(null),*$|^(\{*text => text}),*$|^\[\s*\*\s*([\w.]+)],*$|^\[\s*\+\s*([\w.]+)],*$").unwrap();
         let re_string_type = Regex::new(r#""([A-Za-z0-9.]+)""#).unwrap();
-        let re_multi_union_type = Regex::new(r"\\{1,2}").unwrap();
+        let re_multi_union_type = Regex::new(r"/{1,2}").unwrap();
+
 
         let re_array_primitive_type = Regex::new(r"\s*\[\s*\s*[*+](text)],*").unwrap();
+
+        let re_float = Regex::new(r"^\d+\.+\d+[,;]*$").unwrap();
+
+
+        if value.contains("EmptyParams") {
+            return "Option<serde_cbor::Value>".to_string();
+        }
         if re_multi_union_type.is_match(value) {
             let parts: Vec<&str> = value.split(|c| c == '\\' || c == '/')
                 .map(|s| s.trim())
@@ -269,6 +311,9 @@ fn parse_value (value: &str) -> (String, String) {
             let value = value_determiner(cap);
             return format!("Vec<{}>", value);
         }
+        if re_float.is_match(value) {
+            return "f64".to_string();
+        }
 
         if let Some (primitive_cap) = re_primitive_type.captures(value) {
             for i in 1..=primitive_cap.len() {
@@ -278,13 +323,14 @@ fn parse_value (value: &str) -> (String, String) {
                         "js-uint" => "u32".to_string(),
                         "text" => "String".to_string(),
                         "bool" => "bool".to_string(),
+                        "float" => "f64".to_string(),
                         "null" => "None".to_string(),
                         "{*text => text}" => "HashMap<String, String>".to_string(),
                         val => {
-                            if val == primitive_cap.get(7).map(|m| m.as_str()).unwrap_or("") {
+                            if val == primitive_cap.get(8).map(|m| m.as_str()).unwrap_or("") {
                                 let type_str = val.split('.').last().unwrap();
                                 format!("Vec<{}>", type_str)
-                            } else if val == primitive_cap.get(8).map(|m| m.as_str()).unwrap_or("") {
+                            } else if val == primitive_cap.get(9).map(|m| m.as_str()).unwrap_or("") {
                                 let type_str = val.split('.').last().unwrap();
                                 format!("Vec<{}>", type_str)
                             } else {
