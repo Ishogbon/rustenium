@@ -709,6 +709,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustenium-commands"
+version = "0.1.0"
+
+[[package]]
 name = "rustenium-core"
 version = "0.1.0"
 dependencies = [
