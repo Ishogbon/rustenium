@@ -1,3 +1,7 @@
+use serde::{Serialize, Deserialize};
+use crate::script::types::{ChannelValue, EvaluateResult, Handle, LocalValue, PreloadScript, RealmInfo, RealmType, ResultOwnership, SerializationOptions, Target};
+use crate::browser::types::UserContext;
+use crate::browsing_context::types::BrowsingContext;
 pub enum ScriptCommand {
 	AddPreloadScript(AddPreloadScript),
 	CallFunction(CallFunction),
@@ -21,6 +25,8 @@ pub struct AddPreloadScript {
 	params: AddPreloadScriptParameters,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct AddPreloadScriptParameters {
 	#[serde(rename = "functionDeclaration")]
 	function_declaration: String,
@@ -35,6 +41,18 @@ pub struct AddPreloadScriptParameters {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct AddPreloadScriptResult {
+	#[serde(rename = "script")]
+	script: PreloadScript,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct GetRealmsResult {
+	#[serde(rename = "realms")]
+	realms: Vec<RealmInfo>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Disown {
 	#[serde(rename = "method")]
 	method: String,
@@ -42,6 +60,7 @@ pub struct Disown {
 	params: DisownParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct DisownParameters {
 	#[serde(rename = "handles")]
 	handles: Vec<Handle>,
@@ -57,6 +76,7 @@ pub struct CallFunction {
 	params: CallFunctionParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct CallFunctionParameters {
 	#[serde(rename = "functionDeclaration")]
 	function_declaration: String,
@@ -72,8 +92,12 @@ pub struct CallFunctionParameters {
 	serialization_options: Option<SerializationOptions>,
 	#[serde(rename = "this")]
 	this: Option<LocalValue>,
-	#[serde(rename = "userActivation")]
-	user_activation: Option<>,
+	#[serde(rename = "userActivation", default = "default_user_activation")]
+	user_activation: bool,
+}
+
+fn default_user_activation() -> bool {
+	false
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -84,6 +108,7 @@ pub struct Evaluate {
 	params: EvaluateParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct EvaluateParameters {
 	#[serde(rename = "expression")]
 	expression: String,
@@ -95,8 +120,8 @@ pub struct EvaluateParameters {
 	result_ownership: Option<ResultOwnership>,
 	#[serde(rename = "serializationOptions")]
 	serialization_options: Option<SerializationOptions>,
-	#[serde(rename = "userActivation")]
-	user_activation: Option<>,
+	#[serde(rename = "userActivation", default = "default_user_activation")]
+	user_activation: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -107,6 +132,7 @@ pub struct GetRealms {
 	params: GetRealmsParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct GetRealmsParameters {
 	#[serde(rename = "context")]
 	context: Option<BrowsingContext>,
@@ -122,6 +148,8 @@ pub struct RemovePreloadScript {
 	params: RemovePreloadScriptParameters,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct RemovePreloadScriptParameters {
 	#[serde(rename = "script")]
 	script: PreloadScript,

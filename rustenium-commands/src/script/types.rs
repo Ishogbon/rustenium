@@ -10,6 +10,7 @@ pub type SharedId = String;
 pub type Handle = String;
 pub type InternalId = String;
 pub type ListRemoteValue = Vec<RemoteValue>;
+pub type PreloadScript = String;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum SpecialNumber {
@@ -289,6 +290,19 @@ pub struct BaseRealmInfo {
 	realm: Realm,
 	#[serde(rename = "origin")]
 	origin: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum RealmType {
+	Window,
+	DedicatedWorker,
+	SharedWorker,
+	ServiceWorker,
+	Worker,
+	PaintWorklet,
+	AudioWorklet,
+	Worklet,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
