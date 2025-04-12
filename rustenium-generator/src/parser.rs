@@ -200,7 +200,7 @@ fn conv_to_code(cddl_content: &str) -> String {
                     curl_brace_activated += 1;
                     continue;
                 } else if re_assignment_attr.is_match(cddl_lines[index + 1]) {
-                    code.push_str(&format!("struct {} {{\n", attribute_name));
+                    code.push_str(&format!("#[derive(Debug, Serialize, Deserialize)]\nstruct {} {{\n", attribute_name));
                     curl_brace_activated += 1;
                     continue;
                 }
