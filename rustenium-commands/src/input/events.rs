@@ -1,3 +1,8 @@
+use serde::{Serialize, Deserialize};
+
+use crate::browsing_context::types::BrowsingContext;
+use crate::script::types::SharedReference;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FileDialogOpened {
 	#[serde(rename = "method")]
@@ -6,6 +11,7 @@ pub struct FileDialogOpened {
 	params: FileDialogInfo,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct FileDialogInfo {
 	#[serde(rename = "context")]
 	context: BrowsingContext,

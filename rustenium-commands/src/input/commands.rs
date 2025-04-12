@@ -1,3 +1,10 @@
+use serde::{Serialize, Deserialize};
+
+use crate::{browsing_context::types::BrowsingContext, script::types::SharedReference};
+
+use super::types::ElementOrigin;
+
+pub type NoneSourceAction = PauseAction;
 pub enum InputCommand {
 	PerformActions(PerformActions),
 	ReleaseActions(ReleaseActions),
@@ -12,6 +19,8 @@ pub struct PerformActions {
 	params: PerformActionsParameters,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PerformActionsParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
@@ -19,6 +28,8 @@ pub struct PerformActionsParameters {
 	actions: Vec<SourceActions>,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum SourceActions {
 	NoneSourceActions(NoneSourceActions),
 	KeySourceActions(KeySourceActions),
@@ -26,6 +37,7 @@ pub enum SourceActions {
 	WheelSourceActions(WheelSourceActions),
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct NoneSourceActions {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -35,6 +47,8 @@ pub struct NoneSourceActions {
 	actions: Vec<NoneSourceAction>,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct KeySourceActions {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -44,12 +58,16 @@ pub struct KeySourceActions {
 	actions: Vec<KeySourceAction>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum KeySourceAction {
 	PauseAction(PauseAction),
 	KeyDownAction(KeyDownAction),
 	KeyUpAction(KeyUpAction),
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PointerSourceActions {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -61,11 +79,14 @@ pub struct PointerSourceActions {
 	actions: Vec<PointerSourceAction>,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PointerParameters {
 	#[serde(rename = "pointerType")]
 	pointer_type: Option<String>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum PointerSourceAction {
 	PauseAction(PauseAction),
 	PointerDownAction(PointerDownAction),
@@ -73,6 +94,7 @@ pub enum PointerSourceAction {
 	PointerMoveAction(PointerMoveAction),
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct WheelSourceActions {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -82,11 +104,13 @@ pub struct WheelSourceActions {
 	actions: Vec<WheelSourceAction>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum WheelSourceAction {
 	PauseAction(PauseAction),
 	WheelScrollAction(WheelScrollAction),
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PauseAction {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -94,6 +118,8 @@ pub struct PauseAction {
 	duration: Option<u32>,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct KeyDownAction {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -101,6 +127,8 @@ pub struct KeyDownAction {
 	value: String,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct KeyUpAction {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -108,6 +136,8 @@ pub struct KeyUpAction {
 	value: String,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PointerUpAction {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -115,14 +145,18 @@ pub struct PointerUpAction {
 	button: u32,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PointerDownAction {
 	#[serde(rename = "type")]
 	r#type: String,
 	#[serde(rename = "button")]
 	button: u32,
-	PointerCommonProperties(PointerCommonProperties),
+	#[serde(flatten)]
+	pointerCommonProperties: PointerCommonProperties,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PointerMoveAction {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -134,9 +168,12 @@ pub struct PointerMoveAction {
 	duration: Option<u32>,
 	#[serde(rename = "origin")]
 	origin: Option<Origin>,
-	PointerCommonProperties(PointerCommonProperties),
+	#[serde(flatten)]
+	pointerCommonProperties: PointerCommonProperties,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct WheelScrollAction {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -154,26 +191,56 @@ pub struct WheelScrollAction {
 	origin: Option<String>,
 }
 
+fn pointer_common_properties_default_width() -> u32 {
+    1
+}
+
+fn pointer_common_properties_default_height() -> u32 {
+    1
+}
+
+fn pointer_common_properties_default_pressure() -> f64 {
+    0.0
+}
+
+fn pointer_common_properties_default_tangential_pressure() -> f64 {
+    0.0
+}
+
+fn pointer_common_properties_default_twist() -> u32 {
+    0
+}
+
+fn pointer_common_properties_default_altitude_angle() -> f64 {
+    0.0
+}
+
+fn pointer_common_properties_default_azimuth_angle() -> f64 {
+    0.0
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PointerCommonProperties {
-	#[serde(rename = "width")]
-	width: Option<>,
-	#[serde(rename = "height")]
-	height: Option<>,
-	#[serde(rename = "pressure")]
-	pressure: Option<>,
-	#[serde(rename = "tangentialPressure")]
-	tangential_pressure: Option<>,
-	#[serde(rename = "twist")]
-	twist: Option<>,
-	#[serde(rename = "PI")]
-	p_i: PI,
-	#[serde(rename = "altitudeAngle")]
-	altitude_angle: Option<>,
-	#[serde(rename = "PI")]
-	p_i: PI,
-	#[serde(rename = "azimuthAngle")]
-	azimuth_angle: Option<>,
+    #[serde(rename = "width", default = "pointer_common_properties_default_width")]
+    pub width: u32,  // js-uint maps to u32 in Rust
+
+    #[serde(rename = "height", default = "pointer_common_properties_default_height")]
+    pub height: u32,
+
+    #[serde(rename = "pressure", default = "pointer_common_properties_default_pressure")]
+    pub pressure: f64,
+
+    #[serde(rename = "tangentialPressure", default = "pointer_common_properties_default_tangential_pressure")]
+    pub tangential_pressure: f64,
+
+    #[serde(rename = "twist", default = "pointer_common_properties_default_twist")]
+    pub twist: u32,
+
+    #[serde(rename = "altitudeAngle", default = "pointer_common_properties_default_altitude_angle")]
+    pub altitude_angle: f64,
+
+    #[serde(rename = "azimuthAngle", default = "pointer_common_properties_default_azimuth_angle")]
+    pub azimuth_angle: f64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -184,6 +251,8 @@ pub struct ReleaseActions {
 	params: ReleaseActionsParameters,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ReleaseActionsParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
@@ -197,6 +266,8 @@ pub struct SetFiles {
 	params: SetFilesParameters,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct SetFilesParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
@@ -204,5 +275,15 @@ pub struct SetFilesParameters {
 	element: SharedReference,
 	#[serde(rename = "files")]
 	files: Vec<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum Origin {
+	#[serde(rename = "viewport")]
+	Viewport,
+	#[serde(rename = "pointer")]
+	Pointer,
+	Element(ElementOrigin),
 }
 
