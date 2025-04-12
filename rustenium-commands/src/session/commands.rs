@@ -1,4 +1,6 @@
 use serde::{Serialize, Deserialize};
+
+use super::types::{CapabilitiesRequest, ProxyConfiguration, SubscriptionRequest, UnsubscribeByAttributesRequest, UnsubscribeByIDRequest, UserPromptHandler};
 pub enum SessionCommand {
 	End(End),
 	New(New),
@@ -11,6 +13,52 @@ pub enum SessionResult {
 	NewResult(NewResult),
 	StatusResult(StatusResult),
 	SubscribeResult(SubscribeResult),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct NewResult {
+    #[serde(rename = "sessionId")]
+    pub session_id: String,
+    #[serde(rename = "capabilities")]
+    pub capabilities: Capabilities,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Capabilities {
+    #[serde(rename = "acceptInsecureCerts")]
+    pub accept_insecure_certs: bool,
+    #[serde(rename = "browserName")]
+    pub browser_name: String,
+    #[serde(rename = "browserVersion")]
+    pub browser_version: String,
+    #[serde(rename = "platformName")]
+    pub platform_name: String,
+    #[serde(rename = "setWindowRect")]
+    pub set_window_rect: bool,
+    #[serde(rename = "userAgent")]
+    pub user_agent: String,
+    #[serde(rename = "proxy")]
+    pub proxy: Option<ProxyConfiguration>,
+    #[serde(rename = "unhandledPromptBehavior")]
+    pub unhandled_prompt_behavior: Option<UserPromptHandler>,
+    #[serde(rename = "webSocketUrl")]
+    pub web_socket_url: Option<String>,
+    #[serde(flatten)]
+    pub extension: Option<serde_cbor::Value>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct StatusResult {
+    #[serde(rename = "ready")]
+    pub ready: bool,
+    #[serde(rename = "message")]
+    pub message: String,  // 'text' type maps to String in Rust
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SubscribeResult {
+    #[serde(rename = "subscription")]
+    pub subscription: String,  // Based on usage in UnsubscribeByIDRequest, Subscription appears to be a String
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -59,3 +107,10 @@ pub struct Unsubscribe {
 	params: UnsubscribeParameters,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UnsubscribeParameters {
+    ByAttributes(UnsubscribeByAttributesRequest),
+    ById(UnsubscribeByIDRequest),
+}

@@ -1,5 +1,10 @@
 use serde::{Serialize, Deserialize};
 
+use crate::{browser::types::UserContext, browsing_context::types::{BrowsingContext, UserPromptHandlerType}};
+
+pub type Subscription = String;
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct CapabilitiesRequest {
 	#[serde(rename = "alwaysMatch")]
 	always_match: Option<CapabilityRequest>,
@@ -7,6 +12,8 @@ pub struct CapabilitiesRequest {
 	first_match: Option<Vec<CapabilityRequest>>,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct CapabilityRequest {
 	#[serde(rename = "acceptInsecureCerts")]
 	accept_insecure_certs: Option<bool>,
@@ -24,6 +31,8 @@ pub struct CapabilityRequest {
 	extension: Option<serde_cbor::Value>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum ProxyConfiguration {
 	AutodetectProxyConfiguration(AutodetectProxyConfiguration),
 	DirectProxyConfiguration(DirectProxyConfiguration),
@@ -32,10 +41,40 @@ pub enum ProxyConfiguration {
 	SystemProxyConfiguration(SystemProxyConfiguration),
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum AutodetectProxyConfigurationType {
+	#[serde(rename = "autodetect")]
+	Autodetect,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum DirectProxyConfigurationType {
+	#[serde(rename = "direct")]
+	Direct,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum ManualProxyConfigurationType {
+	#[serde(rename = "manual")]
+	Manual,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum PacProxyConfigurationType {
+	#[serde(rename = "pac")]
+	Pac,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum SystemProxyConfigurationType {
+	#[serde(rename = "system")]
+	System,
+}
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AutodetectProxyConfiguration {
 	#[serde(rename = "proxyType")]
-	proxy_type: String,
+	proxy_type: AutodetectProxyConfigurationType,
 	#[serde(flatten)]
 	extension: Option<serde_cbor::Value>,
 }
@@ -43,7 +82,7 @@ pub struct AutodetectProxyConfiguration {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DirectProxyConfiguration {
 	#[serde(rename = "proxyType")]
-	proxy_type: String,
+	proxy_type: DirectProxyConfigurationType,
 	#[serde(flatten)]
 	extension: Option<serde_cbor::Value>,
 }
@@ -51,7 +90,7 @@ pub struct DirectProxyConfiguration {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ManualProxyConfiguration {
 	#[serde(rename = "proxyType")]
-	proxy_type: String,
+	proxy_type: ManualProxyConfigurationType,
 	#[serde(rename = "ftpProxy")]
 	ftp_proxy: Option<String>,
 	#[serde(rename = "httpProxy")]
@@ -77,21 +116,23 @@ pub struct SocksProxyConfiguration {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PacProxyConfiguration {
 	#[serde(rename = "proxyType")]
-	proxy_type: String,
+	proxy_type: PacProxyConfigurationType,
 	#[serde(rename = "proxyAutoconfigUrl")]
 	proxy_autoconfig_url: String,
 	#[serde(flatten)]
-	extension: Option<serde_cbor::Value>,
+	pub extension: Option<serde_cbor::Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SystemProxyConfiguration {
 	#[serde(rename = "proxyType")]
-	proxy_type: String,
+	proxy_type: SystemProxyConfigurationType,
 	#[serde(flatten)]
 	extension: Option<serde_cbor::Value>,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UserPromptHandler {
 	#[serde(rename = "alert")]
 	alert: Option<UserPromptHandlerType>,
@@ -107,6 +148,7 @@ pub struct UserPromptHandler {
 	prompt: Option<UserPromptHandlerType>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct SubscriptionRequest {
 	#[serde(rename = "events")]
 	events: Vec<String>,
@@ -116,11 +158,14 @@ pub struct SubscriptionRequest {
 	user_contexts: Option<Vec<UserContext>>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UnsubscribeByIDRequest {
 	#[serde(rename = "subscriptions")]
 	subscriptions: Vec<Subscription>,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UnsubscribeByAttributesRequest {
 	#[serde(rename = "events")]
 	events: Vec<String>,
