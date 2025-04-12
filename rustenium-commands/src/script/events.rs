@@ -1,3 +1,5 @@
+use serde::{Serialize, Deserialize};
+use crate::script::types::{Channel, Realm, RealmInfo, RemoteValue, Source};
 pub enum ScriptEvent {
 	Message(Message),
 	RealmCreated(RealmCreated),
@@ -12,6 +14,8 @@ pub struct Message {
 	params: MessageParameters,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct MessageParameters {
 	#[serde(rename = "channel")]
 	channel: Channel,
@@ -37,6 +41,8 @@ pub struct RealmDestroyed {
 	params: RealmDestroyedParameters,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct RealmDestroyedParameters {
 	#[serde(rename = "realm")]
 	realm: Realm,

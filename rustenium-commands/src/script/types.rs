@@ -270,6 +270,8 @@ pub struct BigIntValue {
 	value: String,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum RealmInfo {
 	WindowRealmInfo(WindowRealmInfo),
 	DedicatedWorkerRealmInfo(DedicatedWorkerRealmInfo),
