@@ -1,3 +1,5 @@
+use serde::{Serialize, Deserialize};
+use crate::browsing_context::types::{BaseNavigationInfo, BrowsingContext, Info, NavigationInfo, UserPromptType, U};
 pub enum BrowsingContextEvent {
 	ContextCreated(ContextCreated),
 	ContextDestroyed(ContextDestroyed),
@@ -54,6 +56,7 @@ pub struct HistoryUpdated {
 	params: HistoryUpdatedParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct HistoryUpdatedParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
@@ -85,10 +88,11 @@ pub struct DownloadWillBegin {
 	params: DownloadWillBeginParams,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct DownloadWillBeginParams {
 	#[serde(rename = "suggestedFilename")]
 	suggested_filename: String,
-	BaseNavigationInfo(BaseNavigationInfo),
+	base_navigation_info: BaseNavigationInfo,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -123,6 +127,7 @@ pub struct UserPromptClosed {
 	params: UserPromptClosedParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UserPromptClosedParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
@@ -142,6 +147,7 @@ pub struct UserPromptOpened {
 	params: UserPromptOpenedParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UserPromptOpenedParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,

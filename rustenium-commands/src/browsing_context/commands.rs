@@ -1,3 +1,5 @@
+use serde::{Serialize, Deserialize};
+use crate::browsing_context::types::{BrowsingContext, };
 pub enum BrowsingContextCommand {
 	Activate(Activate),
 	CaptureScreenshot(CaptureScreenshot),
@@ -31,6 +33,7 @@ pub struct Activate {
 	params: ActivateParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ActivateParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
@@ -44,6 +47,8 @@ pub struct CaptureScreenshot {
 	params: CaptureScreenshotParameters,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct CaptureScreenshotParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
@@ -55,6 +60,7 @@ pub struct CaptureScreenshotParameters {
 	clip: Option<ClipRectangle>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ImageFormat {
 	#[serde(rename = "type")]
 	type_: String,
@@ -95,6 +101,7 @@ pub struct Close {
 	params: CloseParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct CloseParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
@@ -110,6 +117,8 @@ pub struct Create {
 	params: CreateParameters,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct CreateParameters {
 	#[serde(rename = "type")]
 	type_: CreateType,
@@ -129,6 +138,8 @@ pub struct GetTree {
 	params: GetTreeParameters,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct GetTreeParameters {
 	#[serde(rename = "maxDepth")]
 	max_depth: Option<u32>,
@@ -144,6 +155,8 @@ pub struct HandleUserPrompt {
 	params: HandleUserPromptParameters,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct HandleUserPromptParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
@@ -161,6 +174,7 @@ pub struct LocateNodes {
 	params: LocateNodesParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct LocateNodesParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
@@ -182,6 +196,7 @@ pub struct Navigate {
 	params: NavigateParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct NavigateParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
@@ -199,6 +214,7 @@ pub struct Print {
 	params: PrintParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PrintParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
@@ -218,6 +234,7 @@ pub struct PrintParameters {
 	shrink_to_fit: Option<>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PrintMarginParameters {
 	#[serde(rename = "bottom")]
 	bottom: Option<>,
@@ -229,6 +246,7 @@ pub struct PrintMarginParameters {
 	top: Option<>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PrintPageParameters {
 	#[serde(rename = "height")]
 	height: Option<>,
@@ -244,6 +262,7 @@ pub struct Reload {
 	params: ReloadParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ReloadParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
@@ -261,6 +280,7 @@ pub struct SetViewport {
 	params: SetViewportParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct SetViewportParameters {
 	#[serde(rename = "context")]
 	context: Option<BrowsingContext>,
@@ -272,6 +292,7 @@ pub struct SetViewportParameters {
 	user_contexts: Option<Vec<UserContext>>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Viewport {
 	#[serde(rename = "width")]
 	width: u32,
@@ -287,6 +308,7 @@ pub struct TraverseHistory {
 	params: TraverseHistoryParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct TraverseHistoryParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,

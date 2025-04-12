@@ -1,3 +1,4 @@
+use serde::{Serialize, Deserialize};
 pub enum SessionCommand {
 	End(End),
 	New(New),
@@ -28,6 +29,7 @@ pub struct New {
 	params: NewParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct NewParameters {
 	#[serde(rename = "capabilities")]
 	capabilities: CapabilitiesRequest,

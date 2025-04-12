@@ -1,3 +1,5 @@
+use serde::{Serialize, Deserialize};
+
 pub struct CapabilitiesRequest {
 	#[serde(rename = "alwaysMatch")]
 	always_match: Option<CapabilityRequest>,
