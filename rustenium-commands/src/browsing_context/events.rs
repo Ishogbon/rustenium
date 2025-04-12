@@ -1,5 +1,7 @@
 use serde::{Serialize, Deserialize};
-use crate::browsing_context::types::{BaseNavigationInfo, BrowsingContext, Info, NavigationInfo, UserPromptType, U};
+use super::types::{BaseNavigationInfo, BrowsingContext, Info, NavigationInfo, UserPromptType};
+
+use super::types::UserPromptHandlerType;
 pub enum BrowsingContextEvent {
 	ContextCreated(ContextCreated),
 	ContextDestroyed(ContextDestroyed),
@@ -134,7 +136,7 @@ pub struct UserPromptClosedParameters {
 	#[serde(rename = "accepted")]
 	accepted: bool,
 	#[serde(rename = "type")]
-	type_: UserPromptType,
+	r#type: UserPromptType,
 	#[serde(rename = "userText")]
 	user_text: Option<String>,
 }
@@ -156,7 +158,7 @@ pub struct UserPromptOpenedParameters {
 	#[serde(rename = "message")]
 	message: String,
 	#[serde(rename = "type")]
-	type_: UserPromptType,
+	r#type: UserPromptType,
 	#[serde(rename = "defaultValue")]
 	default_value: Option<String>,
 }

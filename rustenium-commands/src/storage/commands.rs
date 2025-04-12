@@ -43,14 +43,14 @@ pub struct CookieFilter {
 
 pub struct BrowsingContextPartitionDescriptor {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "context")]
 	context: BrowsingContext,
 }
 
 pub struct StorageKeyPartitionDescriptor {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "userContext")]
 	user_context: Option<String>,
 	#[serde(rename = "sourceOrigin")]

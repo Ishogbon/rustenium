@@ -24,21 +24,21 @@ pub enum ExtensionData {
 
 pub struct ExtensionPath {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "path")]
 	path: String,
 }
 
 pub struct ExtensionArchivePath {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "path")]
 	path: String,
 }
 
 pub struct ExtensionBase64Encoded {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: String,
 }

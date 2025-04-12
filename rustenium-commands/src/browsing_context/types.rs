@@ -40,6 +40,8 @@ pub struct Info {
 	parent: Option<BrowsingContext>,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Locator {
 	AccessibilityLocator(AccessibilityLocator),
 	CssLocator(CssLocator),
@@ -56,7 +58,7 @@ pub struct AccessibilityLocatorValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AccessibilityLocator {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: AccessibilityLocatorValue,
 	#[serde(rename = "name")]
@@ -68,7 +70,7 @@ pub struct AccessibilityLocator {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CssLocator {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: String,
 }
@@ -80,7 +82,7 @@ pub struct ContextLocatorValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContextLocator {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: ContextLocatorValue,
 	#[serde(rename = "context")]
@@ -90,7 +92,7 @@ pub struct ContextLocator {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InnerTextLocator {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: String,
 	#[serde(rename = "ignoreCase")]
@@ -104,7 +106,7 @@ pub struct InnerTextLocator {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct XPathLocator {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: String,
 }

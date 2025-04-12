@@ -1,6 +1,6 @@
 pub struct ElementOrigin {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "element")]
 	element: SharedReference,
 }

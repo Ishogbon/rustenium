@@ -28,7 +28,7 @@ pub enum SourceActions {
 
 pub struct NoneSourceActions {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "id")]
 	id: String,
 	#[serde(rename = "actions")]
@@ -37,7 +37,7 @@ pub struct NoneSourceActions {
 
 pub struct KeySourceActions {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "id")]
 	id: String,
 	#[serde(rename = "actions")]
@@ -52,7 +52,7 @@ pub enum KeySourceAction {
 
 pub struct PointerSourceActions {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "id")]
 	id: String,
 	#[serde(rename = "parameters")]
@@ -75,7 +75,7 @@ pub enum PointerSourceAction {
 
 pub struct WheelSourceActions {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "id")]
 	id: String,
 	#[serde(rename = "actions")]
@@ -89,35 +89,35 @@ pub enum WheelSourceAction {
 
 pub struct PauseAction {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "duration")]
 	duration: Option<u32>,
 }
 
 pub struct KeyDownAction {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: String,
 }
 
 pub struct KeyUpAction {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: String,
 }
 
 pub struct PointerUpAction {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "button")]
 	button: u32,
 }
 
 pub struct PointerDownAction {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "button")]
 	button: u32,
 	PointerCommonProperties(PointerCommonProperties),
@@ -125,7 +125,7 @@ pub struct PointerDownAction {
 
 pub struct PointerMoveAction {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "x")]
 	x: f64,
 	#[serde(rename = "y")]
@@ -139,7 +139,7 @@ pub struct PointerMoveAction {
 
 pub struct WheelScrollAction {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "x")]
 	x: i32,
 	#[serde(rename = "y")]

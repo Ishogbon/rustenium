@@ -7,7 +7,7 @@ pub struct AuthChallenge {
 
 pub struct AuthCredentials {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "username")]
 	username: String,
 	#[serde(rename = "password")]
@@ -33,14 +33,14 @@ pub enum BaseParameters {
 
 pub struct StringValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: String,
 }
 
 pub struct Base64Value {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: String,
 }
@@ -125,7 +125,7 @@ pub struct Initiator {
 	#[serde(rename = "stackTrace")]
 	stack_trace: Option<StackTrace>,
 	#[serde(rename = "type")]
-	type_: Option<String | String | String | String>,
+	r#type: Option<String | String | String | String>,
 }
 
 pub struct RequestData {
@@ -211,7 +211,7 @@ pub enum UrlPattern {
 
 pub struct UrlPatternPattern {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "protocol")]
 	protocol: String,
 	#[serde(rename = "hostname")]
@@ -226,7 +226,7 @@ pub struct UrlPatternPattern {
 
 pub struct UrlPatternString {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "pattern")]
 	pattern: String,
 }

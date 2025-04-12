@@ -1,5 +1,8 @@
 use serde::{Serialize, Deserialize};
-use crate::browsing_context::types::{BrowsingContext, };
+use crate::{browser::types::UserContext, browsing_context::types::BrowsingContext, script::types::{NodeRemoteValue, SerializationOptions, SharedReference}};
+
+use super::types::{InfoList, Locator, Navigation};
+
 pub enum BrowsingContextCommand {
 	Activate(Activate),
 	CaptureScreenshot(CaptureScreenshot),
@@ -40,6 +43,17 @@ pub struct ActivateParameters {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum CaptureScreenshotParametersOrigin {
+	Viewport,
+	Document,
+}
+
+fn capture_screenshot_parameters_default_origin() -> CaptureScreenshotParametersOrigin {
+	CaptureScreenshotParametersOrigin::Viewport
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct CaptureScreenshot {
 	#[serde(rename = "method")]
 	method: String,
@@ -47,13 +61,12 @@ pub struct CaptureScreenshot {
 	params: CaptureScreenshotParameters,
 }
 
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CaptureScreenshotParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
-	#[serde(rename = "origin")]
-	origin: Option<String | String>,
+	#[serde(rename = "origin", default = "capture_screenshot_parameters_default_origin")]
+	origin: CaptureScreenshotParametersOrigin,
 	#[serde(rename = "format")]
 	format: Option<ImageFormat>,
 	#[serde(rename = "clip")]
@@ -63,26 +76,30 @@ pub struct CaptureScreenshotParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ImageFormat {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "quality")]
-	quality: Option<>,
+	quality: Option<f32>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum ClipRectangle {
 	BoxClipRectangle(BoxClipRectangle),
 	ElementClipRectangle(ElementClipRectangle),
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ElementClipRectangle {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "element")]
 	element: SharedReference,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct BoxClipRectangle {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "x")]
 	x: f64,
 	#[serde(rename = "y")]
@@ -94,6 +111,43 @@ pub struct BoxClipRectangle {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct CaptureScreenshotResult {
+    #[serde(rename = "data")]
+    pub data: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct GetTreeResult {
+    #[serde(rename = "contexts")]
+    pub contexts: InfoList,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LocateNodesResult {
+    #[serde(rename = "nodes")]
+    pub nodes: Vec<NodeRemoteValue>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct NavigateResult {
+    #[serde(rename = "navigation")]
+    pub navigation: Option<Navigation>,
+    #[serde(rename = "url")]
+    pub url: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct PrintResult {
+    #[serde(rename = "data")]
+    pub data: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct TraverseHistoryResult {
+    // Empty struct as per schema
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Close {
 	#[serde(rename = "method")]
 	method: String,
@@ -101,12 +155,15 @@ pub struct Close {
 	params: CloseParameters,
 }
 
+fn close_parameters_default_prompt_unload() -> bool {
+	false
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CloseParameters {
-	#[serde(rename = "context")]
-	context: BrowsingContext,
 	#[serde(rename = "promptUnload")]
-	prompt_unload: Option<>,
+	#[serde(default = "close_parameters_default_prompt_unload")]
+	pub prompt_unload: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -117,17 +174,33 @@ pub struct Create {
 	params: CreateParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum CreateType {
+	Tab,
+	Window,
+}
+
+fn create_parameters_default_background() -> bool {
+	false
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreateParameters {
 	#[serde(rename = "type")]
-	type_: CreateType,
+	pub r#type: CreateType,
 	#[serde(rename = "referenceContext")]
-	reference_context: Option<BrowsingContext>,
-	#[serde(rename = "background")]
-	background: Option<>,
+	pub reference_context: Option<BrowsingContext>,
+	#[serde(rename = "background", default = "create_parameters_default_background")]
+	pub background: bool,
 	#[serde(rename = "userContext")]
-	user_context: Option<UserContext>,
+	pub user_context: Option<UserContext>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CreateResult {
+    #[serde(rename = "context")]
+    pub context: BrowsingContext,  // BrowsingContext is already defined as String
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -181,11 +254,11 @@ pub struct LocateNodesParameters {
 	#[serde(rename = "locator")]
 	locator: Locator,
 	#[serde(rename = "maxNodeCount")]
-	max_node_count: Option<>,
+	max_node_count: Option<u64>,
 	#[serde(rename = "serializationOptions")]
 	serialization_options: Option<SerializationOptions>,
 	#[serde(rename = "startNodes")]
-	start_nodes: Option<>,
+	start_nodes: Option<Vec<SharedReference>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -206,6 +279,7 @@ pub struct NavigateParameters {
 	wait: Option<ReadinessState>,
 }
 
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Print {
 	#[serde(rename = "method")]
@@ -214,44 +288,105 @@ pub struct Print {
 	params: PrintParameters,
 }
 
+fn print_parameters_default_background() -> bool {
+	false
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum PrintParametersOrientation {
+	Portrait,
+	Landscape,
+}
+
+fn print_parameters_default_orientation() -> PrintParametersOrientation {
+	PrintParametersOrientation::Portrait
+}
+
+fn print_parameters_default_scale() -> f64 {
+	1.0
+}
+
+fn print_parameters_default_shrink_to_fit() -> bool {
+	true
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum PrintParametersPageRange {
+	Number(u32),  // js-uint maps to u32 in Rust
+	Text(String),
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PrintParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
 	#[serde(rename = "background")]
-	background: Option<>,
+	#[serde(default = "print_parameters_default_background")]
+	pub background: bool,
 	#[serde(rename = "margin")]
 	margin: Option<PrintMarginParameters>,
-	#[serde(rename = "orientation")]
-	orientation: Option<String | String>,
+	#[serde(rename="orientation", default = "print_parameters_default_orientation")]
+	pub orientation: PrintParametersOrientation,
 	#[serde(rename = "page")]
 	page: Option<PrintPageParameters>,
 	#[serde(rename = "pageRanges")]
-	page_ranges: Option< | >,
+	pub page_ranges: Vec<PrintParametersPageRange>,
 	#[serde(rename = "scale")]
-	scale: Option<>,
+	#[serde(default = "print_parameters_default_scale")]
+	pub scale: f64,
 	#[serde(rename = "shrinkToFit")]
-	shrink_to_fit: Option<>,
+	#[serde(default = "print_parameters_default_shrink_to_fit")]
+	pub shrink_to_fit: bool,
+}
+
+fn print_margin_parameters_default_bottom() -> f64 {
+    1.0
+}
+
+fn print_margin_parameters_default_left() -> f64 {
+    1.0
+}
+
+fn print_margin_parameters_default_right() -> f64 {
+    1.0
+}
+
+fn print_margin_parameters_default_top() -> f64 {
+    1.0
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PrintMarginParameters {
-	#[serde(rename = "bottom")]
-	bottom: Option<>,
-	#[serde(rename = "left")]
-	left: Option<>,
-	#[serde(rename = "right")]
-	right: Option<>,
-	#[serde(rename = "top")]
-	top: Option<>,
+    #[serde(rename = "bottom", default = "print_margin_parameters_default_bottom")]
+    pub bottom: f64,
+
+    #[serde(rename = "left", default = "print_margin_parameters_default_left")]
+    pub left: f64,
+
+    #[serde(rename = "right", default = "print_margin_parameters_default_right")]
+    pub right: f64,
+
+    #[serde(rename = "top", default = "print_margin_parameters_default_top")]
+    pub top: f64,
+}
+
+fn print_page_parameters_default_height() -> f64 {
+    27.94
+}
+
+fn print_page_parameters_default_width() -> f64 {
+    21.59
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PrintPageParameters {
-	#[serde(rename = "height")]
-	height: Option<>,
-	#[serde(rename = "width")]
-	width: Option<>,
+    #[serde(rename = "height", default = "print_page_parameters_default_height")]
+    pub height: f64,
+
+    #[serde(rename = "width", default = "print_page_parameters_default_width")]
+    pub width: f64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -282,14 +417,17 @@ pub struct SetViewport {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetViewportParameters {
-	#[serde(rename = "context")]
-	context: Option<BrowsingContext>,
-	#[serde(rename = "viewport")]
-	viewport: Option<Viewport | None>,
-	#[serde(rename = "devicePixelRatio")]
-	device_pixel_ratio: Option< | None>,
-	#[serde(rename = "userContexts")]
-	user_contexts: Option<Vec<UserContext>>,
+    #[serde(rename = "context")]
+    pub context: Option<BrowsingContext>,
+
+    #[serde(rename = "viewport")]
+    pub viewport: Option<Viewport>,
+
+    #[serde(rename = "devicePixelRatio")]
+    pub device_pixel_ratio: Option<f64>,
+
+    #[serde(rename = "userContexts")]
+    pub user_contexts: Option<Vec<UserContext>>,  // [+] means non-empty array, but this would need runtime validation
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -314,5 +452,13 @@ pub struct TraverseHistoryParameters {
 	context: BrowsingContext,
 	#[serde(rename = "delta")]
 	delta: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum ReadinessState {
+    None,
+    Interactive,
+    Complete,
 }
 

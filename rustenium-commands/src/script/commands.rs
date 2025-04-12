@@ -137,7 +137,7 @@ pub struct GetRealmsParameters {
 	#[serde(rename = "context")]
 	context: Option<BrowsingContext>,
 	#[serde(rename = "type")]
-	type_: Option<RealmType>,
+	r#type: Option<RealmType>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

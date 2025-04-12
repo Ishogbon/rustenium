@@ -82,7 +82,7 @@ pub enum ResultOwnership {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ChannelValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: ChannelProperties,
 }
@@ -105,7 +105,7 @@ pub enum EvaluateResult {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct EvaluateResultSuccess {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "result")]
 	result: RemoteValue,
 	#[serde(rename = "realm")]
@@ -115,7 +115,7 @@ pub struct EvaluateResultSuccess {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct EvaluateResultException {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "exceptionDetails")]
 	exception_details: ExceptionDetails,
 	#[serde(rename = "realm")]
@@ -153,7 +153,7 @@ pub enum LocalValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ArrayLocalValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: ListLocalValue,
 }
@@ -161,7 +161,7 @@ pub struct ArrayLocalValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DateLocalValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: String,
 }
@@ -169,7 +169,7 @@ pub struct DateLocalValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MapLocalValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: MappingLocalValue,
 }
@@ -177,7 +177,7 @@ pub struct MapLocalValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ObjectLocalValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: MappingLocalValue,
 }
@@ -193,7 +193,7 @@ pub struct RegExpValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RegExpLocalValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: RegExpValue,
 }
@@ -201,7 +201,7 @@ pub struct RegExpLocalValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetLocalValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: ListLocalValue,
 }
@@ -218,19 +218,19 @@ pub enum PrimitiveProtocolValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UndefinedValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NullValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StringValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: String,
 }
@@ -250,7 +250,7 @@ pub enum NumberValueValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NumberValue {
 	#[serde(rename = "type")]
-	type_: NumberValueType,
+	r#type: NumberValueType,
 	#[serde(rename = "value")]
 	value: NumberValueValue,
 }
@@ -258,7 +258,7 @@ pub struct NumberValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BooleanValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: bool,
 }
@@ -266,7 +266,7 @@ pub struct BooleanValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BigIntValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: String,
 }
@@ -480,7 +480,7 @@ pub enum RemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SymbolRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -490,7 +490,7 @@ pub struct SymbolRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ArrayRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -502,7 +502,7 @@ pub struct ArrayRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ObjectRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -514,7 +514,7 @@ pub struct ObjectRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FunctionRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -544,7 +544,7 @@ pub struct DateRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MapRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -556,7 +556,7 @@ pub struct MapRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -568,7 +568,7 @@ pub struct SetRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WeakMapRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -578,7 +578,7 @@ pub struct WeakMapRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WeakSetRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -588,7 +588,7 @@ pub struct WeakSetRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GeneratorRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -598,7 +598,7 @@ pub struct GeneratorRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ErrorRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -608,7 +608,7 @@ pub struct ErrorRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProxyRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -618,7 +618,7 @@ pub struct ProxyRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PromiseRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -628,7 +628,7 @@ pub struct PromiseRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TypedArrayRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -638,7 +638,7 @@ pub struct TypedArrayRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ArrayBufferRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -648,7 +648,7 @@ pub struct ArrayBufferRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NodeListRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -660,7 +660,7 @@ pub struct NodeListRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HTMLCollectionRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -672,7 +672,7 @@ pub struct HTMLCollectionRemoteValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NodeRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "sharedId")]
 	shared_id: Option<SharedId>,
 	#[serde(rename = "handle")]
@@ -715,7 +715,7 @@ pub struct NodeProperties {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WindowProxyRemoteValue {
 	#[serde(rename = "type")]
-	type_: String,
+	r#type: String,
 	#[serde(rename = "value")]
 	value: WindowProxyProperties,
 	#[serde(rename = "handle")]
