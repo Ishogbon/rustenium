@@ -1,9 +1,15 @@
+use std::collections::HashMap;
+
 use serde::{Serialize, Deserialize};
 use crate::browsing_context::types::BrowsingContext;
 
 pub type Channel = String;
 pub type Realm = String;
 pub type ListLocalValue = Vec<LocalValue>;
+pub type SharedId = String;
+pub type Handle = String;
+pub type InternalId = String;
+pub type ListRemoteValue = Vec<RemoteValue>;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum SpecialNumber {
@@ -44,6 +50,26 @@ pub struct MappingLocalValueEntry(
 pub struct MappingLocalValue(
 	pub Vec<MappingLocalValueEntry>,
 );
+
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum RemoteValueOrText {
+	RemoteValue(RemoteValue),
+	Text(String),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct MappingRemoteValueEntry(
+	pub RemoteValueOrText,
+	pub RemoteValue,
+);
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct MappingRemoteValue(
+	pub Vec<MappingRemoteValueEntry>
+);
+
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -310,33 +336,78 @@ r#type: SharedWorkerRealmInfoType,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-ServiceWorkerRealmInfo = {
-BaseRealmInfo,
-type: "service-worker"
+#[serde(rename_all = "kebab-case")]
+pub enum ServiceWorkerRealmInfoType {
+	#[serde(rename = "service-worker")]
+	ServiceWorker,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-WorkerRealmInfo = {
-BaseRealmInfo,
-type: "worker"
+pub struct ServiceWorkerRealmInfo {
+	#[serde(flatten)]
+	base: BaseRealmInfo,
+	#[serde(rename = "type")]
+	r#type: ServiceWorkerRealmInfoType,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-PaintWorkletRealmInfo = {
-BaseRealmInfo,
-type: "paint-worklet"
+#[serde(rename_all = "kebab-case")]
+pub enum WorkerRealmInfoType {
+	#[serde(rename = "worker")]
+	Worker,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-AudioWorkletRealmInfo = {
-BaseRealmInfo,
-type: "audio-worklet"
+pub struct WorkerRealmInfo {
+	#[serde(flatten)]
+	base: BaseRealmInfo,
+	#[serde(rename = "type")]
+	r#type: WorkerRealmInfoType,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-WorkletRealmInfo = {
-BaseRealmInfo,
-type: "worklet"
+#[serde(rename_all = "kebab-case")]
+pub enum PaintWorkletRealmInfoType {
+	#[serde(rename = "paint-worklet")]
+	PaintWorklet,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct PaintWorkletRealmInfo {
+	#[serde(flatten)]
+	base: BaseRealmInfo,
+	#[serde(rename = "type")]
+	r#type: PaintWorkletRealmInfoType,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum AudioWorkletRealmInfoType {
+	#[serde(rename = "audio-worklet")]
+	AudioWorklet,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AudioWorkletRealmInfo {
+	#[serde(flatten)]
+	base: BaseRealmInfo,
+	#[serde(rename = "type")]
+	r#type: AudioWorkletRealmInfoType,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum WorkletRealmInfoType {
+	#[serde(rename = "worklet")]
+	Worklet,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct WorkletRealmInfo {
+	#[serde(flatten)]
+	base: BaseRealmInfo,
+	#[serde(rename = "type")]
+	r#type: WorkletRealmInfoType,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -593,7 +664,14 @@ pub struct NodeRemoteValue {
 	#[serde(rename = "internalId")]
 	internal_id: Option<InternalId>,
 	#[serde(rename = "value")]
-	value: Option<NodeProperties>,
+	value: Option<Box<NodeProperties>>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum NodePropertiesMode {
+	Open,
+	Closed,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -603,19 +681,19 @@ pub struct NodeProperties {
 	#[serde(rename = "childNodeCount")]
 	child_node_count: u32,
 	#[serde(rename = "attributes")]
-	attributes: Option<>,
+	attributes: Option<HashMap<String, String>>,
 	#[serde(rename = "children")]
 	children: Option<Vec<NodeRemoteValue>>,
 	#[serde(rename = "localName")]
 	local_name: Option<String>,
 	#[serde(rename = "mode")]
-	mode: Option<String | String>,
+	mode: Option<NodePropertiesMode>,
 	#[serde(rename = "namespaceURI")]
 	namespace_u_r_i: Option<String>,
 	#[serde(rename = "nodeValue")]
 	node_value: Option<String>,
 	#[serde(rename = "shadowRoot")]
-	shadow_root: Option<NodeRemoteValue | None>,
+	shadow_root: Option<Box<NodeRemoteValue>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -637,13 +715,25 @@ pub struct WindowProxyProperties {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum IncludeShadowTree {
+	None,
+	Open,
+	All,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct SerializationOptions {
 	#[serde(rename = "maxDomDepth")]
-	max_dom_depth: Option< | >,
+	max_dom_depth: Option<u32>,
 	#[serde(rename = "maxObjectDepth")]
-	max_object_depth: Option< | >,
-	#[serde(rename = "includeShadowTree")]
-	include_shadow_tree: Option<String | String | String>,
+	max_object_depth: Option<u32>,
+	#[serde(rename = "includeShadowTree", default = "default_include_shadow_tree")]
+	include_shadow_tree: IncludeShadowTree,
+}
+
+fn default_include_shadow_tree() -> IncludeShadowTree {
+	IncludeShadowTree::None
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -691,4 +781,3 @@ pub enum Target {
 	ContextTarget(ContextTarget),
 	RealmTarget(RealmTarget),
 }
-
