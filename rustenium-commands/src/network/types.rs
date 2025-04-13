@@ -14,9 +14,15 @@ pub struct AuthChallenge {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub enum AuthCredentialsType {
+	#[serde(rename = "password")]
+	Password,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct AuthCredentials {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: AuthCredentialsType,
 	#[serde(rename = "username")]
 	username: String,
 	#[serde(rename = "password")]
@@ -42,9 +48,15 @@ pub struct BaseParameters {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub enum StringValueType {
+	#[serde(rename = "string")]
+	String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct StringValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: StringValueType,
 	#[serde(rename = "value")]
 	value: String,
 }
@@ -52,7 +64,7 @@ pub struct StringValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Base64Value {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: StringValueType,
 	#[serde(rename = "value")]
 	value: String,
 }
@@ -244,9 +256,15 @@ pub enum UrlPattern {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub enum UrlPatternPatternType {
+	#[serde(rename = "pattern")]
+	Pattern,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UrlPatternPattern {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: UrlPatternPatternType,
 	#[serde(rename = "protocol")]
 	protocol: String,
 	#[serde(rename = "hostname")]
@@ -260,9 +278,14 @@ pub struct UrlPatternPattern {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub enum UrlPatternStringType {
+	#[serde(rename = "string")]
+	String,
+}
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UrlPatternString {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: UrlPatternStringType,
 	#[serde(rename = "pattern")]
 	pattern: String,
 }

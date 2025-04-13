@@ -16,9 +16,45 @@ pub enum NetworkCommand {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum AddInterceptMethod {
+	#[serde(rename = "network.addIntercept")]
+	NetworkAddIntercept,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum ContinueRequestMethod {
+	#[serde(rename = "network.continueRequest")]
+	NetworkContinueRequest,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum ContinueResponseMethod {
+	#[serde(rename = "network.continueResponse")]
+	NetworkContinueResponse,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum FailRequestMethod {
+	#[serde(rename = "network.failRequest")]
+	NetworkFailRequest,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum ProvideResponseMethod {
+	#[serde(rename = "network.provideResponse")]
+	NetworkProvideResponse,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum RemoveInterceptMethod {
+	#[serde(rename = "network.removeIntercept")]
+	NetworkRemoveIntercept,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct AddIntercept {
 	#[serde(rename = "method")]
-	method: String,
+	method: AddInterceptMethod,
 	#[serde(rename = "params")]
 	params: AddInterceptParameters,
 }
@@ -36,7 +72,7 @@ pub struct AddInterceptParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueRequest {
 	#[serde(rename = "method")]
-	method: String,
+	method: ContinueRequestMethod,
 	#[serde(rename = "params")]
 	params: ContinueRequestParameters,
 }
@@ -60,7 +96,7 @@ pub struct ContinueRequestParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueResponse {
 	#[serde(rename = "method")]
-	method: String,
+	method: ContinueResponseMethod,
 	#[serde(rename = "params")]
 	params: ContinueResponseParameters,
 }
@@ -143,7 +179,7 @@ pub struct ContinueWithAuth {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FailRequest {
 	#[serde(rename = "method")]
-	method: String,
+	method: FailRequestMethod,
 	#[serde(rename = "params")]
 	params: FailRequestParameters,
 }
@@ -157,7 +193,7 @@ pub struct FailRequestParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProvideResponse {
 	#[serde(rename = "method")]
-	method: String,
+	method: ProvideResponseMethod,
 	#[serde(rename = "params")]
 	params: ProvideResponseParameters,
 }
@@ -181,7 +217,7 @@ pub struct ProvideResponseParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemoveIntercept {
 	#[serde(rename = "method")]
-	method: String,
+	method: RemoveInterceptMethod,
 	#[serde(rename = "params")]
 	params: RemoveInterceptParameters,
 }

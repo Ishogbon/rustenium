@@ -41,6 +41,12 @@ pub struct GeolocationCoordinates {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub enum SetGeolocationOverrideMethod {
+	#[serde(rename = "emulation.setGeolocationOverride")]
+	EmulationSetGeolocationOverride,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct SetGeolocationOverrideParameters {
 	#[serde(rename = "coordinates")]
 	pub coordinates: Option<GeolocationCoordinates>,
@@ -53,7 +59,7 @@ pub struct SetGeolocationOverrideParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetGeolocationOverride {
 	#[serde(rename = "method")]
-	pub method: String,
+	pub method: SetGeolocationOverrideMethod,
 	#[serde(rename = "params")]
 	pub params: SetGeolocationOverrideParameters,
 }
