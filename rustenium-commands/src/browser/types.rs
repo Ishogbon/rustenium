@@ -6,6 +6,24 @@ pub type UserContext = String;
 pub type CreateUserContextResult = UserContextInfo;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum ClientWindowState {
+	Fullscreen,
+	Maximized,
+	Minimized,
+	Normal,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum ClientWindowInfoState {
+	Fullscreen,
+	Maximized,
+	Minimized,
+	Normal,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ClientWindowInfo {
 	#[serde(rename = "active")]
 	active: bool,
@@ -14,7 +32,7 @@ pub struct ClientWindowInfo {
 	#[serde(rename = "height")]
 	height: u32,
 	#[serde(rename = "state")]
-	state: String,
+	state: ClientWindowInfoState,
 	#[serde(rename = "width")]
 	width: u32,
 	#[serde(rename = "x")]

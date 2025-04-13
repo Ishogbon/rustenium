@@ -62,19 +62,31 @@ pub struct SubscribeResult {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub enum StatusMethod {
+    #[serde(rename = "session.status")]
+    SessionStatus,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Status {
-	#[serde(rename = "method")]
-	method: String,
-	#[serde(rename = "params")]
-	params: Option<serde_cbor::Value>,
+    #[serde(rename = "method")]
+    pub method: StatusMethod,
+    #[serde(rename = "params")]
+    pub params: Option<serde_cbor::Value>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum NewMethod {
+    #[serde(rename = "session.new")]
+    SessionNew,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct New {
-	#[serde(rename = "method")]
-	method: String,
-	#[serde(rename = "params")]
-	params: NewParameters,
+    #[serde(rename = "method")]
+    pub method: NewMethod,
+    #[serde(rename = "params")]
+    pub params: NewParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -84,29 +96,47 @@ pub struct NewParameters {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub enum EndMethod {
+    #[serde(rename = "session.end")]
+    SessionEnd,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct End {
-	#[serde(rename = "method")]
-	method: String,
-	#[serde(rename = "params")]
-	params: Option<serde_cbor::Value>,
+    #[serde(rename = "method")]
+    pub method: EndMethod,
+    #[serde(rename = "params")]
+    pub params: Option<serde_cbor::Value>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum SubscribeMethod {
+    #[serde(rename = "session.subscribe")]
+    SessionSubscribe,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Subscribe {
-	#[serde(rename = "method")]
-	method: String,
-	#[serde(rename = "params")]
-	params: SubscriptionRequest,
+    #[serde(rename = "method")]
+    pub method: SubscribeMethod,
+    #[serde(rename = "params")]
+    pub params: SubscriptionRequest,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum UnsubscribeMethod {
+    #[serde(rename = "session.unsubscribe")]
+    SessionUnsubscribe,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Unsubscribe {
-	#[serde(rename = "method")]
-	method: String,
-	#[serde(rename = "params")]
-	params: UnsubscribeParameters,
-}
+    #[serde(rename = "method")]
+    pub method: UnsubscribeMethod,
 
+    #[serde(rename = "params")]
+    pub params: UnsubscribeParameters,
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(untagged)]
