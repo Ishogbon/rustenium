@@ -1,3 +1,11 @@
+use serde::{Deserialize, Serialize};
+
+use crate::{browsing_context::types::{BrowsingContext, Navigation}, script::types::StackTrace};
+
+pub type Intercept = String;
+pub type Request = String;
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct AuthChallenge {
 	#[serde(rename = "scheme")]
 	scheme: String,
@@ -5,6 +13,7 @@ pub struct AuthChallenge {
 	realm: String,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct AuthCredentials {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -14,23 +23,25 @@ pub struct AuthCredentials {
 	password: String,
 }
 
-pub enum BaseParameters {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct BaseParameters {
 	#[serde(rename = "context")]
-	context: BrowsingContext | None,
+	pub context: Option<BrowsingContext>,
 	#[serde(rename = "isBlocked")]
-	is_blocked: bool,
+	pub is_blocked: bool,
 	#[serde(rename = "navigation")]
-	navigation: Navigation | None,
+	pub navigation: Option<Navigation>,
 	#[serde(rename = "redirectCount")]
-	redirect_count: u32,
+	pub redirect_count: u32,
 	#[serde(rename = "request")]
-	request: RequestData,
+	pub request: RequestData,
 	#[serde(rename = "timestamp")]
-	timestamp: u32,
+	pub timestamp: u32,
 	#[serde(rename = "intercepts")]
-	intercepts: Option<Vec<Intercept>>,
+	pub intercepts: Option<Vec<Intercept>>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct StringValue {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -38,6 +49,7 @@ pub struct StringValue {
 	value: String,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Base64Value {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -45,6 +57,14 @@ pub struct Base64Value {
 	value: String,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum BytesValue {
+	String(StringValue),
+	Base64(Base64Value),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Cookie {
 	#[serde(rename = "name")]
 	name: String,
@@ -68,6 +88,7 @@ pub struct Cookie {
 	extension: Option<serde_cbor::Value>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct CookieHeader {
 	#[serde(rename = "name")]
 	name: String,
@@ -75,6 +96,7 @@ pub struct CookieHeader {
 	value: BytesValue,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct FetchTimingInfo {
 	#[serde(rename = "timeOrigin")]
 	time_origin: f64,
@@ -96,18 +118,15 @@ pub struct FetchTimingInfo {
 	connect_end: f64,
 	#[serde(rename = "tlsStart")]
 	tls_start: f64,
-	#[serde(rename = "tlsEnd")]
-	tls_end: ,
 	#[serde(rename = "requestStart")]
 	request_start: f64,
 	#[serde(rename = "responseStart")]
 	response_start: f64,
-	#[serde(rename = "responseHeadersEnd")]
-	response_headers_end: ,
 	#[serde(rename = "responseEnd")]
 	response_end: f64,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Header {
 	#[serde(rename = "name")]
 	name: String,
@@ -115,74 +134,88 @@ pub struct Header {
 	value: BytesValue,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum InitiatorType {
+	Parser,
+	Script,
+	Preflight,
+	Other,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Initiator {
 	#[serde(rename = "columnNumber")]
-	column_number: Option<u32>,
-	#[serde(rename = "linpub enumber")]
-	line_number: Option<u32>,
+	pub column_number: Option<u32>,
+	#[serde(rename = "lineNumber")]
+	pub line_number: Option<u32>,
 	#[serde(rename = "request")]
-	request: Option<Request>,
+	pub request: Option<Request>,
 	#[serde(rename = "stackTrace")]
-	stack_trace: Option<StackTrace>,
+	pub stack_trace: Option<StackTrace>,
 	#[serde(rename = "type")]
-	r#type: Option<String | String | String | String>,
+	pub r#type: Option<InitiatorType>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct RequestData {
 	#[serde(rename = "request")]
-	request: Request,
+	pub request: Request,
 	#[serde(rename = "url")]
-	url: String,
+	pub url: String,
 	#[serde(rename = "method")]
-	method: String,
+	pub method: String,
 	#[serde(rename = "headers")]
-	headers: Vec<Header>,
+	pub headers: Vec<Header>,
 	#[serde(rename = "cookies")]
-	cookies: Vec<Cookie>,
+	pub cookies: Vec<Cookie>,
 	#[serde(rename = "headersSize")]
-	headers_size: u32,
+	pub headers_size: u32,
 	#[serde(rename = "bodySize")]
-	body_size: u32 | None,
+	pub body_size: Option<u32>,
 	#[serde(rename = "destination")]
-	destination: String,
+	pub destination: String,
 	#[serde(rename = "initiatorType")]
-	initiator_type: String | None,
+	pub initiator_type: Option<String>,
 	#[serde(rename = "timings")]
-	timings: FetchTimingInfo,
+	pub timings: FetchTimingInfo,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ResponseContent {
 	#[serde(rename = "size")]
 	size: u32,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ResponseData {
 	#[serde(rename = "url")]
-	url: String,
+	pub url: String,
 	#[serde(rename = "protocol")]
-	protocol: String,
+	pub protocol: String,
 	#[serde(rename = "status")]
-	status: u32,
+	pub status: u32,
 	#[serde(rename = "statusText")]
-	status_text: String,
+	pub status_text: String,
 	#[serde(rename = "fromCache")]
-	from_cache: bool,
+	pub from_cache: bool,
 	#[serde(rename = "headers")]
-	headers: Vec<Header>,
+	pub headers: Vec<Header>,
 	#[serde(rename = "mimeType")]
-	mime_type: String,
+	pub mime_type: String,
 	#[serde(rename = "bytesReceived")]
-	bytes_received: u32,
+	pub bytes_received: u32,
 	#[serde(rename = "headersSize")]
-	headers_size: u32 | None,
+	pub headers_size: Option<u32>,
 	#[serde(rename = "bodySize")]
-	body_size: u32 | None,
+	pub body_size: Option<u32>,
 	#[serde(rename = "content")]
-	content: ResponseContent,
+	pub content: ResponseContent,
 	#[serde(rename = "authChallenges")]
-	auth_challenges: Vec<AuthChallenge>,
+	pub auth_challenges: Option<Vec<AuthChallenge>>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct SetCookieHeader {
 	#[serde(rename = "name")]
 	name: String,
@@ -204,11 +237,13 @@ pub struct SetCookieHeader {
 	secure: Option<bool>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum UrlPattern {
 	UrlPatternPattern(UrlPatternPattern),
 	UrlPatternString(UrlPatternString),
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UrlPatternPattern {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -224,10 +259,19 @@ pub struct UrlPatternPattern {
 	search: String,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UrlPatternString {
 	#[serde(rename = "type")]
 	r#type: String,
 	#[serde(rename = "pattern")]
 	pattern: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum SameSite {
+	Strict,
+	Lax,
+	None,
 }
 
