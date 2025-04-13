@@ -1,3 +1,8 @@
+use serde::{Serialize, Deserialize};
+
+use crate::script::types::{RemoteValue, Source, StackTrace};	
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Entry {
 	GenericLogEntry(GenericLogEntry),
 	ConsoleLogEntry(ConsoleLogEntry),
@@ -16,5 +21,47 @@ pub struct BaseLogEntry {
 	timestamp: u32,
 	#[serde(rename = "stackTrace")]
 	stack_trace: Option<StackTrace>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum Level {
+	Debug,
+	Info,
+	Warn,
+	Error,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct GenericLogEntry {
+	#[serde(flatten)]
+	pub base: BaseLogEntry,
+
+	#[serde(rename = "type")]
+	pub r#type: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ConsoleLogEntry {
+	#[serde(flatten)]
+	pub base: BaseLogEntry,
+
+	#[serde(rename = "type")]
+	pub r#type: String,
+
+	#[serde(rename = "method")]
+	pub method: String,
+
+	#[serde(rename = "args")]
+	pub args: Vec<RemoteValue>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct JavascriptLogEntry {
+	#[serde(flatten)]
+	pub base: BaseLogEntry,
+
+	#[serde(rename = "type")]
+	pub r#type: String,
 }
 
