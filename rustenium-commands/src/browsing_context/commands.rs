@@ -29,9 +29,94 @@ pub enum BrowsingContextResult {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum ActivateMethod {
+	#[serde(rename = "browsingContext.activate")]
+	BrowsingContextActivate,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum CaptureScreenshotMethod {
+	#[serde(rename = "browsingContext.captureScreenshot")]
+	BrowsingContextCaptureScreenshot,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum CloseMethod {
+	#[serde(rename = "browsingContext.close")]
+	BrowsingContextClose,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum CreateMethod {
+	#[serde(rename = "browsingContext.create")]
+	BrowsingContextCreate,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum GetTreeMethod {
+	#[serde(rename = "browsingContext.getTree")]
+	BrowsingContextGetTree,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum HandleUserPromptMethod {
+	#[serde(rename = "browsingContext.handleUserPrompt")]
+	BrowsingContextHandleUserPrompt,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum LocateNodesMethod {
+	#[serde(rename = "browsingContext.locateNodes")]
+	BrowsingContextLocateNodes,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum NavigateMethod {
+	#[serde(rename = "browsingContext.navigate")]
+	BrowsingContextNavigate,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum PrintMethod {
+	#[serde(rename = "browsingContext.print")]
+	BrowsingContextPrint,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum ReloadMethod {
+	#[serde(rename = "browsingContext.reload")]
+	BrowsingContextReload,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum SetViewportMethod {
+	#[serde(rename = "browsingContext.setViewport")]
+	BrowsingContextSetViewport,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum TraverseHistoryMethod {
+	#[serde(rename = "browsingContext.traverseHistory")]
+	BrowsingContextTraverseHistory,
+}
+
+// For the clip rectangle types
+#[derive(Debug, Serialize, Deserialize)]
+enum ElementClipRectangleType {
+	#[serde(rename = "element")]
+	Element,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum BoxClipRectangleType {
+	#[serde(rename = "box")]
+	Box,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Activate {
 	#[serde(rename = "method")]
-	method: String,
+	method: ActivateMethod,
 	#[serde(rename = "params")]
 	params: ActivateParameters,
 }
@@ -56,7 +141,7 @@ fn capture_screenshot_parameters_default_origin() -> CaptureScreenshotParameters
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CaptureScreenshot {
 	#[serde(rename = "method")]
-	method: String,
+	method: CaptureScreenshotMethod,
 	#[serde(rename = "params")]
 	params: CaptureScreenshotParameters,
 }
@@ -91,7 +176,7 @@ pub enum ClipRectangle {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ElementClipRectangle {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: ElementClipRectangleType,
 	#[serde(rename = "element")]
 	element: SharedReference,
 }
@@ -99,7 +184,7 @@ pub struct ElementClipRectangle {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BoxClipRectangle {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: BoxClipRectangleType,
 	#[serde(rename = "x")]
 	x: f64,
 	#[serde(rename = "y")]
@@ -150,7 +235,7 @@ pub struct TraverseHistoryResult {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Close {
 	#[serde(rename = "method")]
-	method: String,
+	method: CloseMethod,
 	#[serde(rename = "params")]
 	params: CloseParameters,
 }
@@ -169,7 +254,7 @@ pub struct CloseParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Create {
 	#[serde(rename = "method")]
-	method: String,
+	method: CreateMethod,
 	#[serde(rename = "params")]
 	params: CreateParameters,
 }
@@ -206,7 +291,7 @@ pub struct CreateResult {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetTree {
 	#[serde(rename = "method")]
-	method: String,
+	method: GetTreeMethod,
 	#[serde(rename = "params")]
 	params: GetTreeParameters,
 }
@@ -223,7 +308,7 @@ pub struct GetTreeParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HandleUserPrompt {
 	#[serde(rename = "method")]
-	method: String,
+	method: HandleUserPromptMethod,
 	#[serde(rename = "params")]
 	params: HandleUserPromptParameters,
 }
@@ -242,7 +327,7 @@ pub struct HandleUserPromptParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LocateNodes {
 	#[serde(rename = "method")]
-	method: String,
+	method: LocateNodesMethod,
 	#[serde(rename = "params")]
 	params: LocateNodesParameters,
 }
@@ -264,7 +349,7 @@ pub struct LocateNodesParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Navigate {
 	#[serde(rename = "method")]
-	method: String,
+	method: NavigateMethod,
 	#[serde(rename = "params")]
 	params: NavigateParameters,
 }
@@ -283,7 +368,7 @@ pub struct NavigateParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Print {
 	#[serde(rename = "method")]
-	method: String,
+	method: PrintMethod,
 	#[serde(rename = "params")]
 	params: PrintParameters,
 }
@@ -392,7 +477,7 @@ pub struct PrintPageParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Reload {
 	#[serde(rename = "method")]
-	method: String,
+	method: ReloadMethod,
 	#[serde(rename = "params")]
 	params: ReloadParameters,
 }
@@ -410,7 +495,7 @@ pub struct ReloadParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetViewport {
 	#[serde(rename = "method")]
-	method: String,
+	method: SetViewportMethod,
 	#[serde(rename = "params")]
 	params: SetViewportParameters,
 }
@@ -441,7 +526,7 @@ pub struct Viewport {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TraverseHistory {
 	#[serde(rename = "method")]
-	method: String,
+	method: TraverseHistoryMethod,
 	#[serde(rename = "params")]
 	params: TraverseHistoryParameters,
 }

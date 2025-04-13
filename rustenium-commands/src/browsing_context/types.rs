@@ -51,6 +51,36 @@ pub enum Locator {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum AccessibilityLocatorType {
+	#[serde(rename = "accessibility")]
+	Aceessibility,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum CssLocatorType {
+	#[serde(rename = "css")]
+	Css,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum ContextLocatorType {
+	#[serde(rename = "context")]
+	Context,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum InnerTextLocatorType {
+	#[serde(rename = "innerText")]
+	InnerText,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum XPathLocatorType {
+	#[serde(rename = "xpath")]
+	XPath,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct AccessibilityLocatorValue {
 	name: Option<String>,
 	role: Option<String>,
@@ -58,7 +88,7 @@ pub struct AccessibilityLocatorValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AccessibilityLocator {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: AccessibilityLocatorType,
 	#[serde(rename = "value")]
 	value: AccessibilityLocatorValue,
 	#[serde(rename = "name")]
@@ -70,7 +100,7 @@ pub struct AccessibilityLocator {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CssLocator {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: CssLocatorType,
 	#[serde(rename = "value")]
 	value: String,
 }
@@ -82,7 +112,7 @@ pub struct ContextLocatorValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContextLocator {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: ContextLocatorType,
 	#[serde(rename = "value")]
 	value: ContextLocatorValue,
 	#[serde(rename = "context")]
@@ -92,7 +122,7 @@ pub struct ContextLocator {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InnerTextLocator {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: InnerTextLocatorType,
 	#[serde(rename = "value")]
 	value: String,
 	#[serde(rename = "ignoreCase")]
@@ -106,7 +136,7 @@ pub struct InnerTextLocator {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct XPathLocator {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: XPathLocatorType,
 	#[serde(rename = "value")]
 	value: String,
 }
