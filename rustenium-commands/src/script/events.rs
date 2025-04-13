@@ -1,5 +1,6 @@
 use serde::{Serialize, Deserialize};
 use crate::script::types::{Channel, Realm, RealmInfo, RemoteValue, Source};
+
 pub enum ScriptEvent {
 	Message(Message),
 	RealmCreated(RealmCreated),
@@ -7,13 +8,30 @@ pub enum ScriptEvent {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum MessageMethod {
+	#[serde(rename = "script.message")]
+	Message,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum RealmCreatedMethod {
+	#[serde(rename = "script.realmCreated")]
+	RealmCreated,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum RealmDestroyedMethod {
+	#[serde(rename = "script.realmDestroyed")]
+	RealmDestroyed,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Message {
 	#[serde(rename = "method")]
-	method: String,
+	method: MessageMethod,
 	#[serde(rename = "params")]
 	params: MessageParameters,
 }
-
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MessageParameters {
@@ -28,7 +46,7 @@ pub struct MessageParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RealmCreated {
 	#[serde(rename = "method")]
-	method: String,
+	method: RealmCreatedMethod,
 	#[serde(rename = "params")]
 	params: RealmInfo,
 }
@@ -36,11 +54,10 @@ pub struct RealmCreated {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RealmDestroyed {
 	#[serde(rename = "method")]
-	method: String,
+	method: RealmDestroyedMethod,
 	#[serde(rename = "params")]
 	params: RealmDestroyedParameters,
 }
-
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RealmDestroyedParameters {

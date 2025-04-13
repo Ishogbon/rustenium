@@ -80,9 +80,15 @@ pub enum ResultOwnership {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum ChannelValueType {
+	#[serde(rename = "channel")]
+	Channel,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ChannelValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: ChannelValueType,
 	#[serde(rename = "value")]
 	value: ChannelProperties,
 }
@@ -103,9 +109,15 @@ pub enum EvaluateResult {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum EvaluateResultSuccessType {
+	#[serde(rename = "success")]
+	Success,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct EvaluateResultSuccess {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: EvaluateResultSuccessType,
 	#[serde(rename = "result")]
 	result: RemoteValue,
 	#[serde(rename = "realm")]
@@ -113,9 +125,15 @@ pub struct EvaluateResultSuccess {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum EvaluateResultExceptionType {
+	#[serde(rename = "exception")]
+	Exception,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct EvaluateResultException {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: EvaluateResultExceptionType,
 	#[serde(rename = "exceptionDetails")]
 	exception_details: ExceptionDetails,
 	#[serde(rename = "realm")]
@@ -151,33 +169,57 @@ pub enum LocalValue {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum ArrayLocalValueType {
+	#[serde(rename = "array")]
+	Array,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ArrayLocalValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: ArrayLocalValueType,
 	#[serde(rename = "value")]
 	value: ListLocalValue,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum DateLocalValueType {
+	#[serde(rename = "date")]
+	Date,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct DateLocalValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: DateLocalValueType,
 	#[serde(rename = "value")]
 	value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum MapLocalValueType {
+	#[serde(rename = "map")]
+	Map,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct MapLocalValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: MapLocalValueType,
 	#[serde(rename = "value")]
 	value: MappingLocalValue,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum ObjectLocalValueType {
+	#[serde(rename = "object")]
+	Object,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ObjectLocalValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: ObjectLocalValueType,
 	#[serde(rename = "value")]
 	value: MappingLocalValue,
 }
@@ -191,17 +233,29 @@ pub struct RegExpValue {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum RegExpLocalValueType {
+	#[serde(rename = "regexp")]
+	RegExp,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct RegExpLocalValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: RegExpLocalValueType,
 	#[serde(rename = "value")]
 	value: RegExpValue,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum SetLocalValueType {
+	#[serde(rename = "set")]
+	Set,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct SetLocalValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: SetLocalValueType,
 	#[serde(rename = "value")]
 	value: ListLocalValue,
 }
@@ -216,29 +270,47 @@ pub enum PrimitiveProtocolValue {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum UndefinedValueType {
+	#[serde(rename = "undefined")]
+	Undefined,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UndefinedValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: UndefinedValueType,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum NullValueType {
+	#[serde(rename = "null")]
+	Null,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NullValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: NullValueType,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum StringValueType {
+	#[serde(rename = "string")]
+	String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StringValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: StringValueType,
 	#[serde(rename = "value")]
 	value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub enum NumberValueType {
-	Number
+enum NumberValueType {
+	#[serde(rename = "number")]
+	Number,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -256,17 +328,29 @@ pub struct NumberValue {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum BooleanValueType {
+	#[serde(rename = "boolean")]
+	Boolean,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct BooleanValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: BooleanValueType,
 	#[serde(rename = "value")]
 	value: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum BigIntValueType {
+	#[serde(rename = "bigint")]
+	BigInt,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct BigIntValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: BigIntValueType,
 	#[serde(rename = "value")]
 	value: String,
 }
@@ -306,10 +390,11 @@ pub enum RealmType {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum WindowRealmInfoType {
-	Window
+enum WindowRealmInfoType {
+	#[serde(rename = "window")]
+	Window,
 }
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WindowRealmInfo {
 	#[serde(flatten)]
@@ -323,9 +408,9 @@ sandbox: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub enum DedicatedWorkerRealmInfoType {
+enum DedicatedWorkerRealmInfoType {
 	#[serde(rename = "dedicated-worker")]
-	DedicatedWorker
+	DedicatedWorker,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -339,10 +424,11 @@ owners: Vec<Realm>
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub enum SharedWorkerRealmInfoType {
+enum SharedWorkerRealmInfoType {
 	#[serde(rename = "shared-worker")]
-	SharedWorker
+	SharedWorker,
 }
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SharedWorkerRealmInfo {
 	#[serde(flatten)]
@@ -352,8 +438,7 @@ r#type: SharedWorkerRealmInfoType,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum ServiceWorkerRealmInfoType {
+enum ServiceWorkerRealmInfoType {
 	#[serde(rename = "service-worker")]
 	ServiceWorker,
 }
@@ -367,8 +452,7 @@ pub struct ServiceWorkerRealmInfo {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum WorkerRealmInfoType {
+enum WorkerRealmInfoType {
 	#[serde(rename = "worker")]
 	Worker,
 }
@@ -382,8 +466,7 @@ pub struct WorkerRealmInfo {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum PaintWorkletRealmInfoType {
+enum PaintWorkletRealmInfoType {
 	#[serde(rename = "paint-worklet")]
 	PaintWorklet,
 }
@@ -397,8 +480,7 @@ pub struct PaintWorkletRealmInfo {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum AudioWorkletRealmInfoType {
+enum AudioWorkletRealmInfoType {
 	#[serde(rename = "audio-worklet")]
 	AudioWorklet,
 }
@@ -412,8 +494,7 @@ pub struct AudioWorkletRealmInfo {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum WorkletRealmInfoType {
+enum WorkletRealmInfoType {
 	#[serde(rename = "worklet")]
 	Worklet,
 }
@@ -478,9 +559,15 @@ pub enum RemoteValue {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum SymbolRemoteValueType {
+	#[serde(rename = "symbol")]
+	Symbol,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct SymbolRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: SymbolRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -488,9 +575,15 @@ pub struct SymbolRemoteValue {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum ArrayRemoteValueType {
+	#[serde(rename = "array")]
+	Array,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ArrayRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: ArrayRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -500,9 +593,15 @@ pub struct ArrayRemoteValue {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum ObjectRemoteValueType {
+	#[serde(rename = "object")]
+	Object,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ObjectRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: ObjectRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -512,9 +611,15 @@ pub struct ObjectRemoteValue {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum FunctionRemoteValueType {
+	#[serde(rename = "function")]
+	Function,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct FunctionRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: FunctionRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -542,9 +647,15 @@ pub struct DateRemoteValue {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum MapRemoteValueType {
+	#[serde(rename = "map")]
+	Map,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct MapRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: MapRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -554,113 +665,179 @@ pub struct MapRemoteValue {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum SetRemoteValueType {
+	#[serde(rename = "set")]
+	Set,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct SetRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: SetRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
 	internal_id: Option<InternalId>,
 	#[serde(rename = "value")]
 	value: Option<ListRemoteValue>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum WeakMapRemoteValueType {
+	#[serde(rename = "weakmap")]
+	WeakMap,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WeakMapRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: WeakMapRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
 	internal_id: Option<InternalId>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum WeakSetRemoteValueType {
+	#[serde(rename = "weakset")]
+	WeakSet,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WeakSetRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: WeakSetRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
 	internal_id: Option<InternalId>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum GeneratorRemoteValueType {
+	#[serde(rename = "generator")]
+	Generator,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GeneratorRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: GeneratorRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
 	internal_id: Option<InternalId>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum ErrorRemoteValueType {
+	#[serde(rename = "error")]
+	Error,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ErrorRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: ErrorRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
 	internal_id: Option<InternalId>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum ProxyRemoteValueType {
+	#[serde(rename = "proxy")]
+	Proxy,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProxyRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: ProxyRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
 	internal_id: Option<InternalId>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum PromiseRemoteValueType {
+	#[serde(rename = "promise")]
+	Promise,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PromiseRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: PromiseRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
 	internal_id: Option<InternalId>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum TypedArrayRemoteValueType {
+	#[serde(rename = "typedarray")]
+	TypedArray,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TypedArrayRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: TypedArrayRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
 	internal_id: Option<InternalId>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum ArrayBufferRemoteValueType {
+	#[serde(rename = "arraybuffer")]
+	ArrayBuffer,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ArrayBufferRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: ArrayBufferRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
 	internal_id: Option<InternalId>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum NodeListRemoteValueType {
+	#[serde(rename = "nodelist")]
+	NodeList,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NodeListRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: NodeListRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
 	internal_id: Option<InternalId>,
 	#[serde(rename = "value")]
 	value: Option<ListRemoteValue>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum HTMLCollectionRemoteValueType {
+	#[serde(rename = "htmlcollection")]
+	HtmlCollection,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HTMLCollectionRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: HTMLCollectionRemoteValueType,
 	#[serde(rename = "handle")]
 	handle: Option<Handle>,
 	#[serde(rename = "internalId")]
@@ -670,9 +847,15 @@ pub struct HTMLCollectionRemoteValue {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum NodeRemoteValueType {
+	#[serde(rename = "node")]
+	Node,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct NodeRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: NodeRemoteValueType,
 	#[serde(rename = "sharedId")]
 	shared_id: Option<SharedId>,
 	#[serde(rename = "handle")]
@@ -713,9 +896,15 @@ pub struct NodeProperties {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum WindowProxyRemoteValueType {
+	#[serde(rename = "window")]
+	Window,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct WindowProxyRemoteValue {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: WindowProxyRemoteValueType,
 	#[serde(rename = "value")]
 	value: WindowProxyProperties,
 	#[serde(rename = "handle")]

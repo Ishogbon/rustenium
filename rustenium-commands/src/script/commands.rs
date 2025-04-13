@@ -2,6 +2,7 @@ use serde::{Serialize, Deserialize};
 use crate::script::types::{ChannelValue, EvaluateResult, Handle, LocalValue, PreloadScript, RealmInfo, RealmType, ResultOwnership, SerializationOptions, Target};
 use crate::browser::types::UserContext;
 use crate::browsing_context::types::BrowsingContext;
+
 pub enum ScriptCommand {
 	AddPreloadScript(AddPreloadScript),
 	CallFunction(CallFunction),
@@ -18,13 +19,48 @@ pub enum ScriptResult {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum AddPreloadScriptMethod {
+	#[serde(rename = "script.addPreloadScript")]
+	ScriptAddPreloadScript,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum DisownMethod {
+	#[serde(rename = "script.disown")]
+	ScriptDisown,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum CallFunctionMethod {
+	#[serde(rename = "script.callFunction")]
+	ScriptCallFunction,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum EvaluateMethod {
+	#[serde(rename = "script.evaluate")]
+	ScriptEvaluate,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum GetRealmsMethod {
+	#[serde(rename = "script.getRealms")]
+	ScriptGetRealms,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum RemovePreloadScriptMethod {
+	#[serde(rename = "script.removePreloadScript")]
+	ScriptRemovePreloadScript,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct AddPreloadScript {
 	#[serde(rename = "method")]
-	method: String,
+	method: AddPreloadScriptMethod,
 	#[serde(rename = "params")]
 	params: AddPreloadScriptParameters,
 }
-
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AddPreloadScriptParameters {
@@ -55,7 +91,7 @@ pub struct GetRealmsResult {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Disown {
 	#[serde(rename = "method")]
-	method: String,
+	method: DisownMethod,
 	#[serde(rename = "params")]
 	params: DisownParameters,
 }
@@ -71,7 +107,7 @@ pub struct DisownParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CallFunction {
 	#[serde(rename = "method")]
-	method: String,
+	method: CallFunctionMethod,
 	#[serde(rename = "params")]
 	params: CallFunctionParameters,
 }
@@ -103,7 +139,7 @@ fn default_user_activation() -> bool {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Evaluate {
 	#[serde(rename = "method")]
-	method: String,
+	method: EvaluateMethod,
 	#[serde(rename = "params")]
 	params: EvaluateParameters,
 }
@@ -127,7 +163,7 @@ pub struct EvaluateParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetRealms {
 	#[serde(rename = "method")]
-	method: String,
+	method: GetRealmsMethod,
 	#[serde(rename = "params")]
 	params: GetRealmsParameters,
 }
@@ -143,11 +179,10 @@ pub struct GetRealmsParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemovePreloadScript {
 	#[serde(rename = "method")]
-	method: String,
+	method: RemovePreloadScriptMethod,
 	#[serde(rename = "params")]
 	params: RemovePreloadScriptParameters,
 }
-
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemovePreloadScriptParameters {
