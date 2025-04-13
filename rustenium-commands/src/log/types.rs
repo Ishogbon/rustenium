@@ -11,7 +11,7 @@ pub struct BaseLogEntry {
 	#[serde(rename = "source")]
 	source: Source,
 	#[serde(rename = "text")]
-	text: String | None,
+	text: Option<String>,
 	#[serde(rename = "timestamp")]
 	timestamp: u32,
 	#[serde(rename = "stackTrace")]
