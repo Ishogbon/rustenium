@@ -1,6 +1,16 @@
+use serde::{Deserialize, Serialize};
+
+pub type Extension = String;
+
 pub enum WebExtensionCommand {
 	Install(Install),
 	Uninstall(Uninstall),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct InstallResult {
+	#[serde(rename = "extension")]
+	pub extension: Extension,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -11,17 +21,20 @@ pub struct Install {
 	params: InstallParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct InstallParameters {
 	#[serde(rename = "extensionData")]
 	extension_data: ExtensionData,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ExtensionData {
 	ExtensionArchivePath(ExtensionArchivePath),
 	ExtensionBase64Encoded(ExtensionBase64Encoded),
 	ExtensionPath(ExtensionPath),
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ExtensionPath {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -29,6 +42,7 @@ pub struct ExtensionPath {
 	path: String,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ExtensionArchivePath {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -36,6 +50,7 @@ pub struct ExtensionArchivePath {
 	path: String,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ExtensionBase64Encoded {
 	#[serde(rename = "type")]
 	r#type: String,
@@ -51,8 +66,8 @@ pub struct Uninstall {
 	params: UninstallParameters,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UninstallParameters {
 	#[serde(rename = "extension")]
 	extension: Extension,
 }
-
