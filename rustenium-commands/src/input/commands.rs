@@ -12,9 +12,15 @@ pub enum InputCommand {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum PerformActionsMethod {
+	#[serde(rename = "input.performActions")]
+	InputPerformActions,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PerformActions {
 	#[serde(rename = "method")]
-	method: String,
+	method: PerformActionsMethod,
 	#[serde(rename = "params")]
 	params: PerformActionsParameters,
 }
@@ -38,9 +44,15 @@ pub enum SourceActions {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum NoneSourceActionsType {
+	#[serde(rename = "none")]
+	None,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct NoneSourceActions {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: NoneSourceActionsType,
 	#[serde(rename = "id")]
 	id: String,
 	#[serde(rename = "actions")]
@@ -49,9 +61,15 @@ pub struct NoneSourceActions {
 
 
 #[derive(Debug, Serialize, Deserialize)]
+enum KeySourceActionsType {
+	#[serde(rename = "key")]
+	Key,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct KeySourceActions {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: KeySourceActionsType,
 	#[serde(rename = "id")]
 	id: String,
 	#[serde(rename = "actions")]
@@ -68,9 +86,15 @@ pub enum KeySourceAction {
 
 
 #[derive(Debug, Serialize, Deserialize)]
+enum PointerSourceActionsType {
+	#[serde(rename = "pointer")]
+	Pointer,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PointerSourceActions {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: PointerSourceActionsType,
 	#[serde(rename = "id")]
 	id: String,
 	#[serde(rename = "parameters")]
@@ -95,9 +119,15 @@ pub enum PointerSourceAction {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum WheelSourceActionsType {
+	#[serde(rename = "wheel")]
+	Wheel,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct WheelSourceActions {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: WheelSourceActionsType,
 	#[serde(rename = "id")]
 	id: String,
 	#[serde(rename = "actions")]
@@ -111,55 +141,91 @@ pub enum WheelSourceAction {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum PauseActionType {
+	#[serde(rename = "pause")]
+	Pause,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PauseAction {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: PauseActionType,
 	#[serde(rename = "duration")]
 	duration: Option<u32>,
 }
 
 
 #[derive(Debug, Serialize, Deserialize)]
+enum KeyDownActionType {
+	#[serde(rename = "keyDown")]
+	KeyDown,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct KeyDownAction {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: KeyDownActionType,
 	#[serde(rename = "value")]
 	value: String,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
+enum KeyUpActionType {
+	#[serde(rename = "keyUp")]
+	KeyUp,
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct KeyUpAction {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: KeyUpActionType,
 	#[serde(rename = "value")]
 	value: String,
 }
 
 
 #[derive(Debug, Serialize, Deserialize)]
+enum PointerUpActionType {
+	#[serde(rename = "pointerUp")]
+	PointerUp,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PointerUpAction {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: PointerUpActionType,
 	#[serde(rename = "button")]
 	button: u32,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum PointerDownActionType {
+	#[serde(rename = "pointerDown")]
+	PointerDown,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PointerDownAction {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: PointerDownActionType,
 	#[serde(rename = "button")]
 	button: u32,
 	#[serde(flatten)]
-	pointerCommonProperties: PointerCommonProperties,
+	extension: PointerCommonProperties,
 }
 
 
 #[derive(Debug, Serialize, Deserialize)]
+enum PointerMoveActionType {
+	#[serde(rename = "pointerMove")]
+	PointerMove,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PointerMoveAction {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: PointerMoveActionType,
 	#[serde(rename = "x")]
 	x: f64,
 	#[serde(rename = "y")]
@@ -169,14 +235,20 @@ pub struct PointerMoveAction {
 	#[serde(rename = "origin")]
 	origin: Option<Origin>,
 	#[serde(flatten)]
-	pointerCommonProperties: PointerCommonProperties,
+	extension: PointerCommonProperties,
 }
 
 
 #[derive(Debug, Serialize, Deserialize)]
+enum WheelScrollActionType {
+	#[serde(rename = "scroll")]
+	Scroll,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct WheelScrollAction {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: WheelScrollActionType,
 	#[serde(rename = "x")]
 	x: i32,
 	#[serde(rename = "y")]
@@ -188,7 +260,7 @@ pub struct WheelScrollAction {
 	#[serde(rename = "duration")]
 	duration: Option<u32>,
 	#[serde(rename = "origin")]
-	origin: Option<String>,
+	origin: Option<Origin>,
 }
 
 fn pointer_common_properties_default_width() -> u32 {
@@ -244,9 +316,15 @@ pub struct PointerCommonProperties {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum ReleaseActionsMethod {
+	#[serde(rename = "input.releaseActions")]
+	InputReleaseActions,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ReleaseActions {
 	#[serde(rename = "method")]
-	method: String,
+	method: ReleaseActionsMethod,
 	#[serde(rename = "params")]
 	params: ReleaseActionsParameters,
 }
@@ -259,9 +337,15 @@ pub struct ReleaseActionsParameters {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum SetFilesMethod {
+	#[serde(rename = "input.setFiles")]
+	SetFiles,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct SetFiles {
 	#[serde(rename = "method")]
-	method: String,
+	method: SetFilesMethod,
 	#[serde(rename = "params")]
 	params: SetFilesParameters,
 }

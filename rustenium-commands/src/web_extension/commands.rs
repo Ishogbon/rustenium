@@ -14,9 +14,33 @@ pub struct InstallResult {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum InstallMethod {
+	#[serde(rename = "webExtension.install")]
+	WebExtensionInstall,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum ExtensionPathType {
+	#[serde(rename = "path")]
+	Path,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum ExtensionArchivePathType {
+	#[serde(rename = "archivePath")]
+	ArchivePath,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum ExtensionBase64EncodedType {
+	#[serde(rename = "base64")]
+	Base64,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Install {
 	#[serde(rename = "method")]
-	method: String,
+	method: InstallMethod,
 	#[serde(rename = "params")]
 	params: InstallParameters,
 }
@@ -37,7 +61,7 @@ pub enum ExtensionData {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ExtensionPath {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: ExtensionPathType,
 	#[serde(rename = "path")]
 	path: String,
 }
@@ -45,7 +69,7 @@ pub struct ExtensionPath {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ExtensionArchivePath {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: ExtensionArchivePathType,
 	#[serde(rename = "path")]
 	path: String,
 }
@@ -53,15 +77,21 @@ pub struct ExtensionArchivePath {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ExtensionBase64Encoded {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: ExtensionBase64EncodedType,
 	#[serde(rename = "value")]
 	value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum UninstallMethod {
+	#[serde(rename = "webExtension.uninstall")]
+	WebExtensionUninstall,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Uninstall {
 	#[serde(rename = "method")]
-	method: String,
+	method: UninstallMethod,
 	#[serde(rename = "params")]
 	params: UninstallParameters,
 }

@@ -42,12 +42,24 @@ pub struct GenericLogEntry {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum ConsoleLogEntryType {
+	#[serde(rename = "console")]
+	Console,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum JavascriptLogEntryType {
+	#[serde(rename = "javascript")]
+	Javascript,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ConsoleLogEntry {
 	#[serde(flatten)]
 	pub base: BaseLogEntry,
 
 	#[serde(rename = "type")]
-	pub r#type: String,
+	pub r#type: ConsoleLogEntryType,
 
 	#[serde(rename = "method")]
 	pub method: String,
@@ -62,6 +74,6 @@ pub struct JavascriptLogEntry {
 	pub base: BaseLogEntry,
 
 	#[serde(rename = "type")]
-	pub r#type: String,
+	pub r#type: JavascriptLogEntryType,
 }
 
