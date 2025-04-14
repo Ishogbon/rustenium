@@ -17,9 +17,39 @@ pub enum StorageResult {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+enum GetCookiesMethod {
+	#[serde(rename = "storage.getCookies")]
+	StorageGetCookies,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum SetCookieMethod {
+	#[serde(rename = "storage.setCookie")]
+	StorageSetCookie,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum DeleteCookiesMethod {
+	#[serde(rename = "storage.deleteCookies")]
+	StorageDeleteCookies,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum BrowsingContextPartitionDescriptorType {
+	#[serde(rename = "context")]
+	Context,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum StorageKeyPartitionDescriptorType {
+	#[serde(rename = "storageKey")]
+	StorageKey,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct GetCookies {
 	#[serde(rename = "method")]
-	method: String,
+	method: GetCookiesMethod,
 	#[serde(rename = "params")]
 	params: GetCookiesParameters,
 }
@@ -51,7 +81,7 @@ pub struct CookieFilter {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BrowsingContextPartitionDescriptor {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: BrowsingContextPartitionDescriptorType,
 	#[serde(rename = "context")]
 	context: BrowsingContext,
 }
@@ -59,7 +89,7 @@ pub struct BrowsingContextPartitionDescriptor {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StorageKeyPartitionDescriptor {
 	#[serde(rename = "type")]
-	r#type: String,
+	r#type: StorageKeyPartitionDescriptorType,
 	#[serde(rename = "userContext")]
 	user_context: Option<String>,
 	#[serde(rename = "sourceOrigin")]
@@ -85,7 +115,7 @@ pub struct GetCookiesParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetCookie {
 	#[serde(rename = "method")]
-	method: String,
+	method: SetCookieMethod,
 	#[serde(rename = "params")]
 	params: SetCookieParameters,
 }
@@ -123,7 +153,7 @@ pub struct SetCookieParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DeleteCookies {
 	#[serde(rename = "method")]
-	method: String,
+	method: DeleteCookiesMethod,
 	#[serde(rename = "params")]
 	params: DeleteCookiesParameters,
 }
