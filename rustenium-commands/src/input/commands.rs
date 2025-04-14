@@ -105,9 +105,23 @@ pub struct PointerSourceActions {
 
 
 #[derive(Debug, Serialize, Deserialize)]
+pub enum PointerType {
+    #[serde(rename = "mouse")]
+    Mouse,
+    #[serde(rename = "pen")]
+    Pen,
+    #[serde(rename = "touch")]
+    Touch,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PointerParameters {
-	#[serde(rename = "pointerType")]
-	pointer_type: Option<String>,
+    #[serde(rename = "pointerType", default = "pointer_parameters_default_pointer_type")]
+    pointer_type: PointerType,
+}
+
+fn pointer_parameters_default_pointer_type() -> PointerType {
+    PointerType::Mouse
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -245,6 +259,10 @@ enum WheelScrollActionType {
 	Scroll,
 }
 
+fn wheel_scroll_action_default_origin() -> Origin {
+	Origin::Viewport
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WheelScrollAction {
 	#[serde(rename = "type")]
@@ -259,8 +277,8 @@ pub struct WheelScrollAction {
 	delta_y: i32,
 	#[serde(rename = "duration")]
 	duration: Option<u32>,
-	#[serde(rename = "origin")]
-	origin: Option<Origin>,
+	#[serde(rename = "origin", default = "wheel_scroll_action_default_origin")]
+	origin: Origin,
 }
 
 fn pointer_common_properties_default_width() -> u32 {
@@ -294,7 +312,7 @@ fn pointer_common_properties_default_azimuth_angle() -> f64 {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PointerCommonProperties {
     #[serde(rename = "width", default = "pointer_common_properties_default_width")]
-    pub width: u32,  // js-uint maps to u32 in Rust
+    pub width: u32,
 
     #[serde(rename = "height", default = "pointer_common_properties_default_height")]
     pub height: u32,
@@ -339,7 +357,7 @@ pub struct ReleaseActionsParameters {
 #[derive(Debug, Serialize, Deserialize)]
 enum SetFilesMethod {
 	#[serde(rename = "input.setFiles")]
-	SetFiles,
+	InputSetFiles,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

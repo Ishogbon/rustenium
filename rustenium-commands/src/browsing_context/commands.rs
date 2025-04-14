@@ -246,8 +246,7 @@ fn close_parameters_default_prompt_unload() -> bool {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CloseParameters {
-	#[serde(rename = "promptUnload")]
-	#[serde(default = "close_parameters_default_prompt_unload")]
+	#[serde(rename = "promptUnload", default = "close_parameters_default_prompt_unload")]
 	pub prompt_unload: bool,
 }
 
@@ -407,8 +406,7 @@ pub enum PrintParametersPageRange {
 pub struct PrintParameters {
 	#[serde(rename = "context")]
 	context: BrowsingContext,
-	#[serde(rename = "background")]
-	#[serde(default = "print_parameters_default_background")]
+	#[serde(rename = "background", default = "print_parameters_default_background")]
 	pub background: bool,
 	#[serde(rename = "margin")]
 	margin: Option<PrintMarginParameters>,
@@ -418,11 +416,9 @@ pub struct PrintParameters {
 	page: Option<PrintPageParameters>,
 	#[serde(rename = "pageRanges")]
 	pub page_ranges: Vec<PrintParametersPageRange>,
-	#[serde(rename = "scale")]
-	#[serde(default = "print_parameters_default_scale")]
+	#[serde(rename = "scale", default = "print_parameters_default_scale")]
 	pub scale: f64,
-	#[serde(rename = "shrinkToFit")]
-	#[serde(default = "print_parameters_default_shrink_to_fit")]
+	#[serde(rename = "shrinkToFit", default = "print_parameters_default_shrink_to_fit")]
 	pub shrink_to_fit: bool,
 }
 

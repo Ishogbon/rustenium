@@ -929,15 +929,21 @@ pub enum IncludeShadowTree {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SerializationOptions {
-	#[serde(rename = "maxDomDepth")]
-	max_dom_depth: Option<u32>,
-	#[serde(rename = "maxObjectDepth")]
-	max_object_depth: Option<u32>,
-	#[serde(rename = "includeShadowTree", default = "default_include_shadow_tree")]
-	include_shadow_tree: IncludeShadowTree,
+	#[serde(rename = "maxDomDepth", default = "serialization_options_default_max_dom_depth")]
+	pub max_dom_depth: Option<u32>,
+	
+	#[serde(rename = "maxObjectDepth", default)]
+	pub max_object_depth: Option<u32>,
+	
+	#[serde(rename = "includeShadowTree", default = "serialization_options_default_include_shadow_tree")]
+	pub include_shadow_tree: IncludeShadowTree,
 }
 
-fn default_include_shadow_tree() -> IncludeShadowTree {
+fn serialization_options_default_max_dom_depth() -> Option<u32> {
+	Some(0)
+}
+
+fn serialization_options_default_include_shadow_tree() -> IncludeShadowTree {
 	IncludeShadowTree::None
 }
 
