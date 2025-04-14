@@ -432,9 +432,9 @@ enum SharedWorkerRealmInfoType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SharedWorkerRealmInfo {
 	#[serde(flatten)]
-base: BaseRealmInfo,
-#[serde(rename="type")]
-r#type: SharedWorkerRealmInfoType,
+	base: BaseRealmInfo,
+	#[serde(rename="type")]
+	r#type: SharedWorkerRealmInfoType,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
