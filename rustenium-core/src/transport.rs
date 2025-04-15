@@ -46,6 +46,19 @@ impl ConnectionTransportConfig {
         let url = Url::parse(&self.endpoint);
         return url.unwrap().path().to_owned();
     }
+    
+    pub fn extract_session_id(&self) -> Option<String> {
+        if let Ok(url) = Url::parse(&self.endpoint) {
+            let path = url.path();
+            if !path.is_empty() {
+                let segments: Vec<&str> = path.split('/').filter(|s| !s.is_empty()).collect();
+                if let Some(last_segment) = segments.last() {
+                    return Some(last_segment.to_string());
+                }
+            }
+        }
+        None
+    }
 }
 
 pub trait ConnectionTransport {
@@ -66,7 +79,7 @@ impl ConnectionTransport for WebsocketConnectionTransport {
     }
 
     fn listen(&self) -> () {
-        todo!()
+        
     }
 
     fn close(&self) -> () {

@@ -10,4 +10,8 @@ impl<T: ConnectionTransport> Connection<T> {
             transport: connection_transport,
         };
     }
+
+    pub fn send(&mut self, data: String) {
+        self.transport.send(data);
+    }
 }

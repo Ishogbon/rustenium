@@ -44,13 +44,13 @@ pub struct Close {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-enum CreateUserContextMethod {
+pub enum CreateUserContextMethod {
 	#[serde(rename = "browser.createUserContext")]
 	BrowserCreateUserContext,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct CreateUserContext {
+pub struct CreateUserContext {
 	#[serde(rename = "method")]
 	method: CreateUserContextMethod,
 	#[serde(rename = "params")]
@@ -58,13 +58,13 @@ struct CreateUserContext {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-enum GetClientWindowsMethod {
+pub enum GetClientWindowsMethod {
 	#[serde(rename = "browser.getClientWindows")]
 	BrowserGetClientWindows,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct GetClientWindows {
+pub struct GetClientWindows {
 	#[serde(rename = "method")]
 	method: GetClientWindowsMethod,
 	#[serde(rename = "params")]
@@ -72,13 +72,13 @@ struct GetClientWindows {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-enum GetUserContextsMethod {
+pub enum GetUserContextsMethod {
 	#[serde(rename = "browser.getUserContexts")]
 	BrowserGetUserContexts,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct GetUserContexts {
+pub struct GetUserContexts {
 	#[serde(rename = "method")]
 	method: GetUserContextsMethod,
 	#[serde(rename = "params")]
@@ -86,39 +86,39 @@ struct GetUserContexts {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-enum RemoveUserContextMethod {
+pub enum RemoveUserContextMethod {
 	#[serde(rename = "browser.removeUserContext")]
 	BrowserRemoveUserContext,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-enum SetClientWindowStateMethod {
+pub enum SetClientWindowStateMethod {
 	#[serde(rename = "browser.setClientWindowState")]
 	BrowserSetClientWindowState,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
-enum ClientWindowNamedStateType {
+pub enum ClientWindowNamedStateType {
 	Fullscreen,
 	Maximized,
 	Minimized,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-enum ClientWindowRectStateType {
+pub enum ClientWindowRectStateType {
 	#[serde(rename = "normal")]
 	Normal,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct ClientWindowNamedState {
+pub struct ClientWindowNamedState {
 	#[serde(rename = "state")]
 	state: ClientWindowNamedStateType,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct ClientWindowRectState {
+pub struct ClientWindowRectState {
 	#[serde(rename = "state")]
 	state: ClientWindowRectStateType,
 	#[serde(rename = "width")]
@@ -138,7 +138,7 @@ pub struct RemoveUserContextParameters {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct SetClientWindowStateParameters {
+pub struct SetClientWindowStateParameters {
 	#[serde(rename = "clientWindow")]
 	client_window: ClientWindow,
 	#[serde(flatten)]
@@ -146,7 +146,7 @@ struct SetClientWindowStateParameters {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct RemoveUserContext {
+pub struct RemoveUserContext {
 	#[serde(rename = "method")]
 	method: RemoveUserContextMethod,
 	#[serde(rename = "params")]
@@ -154,7 +154,7 @@ struct RemoveUserContext {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct SetClientWindowState {
+pub struct SetClientWindowState {
 	#[serde(rename = "method")]
 	method: SetClientWindowStateMethod,
 	#[serde(rename = "params")]

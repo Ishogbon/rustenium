@@ -1,5 +1,5 @@
 [package]
-name = "rustenium-commands"
+name = "rustenium-bidi-commands"
 version = "0.1.0"
 edition = "2024"
 
