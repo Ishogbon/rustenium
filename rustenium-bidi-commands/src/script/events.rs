@@ -28,40 +28,40 @@ enum RealmDestroyedMethod {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Message {
 	#[serde(rename = "method")]
-	method: MessageMethod,
+	pub method: MessageMethod,
 	#[serde(rename = "params")]
-	params: MessageParameters,
+	pub params: MessageParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MessageParameters {
 	#[serde(rename = "channel")]
-	channel: Channel,
+	pub channel: Channel,
 	#[serde(rename = "data")]
-	data: RemoteValue,
+	pub data: RemoteValue,
 	#[serde(rename = "source")]
-	source: Source,
+	pub source: Source,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RealmCreated {
 	#[serde(rename = "method")]
-	method: RealmCreatedMethod,
+	pub method: RealmCreatedMethod,
 	#[serde(rename = "params")]
-	params: RealmInfo,
+	pub params: RealmInfo,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RealmDestroyed {
 	#[serde(rename = "method")]
-	method: RealmDestroyedMethod,
+	pub method: RealmDestroyedMethod,
 	#[serde(rename = "params")]
-	params: RealmDestroyedParameters,
+	pub params: RealmDestroyedParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RealmDestroyedParameters {
 	#[serde(rename = "realm")]
-	realm: Realm,
+	pub realm: Realm,
 }
 

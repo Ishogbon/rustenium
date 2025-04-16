@@ -8,9 +8,9 @@ pub type Request = String;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AuthChallenge {
 	#[serde(rename = "scheme")]
-	scheme: String,
+	pub scheme: String,
 	#[serde(rename = "realm")]
-	realm: String,
+	pub realm: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -22,11 +22,11 @@ pub enum AuthCredentialsType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AuthCredentials {
 	#[serde(rename = "type")]
-	r#type: AuthCredentialsType,
+	pub r#type: AuthCredentialsType,
 	#[serde(rename = "username")]
-	username: String,
+	pub username: String,
 	#[serde(rename = "password")]
-	password: String,
+	pub password: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -56,17 +56,17 @@ pub enum StringValueType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StringValue {
 	#[serde(rename = "type")]
-	r#type: StringValueType,
+	pub r#type: StringValueType,
 	#[serde(rename = "value")]
-	value: String,
+	pub value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Base64Value {
 	#[serde(rename = "type")]
-	r#type: StringValueType,
+	pub r#type: StringValueType,
 	#[serde(rename = "value")]
-	value: String,
+	pub value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -79,71 +79,71 @@ pub enum BytesValue {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Cookie {
 	#[serde(rename = "name")]
-	name: String,
+	pub name: String,
 	#[serde(rename = "value")]
-	value: BytesValue,
+	pub value: BytesValue,
 	#[serde(rename = "domain")]
-	domain: String,
+	pub domain: String,
 	#[serde(rename = "path")]
-	path: String,
+	pub path: String,
 	#[serde(rename = "size")]
-	size: u32,
+	pub size: u32,
 	#[serde(rename = "httpOnly")]
-	http_only: bool,
+	pub http_only: bool,
 	#[serde(rename = "secure")]
-	secure: bool,
+	pub secure: bool,
 	#[serde(rename = "sameSite")]
-	same_site: SameSite,
+	pub same_site: SameSite,
 	#[serde(rename = "expiry")]
-	expiry: Option<u32>,
+	pub expiry: Option<u32>,
 	#[serde(flatten)]
-	extension: Option<serde_cbor::Value>,
+	pub extension: Option<serde_cbor::Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CookieHeader {
 	#[serde(rename = "name")]
-	name: String,
+	pub name: String,
 	#[serde(rename = "value")]
-	value: BytesValue,
+	pub value: BytesValue,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FetchTimingInfo {
 	#[serde(rename = "timeOrigin")]
-	time_origin: f64,
+	pub time_origin: f64,
 	#[serde(rename = "requestTime")]
-	request_time: f64,
+	pub request_time: f64,
 	#[serde(rename = "redirectStart")]
-	redirect_start: f64,
+	pub redirect_start: f64,
 	#[serde(rename = "redirectEnd")]
-	redirect_end: f64,
+	pub redirect_end: f64,
 	#[serde(rename = "fetchStart")]
-	fetch_start: f64,
+	pub fetch_start: f64,
 	#[serde(rename = "dnsStart")]
-	dns_start: f64,
+	pub dns_start: f64,
 	#[serde(rename = "dnsEnd")]
-	dns_end: f64,
+	pub dns_end: f64,
 	#[serde(rename = "connectStart")]
-	connect_start: f64,
+	pub connect_start: f64,
 	#[serde(rename = "connectEnd")]
-	connect_end: f64,
+	pub connect_end: f64,
 	#[serde(rename = "tlsStart")]
-	tls_start: f64,
+	pub tls_start: f64,
 	#[serde(rename = "requestStart")]
-	request_start: f64,
+	pub request_start: f64,
 	#[serde(rename = "responseStart")]
-	response_start: f64,
+	pub response_start: f64,
 	#[serde(rename = "responseEnd")]
-	response_end: f64,
+	pub response_end: f64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Header {
 	#[serde(rename = "name")]
-	name: String,
+	pub name: String,
 	#[serde(rename = "value")]
-	value: BytesValue,
+	pub value: BytesValue,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -196,7 +196,7 @@ pub struct RequestData {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ResponseContent {
 	#[serde(rename = "size")]
-	size: u32,
+	pub size: u32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -230,23 +230,23 @@ pub struct ResponseData {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetCookieHeader {
 	#[serde(rename = "name")]
-	name: String,
+	pub name: String,
 	#[serde(rename = "value")]
-	value: BytesValue,
+	pub value: BytesValue,
 	#[serde(rename = "domain")]
-	domain: Option<String>,
+	pub domain: Option<String>,
 	#[serde(rename = "httpOnly")]
-	http_only: Option<bool>,
+	pub http_only: Option<bool>,
 	#[serde(rename = "expiry")]
-	expiry: Option<String>,
+	pub expiry: Option<String>,
 	#[serde(rename = "maxAge")]
-	max_age: Option<i32>,
+	pub max_age: Option<i32>,
 	#[serde(rename = "path")]
-	path: Option<String>,
+	pub path: Option<String>,
 	#[serde(rename = "sameSite")]
-	same_site: Option<SameSite>,
+	pub same_site: Option<SameSite>,
 	#[serde(rename = "secure")]
-	secure: Option<bool>,
+	pub secure: Option<bool>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -264,17 +264,17 @@ pub enum UrlPatternPatternType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UrlPatternPattern {
 	#[serde(rename = "type")]
-	r#type: UrlPatternPatternType,
+	pub r#type: UrlPatternPatternType,
 	#[serde(rename = "protocol")]
-	protocol: String,
+	pub protocol: String,
 	#[serde(rename = "hostname")]
-	hostname: String,
+	pub hostname: String,
 	#[serde(rename = "port")]
-	port: String,
+	pub port: String,
 	#[serde(rename = "pathname")]
-	pathname: String,
+	pub pathname: String,
 	#[serde(rename = "search")]
-	search: String,
+	pub search: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -285,9 +285,9 @@ pub enum UrlPatternStringType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UrlPatternString {
 	#[serde(rename = "type")]
-	r#type: UrlPatternStringType,
+	pub r#type: UrlPatternStringType,
 	#[serde(rename = "pattern")]
-	pattern: String,
+	pub pattern: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

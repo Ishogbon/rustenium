@@ -99,145 +99,145 @@ enum UserPromptOpenedMethod {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContextCreated {
 	#[serde(rename = "method")]
-	method: ContextCreatedMethod,
+	pub method: ContextCreatedMethod,
 	#[serde(rename = "params")]
-	params: Info,
+	pub params: Info,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContextDestroyed {
 	#[serde(rename = "method")]
-	method: ContextDestroyedMethod,
+	pub method: ContextDestroyedMethod,
 	#[serde(rename = "params")]
-	params: Info,
+	pub params: Info,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NavigationStarted {
 	#[serde(rename = "method")]
-	method: NavigationStartedMethod,
+	pub method: NavigationStartedMethod,
 	#[serde(rename = "params")]
-	params: NavigationInfo,
+	pub params: NavigationInfo,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FragmentNavigated {
 	#[serde(rename = "method")]
-	method: FragmentNavigatedMethod,
+	pub method: FragmentNavigatedMethod,
 	#[serde(rename = "params")]
-	params: NavigationInfo,
+	pub params: NavigationInfo,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HistoryUpdated {
 	#[serde(rename = "method")]
-	method: HistoryUpdatedMethod,
+	pub method: HistoryUpdatedMethod,
 	#[serde(rename = "params")]
-	params: HistoryUpdatedParameters,
+	pub params: HistoryUpdatedParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HistoryUpdatedParameters {
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 	#[serde(rename = "url")]
-	url: String,
+	pub url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DomContentLoaded {
 	#[serde(rename = "method")]
-	method: DomContentLoadedMethod,
+	pub method: DomContentLoadedMethod,
 	#[serde(rename = "params")]
-	params: NavigationInfo,
+	pub params: NavigationInfo,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Load {
 	#[serde(rename = "method")]
-	method: LoadMethod,
+	pub method: LoadMethod,
 	#[serde(rename = "params")]
-	params: NavigationInfo,
+	pub params: NavigationInfo,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DownloadWillBegin {
 	#[serde(rename = "method")]
-	method: DownloadWillBeginMethod,
+	pub method: DownloadWillBeginMethod,
 	#[serde(rename = "params")]
-	params: DownloadWillBeginParams,
+	pub params: DownloadWillBeginParams,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DownloadWillBeginParams {
 	#[serde(rename = "suggestedFilename")]
-	suggested_filename: String,
-	base_navigation_info: BaseNavigationInfo,
+	pub suggested_filename: String,
+	pub base_navigation_info: BaseNavigationInfo,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NavigationAborted {
 	#[serde(rename = "method")]
-	method: NavigationAbortedMethod,
+	pub method: NavigationAbortedMethod,
 	#[serde(rename = "params")]
-	params: NavigationInfo,
+	pub params: NavigationInfo,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NavigationCommitted {
 	#[serde(rename = "method")]
-	method: NavigationCommittedMethod,
+	pub method: NavigationCommittedMethod,
 	#[serde(rename = "params")]
-	params: NavigationInfo,
+	pub params: NavigationInfo,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NavigationFailed {
 	#[serde(rename = "method")]
-	method: NavigationFailedMethod,
+	pub method: NavigationFailedMethod,
 	#[serde(rename = "params")]
-	params: NavigationInfo,
+	pub params: NavigationInfo,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserPromptClosed {
 	#[serde(rename = "method")]
-	method: UserPromptClosedMethod,
+	pub method: UserPromptClosedMethod,
 	#[serde(rename = "params")]
-	params: UserPromptClosedParameters,
+	pub params: UserPromptClosedParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserPromptClosedParameters {
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 	#[serde(rename = "accepted")]
-	accepted: bool,
+	pub accepted: bool,
 	#[serde(rename = "type")]
-	r#type: UserPromptType,
+	pub r#type: UserPromptType,
 	#[serde(rename = "userText")]
-	user_text: Option<String>,
+	pub user_text: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserPromptOpened {
 	#[serde(rename = "method")]
-	method: UserPromptOpenedMethod,
+	pub method: UserPromptOpenedMethod,
 	#[serde(rename = "params")]
-	params: UserPromptOpenedParameters,
+	pub params: UserPromptOpenedParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserPromptOpenedParameters {
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 	#[serde(rename = "handler")]
-	handler: UserPromptHandlerType,
+	pub handler: UserPromptHandlerType,
 	#[serde(rename = "message")]
-	message: String,
+	pub message: String,
 	#[serde(rename = "type")]
-	r#type: UserPromptType,
+	pub r#type: UserPromptType,
 	#[serde(rename = "defaultValue")]
-	default_value: Option<String>,
+	pub default_value: Option<String>,
 }
 

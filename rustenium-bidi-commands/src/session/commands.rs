@@ -92,7 +92,7 @@ pub struct New {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NewParameters {
 	#[serde(rename = "capabilities")]
-	capabilities: CapabilitiesRequest,
+	pub capabilities: CapabilitiesRequest,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

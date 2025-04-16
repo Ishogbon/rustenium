@@ -7,28 +7,28 @@ pub type Subscription = String;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CapabilitiesRequest {
 	#[serde(rename = "alwaysMatch")]
-	always_match: Option<CapabilityRequest>,
+	pub always_match: Option<CapabilityRequest>,
 	#[serde(rename = "firstMatch")]
-	first_match: Option<Vec<CapabilityRequest>>,
+	pub first_match: Option<Vec<CapabilityRequest>>,
 }
 
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CapabilityRequest {
 	#[serde(rename = "acceptInsecureCerts")]
-	accept_insecure_certs: Option<bool>,
+	pub accept_insecure_certs: Option<bool>,
 	#[serde(rename = "browserName")]
-	browser_name: Option<String>,
+	pub browser_name: Option<String>,
 	#[serde(rename = "browserVersion")]
-	browser_version: Option<String>,
+	pub browser_version: Option<String>,
 	#[serde(rename = "platformName")]
-	platform_name: Option<String>,
+	pub platform_name: Option<String>,
 	#[serde(rename = "proxy")]
-	proxy: Option<ProxyConfiguration>,
+	pub proxy: Option<ProxyConfiguration>,
 	#[serde(rename = "unhandledPromptBehavior")]
-	unhandled_prompt_behavior: Option<UserPromptHandler>,
+	pub unhandled_prompt_behavior: Option<UserPromptHandler>,
 	#[serde(flatten)]
-	extension: Option<serde_cbor::Value>,
+	pub extension: Option<serde_cbor::Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -74,51 +74,51 @@ pub enum SystemProxyConfigurationType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AutodetectProxyConfiguration {
 	#[serde(rename = "proxyType")]
-	proxy_type: AutodetectProxyConfigurationType,
+	pub proxy_type: AutodetectProxyConfigurationType,
 	#[serde(flatten)]
-	extension: Option<serde_cbor::Value>,
+	pub extension: Option<serde_cbor::Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DirectProxyConfiguration {
 	#[serde(rename = "proxyType")]
-	proxy_type: DirectProxyConfigurationType,
+	pub proxy_type: DirectProxyConfigurationType,
 	#[serde(flatten)]
-	extension: Option<serde_cbor::Value>,
+	pub extension: Option<serde_cbor::Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ManualProxyConfiguration {
 	#[serde(rename = "proxyType")]
-	proxy_type: ManualProxyConfigurationType,
+	pub proxy_type: ManualProxyConfigurationType,
 	#[serde(rename = "ftpProxy")]
-	ftp_proxy: Option<String>,
+	pub ftp_proxy: Option<String>,
 	#[serde(rename = "httpProxy")]
-	http_proxy: Option<String>,
+	pub http_proxy: Option<String>,
 	#[serde(rename = "sslProxy")]
-	ssl_proxy: Option<String>,
+	pub ssl_proxy: Option<String>,
 	#[serde(rename = "SocksProxyConfiguration")]
-	socks_proxy_configuration: Option<SocksProxyConfiguration>,
+	pub socks_proxy_configuration: Option<SocksProxyConfiguration>,
 	#[serde(rename = "noProxy")]
-	no_proxy: Option<Vec<String>>,
+	pub no_proxy: Option<Vec<String>>,
 	#[serde(flatten)]
-	extension: Option<serde_cbor::Value>,
+	pub extension: Option<serde_cbor::Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SocksProxyConfiguration {
 	#[serde(rename = "socksProxy")]
-	socks_proxy: String,
+	pub socks_proxy: String,
 	#[serde(rename = "socksVersion")]
-	socks_version: f64,
+	pub socks_version: f64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PacProxyConfiguration {
 	#[serde(rename = "proxyType")]
-	proxy_type: PacProxyConfigurationType,
+	pub proxy_type: PacProxyConfigurationType,
 	#[serde(rename = "proxyAutoconfigUrl")]
-	proxy_autoconfig_url: String,
+	pub proxy_autoconfig_url: String,
 	#[serde(flatten)]
 	pub extension: Option<serde_cbor::Value>,
 }
@@ -126,50 +126,50 @@ pub struct PacProxyConfiguration {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SystemProxyConfiguration {
 	#[serde(rename = "proxyType")]
-	proxy_type: SystemProxyConfigurationType,
+	pub proxy_type: SystemProxyConfigurationType,
 	#[serde(flatten)]
-	extension: Option<serde_cbor::Value>,
+	pub extension: Option<serde_cbor::Value>,
 }
 
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserPromptHandler {
 	#[serde(rename = "alert")]
-	alert: Option<UserPromptHandlerType>,
+	pub alert: Option<UserPromptHandlerType>,
 	#[serde(rename = "beforeUnload")]
-	before_unload: Option<UserPromptHandlerType>,
+	pub before_unload: Option<UserPromptHandlerType>,
 	#[serde(rename = "confirm")]
-	confirm: Option<UserPromptHandlerType>,
+	pub confirm: Option<UserPromptHandlerType>,
 	#[serde(rename = "default")]
-	default: Option<UserPromptHandlerType>,
+	pub default: Option<UserPromptHandlerType>,
 	#[serde(rename = "file")]
-	file: Option<UserPromptHandlerType>,
+	pub file: Option<UserPromptHandlerType>,
 	#[serde(rename = "prompt")]
-	prompt: Option<UserPromptHandlerType>,
+	pub prompt: Option<UserPromptHandlerType>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SubscriptionRequest {
 	#[serde(rename = "events")]
-	events: Vec<String>,
+	pub events: Vec<String>,
 	#[serde(rename = "contexts")]
-	contexts: Option<Vec<BrowsingContext>>,
+	pub contexts: Option<Vec<BrowsingContext>>,
 	#[serde(rename = "userContexts")]
-	user_contexts: Option<Vec<UserContext>>,
+	pub user_contexts: Option<Vec<UserContext>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UnsubscribeByIDRequest {
 	#[serde(rename = "subscriptions")]
-	subscriptions: Vec<Subscription>,
+	pub subscriptions: Vec<Subscription>,
 }
 
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UnsubscribeByAttributesRequest {
 	#[serde(rename = "events")]
-	events: Vec<String>,
+	pub events: Vec<String>,
 	#[serde(rename = "contexts")]
-	contexts: Option<Vec<BrowsingContext>>,
+	pub contexts: Option<Vec<BrowsingContext>>,
 }
 

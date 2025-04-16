@@ -26,24 +26,24 @@ pub enum ClientWindowInfoState {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ClientWindowInfo {
 	#[serde(rename = "active")]
-	active: bool,
+	pub active: bool,
 	#[serde(rename = "clientWindow")]
-	client_window: ClientWindow,
+	pub client_window: ClientWindow,
 	#[serde(rename = "height")]
-	height: u32,
+	pub height: u32,
 	#[serde(rename = "state")]
-	state: ClientWindowInfoState,
+	pub state: ClientWindowInfoState,
 	#[serde(rename = "width")]
-	width: u32,
+	pub width: u32,
 	#[serde(rename = "x")]
-	x: i32,
+	pub x: i32,
 	#[serde(rename = "y")]
-	y: i32,
+	pub y: i32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserContextInfo {
 	#[serde(rename = "userContext")]
-	user_context: UserContext,
+	pub user_context: UserContext,
 }
 

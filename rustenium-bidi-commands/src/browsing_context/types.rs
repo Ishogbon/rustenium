@@ -25,19 +25,19 @@ pub enum UserPromptHandlerType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Info {
 	#[serde(rename = "children")]
-	children: Option<InfoList>,
+	pub children: Option<InfoList>,
 	#[serde(rename = "clientWindow")]
-	client_window: ClientWindow,
+	pub client_window: ClientWindow,
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 	#[serde(rename = "originalOpener")]
-	original_opener: Option<BrowsingContext>,
+	pub original_opener: Option<BrowsingContext>,
 	#[serde(rename = "url")]
-	url: String,
+	pub url: String,
 	#[serde(rename = "userContext")]
-	user_context: UserContext,
+	pub user_context: UserContext,
 	#[serde(rename = "parent")]
-	parent: Option<BrowsingContext>,
+	pub parent: Option<BrowsingContext>,
 }
 
 
@@ -82,79 +82,79 @@ enum XPathLocatorType {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AccessibilityLocatorValue {
-	name: Option<String>,
-	role: Option<String>,
+	pub name: Option<String>,
+	pub role: Option<String>,
 }
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AccessibilityLocator {
 	#[serde(rename = "type")]
-	r#type: AccessibilityLocatorType,
+	pub r#type: AccessibilityLocatorType,
 	#[serde(rename = "value")]
-	value: AccessibilityLocatorValue,
+	pub value: AccessibilityLocatorValue,
 	#[serde(rename = "name")]
-	name: Option<String>,
+	pub name: Option<String>,
 	#[serde(rename = "role")]
-	role: Option<String>,
+	pub role: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CssLocator {
 	#[serde(rename = "type")]
-	r#type: CssLocatorType,
+	pub r#type: CssLocatorType,
 	#[serde(rename = "value")]
-	value: String,
+	pub value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContextLocatorValue {
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 }
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContextLocator {
 	#[serde(rename = "type")]
-	r#type: ContextLocatorType,
+	pub r#type: ContextLocatorType,
 	#[serde(rename = "value")]
-	value: ContextLocatorValue,
+	pub value: ContextLocatorValue,
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InnerTextLocator {
 	#[serde(rename = "type")]
-	r#type: InnerTextLocatorType,
+	pub r#type: InnerTextLocatorType,
 	#[serde(rename = "value")]
-	value: String,
+	pub value: String,
 	#[serde(rename = "ignoreCase")]
-	ignore_case: Option<bool>,
+	pub ignore_case: Option<bool>,
 	#[serde(rename = "matchType")]
-	match_type: Option<String>,
+	pub match_type: Option<String>,
 	#[serde(rename = "maxDepth")]
-	max_depth: Option<u32>,
+	pub max_depth: Option<u32>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct XPathLocator {
 	#[serde(rename = "type")]
-	r#type: XPathLocatorType,
+	pub r#type: XPathLocatorType,
 	#[serde(rename = "value")]
-	value: String,
+	pub value: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BaseNavigationInfo {
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 	#[serde(rename = "navigation")]
-	navigation: Option<Navigation>,
+	pub navigation: Option<Navigation>,
 	#[serde(rename = "timestamp")]
-	timestamp: u32,
+	pub timestamp: u32,
 	#[serde(rename = "url")]
-	url: String,
+	pub url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NavigationInfo {
 	#[serde(flatten)]
-	base: BaseNavigationInfo,
+	pub base: BaseNavigationInfo,
 }

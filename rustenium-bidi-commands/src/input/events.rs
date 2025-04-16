@@ -12,18 +12,18 @@ enum FileDialogOpenedMethod {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FileDialogOpened {
 	#[serde(rename = "method")]
-	method: FileDialogOpenedMethod,
+	pub method: FileDialogOpenedMethod,
 	#[serde(rename = "params")]
-	params: FileDialogInfo,
+	pub params: FileDialogInfo,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FileDialogInfo {
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 	#[serde(rename = "element")]
-	element: Option<SharedReference>,
+	pub element: Option<SharedReference>,
 	#[serde(rename = "multiple")]
-	multiple: bool,
+	pub multiple: bool,
 }
 

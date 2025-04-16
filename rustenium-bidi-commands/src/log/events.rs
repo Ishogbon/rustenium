@@ -11,8 +11,8 @@ enum EntryAddedMethod {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct EntryAdded {
 	#[serde(rename = "method")]
-	method: EntryAddedMethod,
+	pub method: EntryAddedMethod,
 	#[serde(rename = "params")]
-	params: Entry,
+	pub params: Entry,
 }
 

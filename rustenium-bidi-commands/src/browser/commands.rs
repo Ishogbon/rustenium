@@ -26,7 +26,7 @@ pub enum ClientWindowState {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetUserContextsResult {
-	user_contexts: Vec<UserContextInfo>,
+	pub user_contexts: Vec<UserContextInfo>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -38,9 +38,9 @@ pub enum CloseMethod {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Close {
 	#[serde(rename = "method")]
-	method: CloseMethod,
+	pub method: CloseMethod,
 	#[serde(rename = "params")]
-	params: Option<serde_cbor::Value>,
+	pub params: Option<serde_cbor::Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -52,9 +52,9 @@ pub enum CreateUserContextMethod {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreateUserContext {
 	#[serde(rename = "method")]
-	method: CreateUserContextMethod,
+	pub method: CreateUserContextMethod,
 	#[serde(rename = "params")]
-	params: Option<serde_cbor::Value>,
+	pub params: Option<serde_cbor::Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -66,9 +66,9 @@ pub enum GetClientWindowsMethod {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetClientWindows {
 	#[serde(rename = "method")]
-	method: GetClientWindowsMethod,
+	pub method: GetClientWindowsMethod,
 	#[serde(rename = "params")]
-	params: Option<serde_cbor::Value>,
+	pub params: Option<serde_cbor::Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -80,9 +80,9 @@ pub enum GetUserContextsMethod {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetUserContexts {
 	#[serde(rename = "method")]
-	method: GetUserContextsMethod,
+	pub method: GetUserContextsMethod,
 	#[serde(rename = "params")]
-	params: Option<serde_cbor::Value>,
+	pub params: Option<serde_cbor::Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -114,50 +114,50 @@ pub enum ClientWindowRectStateType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ClientWindowNamedState {
 	#[serde(rename = "state")]
-	state: ClientWindowNamedStateType,
+	pub state: ClientWindowNamedStateType,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ClientWindowRectState {
 	#[serde(rename = "state")]
-	state: ClientWindowRectStateType,
+	pub state: ClientWindowRectStateType,
 	#[serde(rename = "width")]
-	width: Option<u32>,
+	pub width: Option<u32>,
 	#[serde(rename = "height")]
-	height: Option<u32>,
+	pub height: Option<u32>,
 	#[serde(rename = "x")]
-	x: Option<i32>,
+	pub x: Option<i32>,
 	#[serde(rename = "y")]
-	y: Option<i32>,
+	pub y: Option<i32>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemoveUserContextParameters {
 	#[serde(rename = "userContext")]
-	user_context: UserContext,
+	pub user_context: UserContext,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetClientWindowStateParameters {
 	#[serde(rename = "clientWindow")]
-	client_window: ClientWindow,
+	pub client_window: ClientWindow,
 	#[serde(flatten)]
-	extesnsion: ClientWindowState,
+	pub extesnsion: ClientWindowState,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemoveUserContext {
 	#[serde(rename = "method")]
-	method: RemoveUserContextMethod,
+	pub method: RemoveUserContextMethod,
 	#[serde(rename = "params")]
-	params: RemoveUserContextParameters,
+	pub params: RemoveUserContextParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetClientWindowState {
 	#[serde(rename = "method")]
-	method: SetClientWindowStateMethod,
+	pub method: SetClientWindowStateMethod,
 	#[serde(rename = "params")]
-	params: SetClientWindowStateParameters,
+	pub params: SetClientWindowStateParameters,
 }
 

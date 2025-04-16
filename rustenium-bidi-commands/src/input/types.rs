@@ -11,8 +11,8 @@ enum ElementOriginType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ElementOrigin {
 	#[serde(rename = "type")]
-	r#type: ElementOriginType,
+	pub r#type: ElementOriginType,
 	#[serde(rename = "element")]
-	element: SharedReference,
+	pub element: SharedReference,
 }
 

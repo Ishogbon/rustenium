@@ -1,13 +1,13 @@
-mod browser;
-mod session;
-mod browsing_context;
-mod script;
-mod emulation;
-mod input;
-mod log;
-mod network;
-mod storage;
-mod web_extension;
+pub mod browser;
+pub mod session;
+pub mod browsing_context;
+pub mod script;
+pub mod emulation;
+pub mod input;
+pub mod log;
+pub mod network;
+pub mod storage;
+pub mod web_extension;
 
 pub fn add(left: u64, right: u64) -> u64 {
     left + right

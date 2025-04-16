@@ -57,79 +57,79 @@ enum RemovePreloadScriptMethod {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AddPreloadScript {
 	#[serde(rename = "method")]
-	method: AddPreloadScriptMethod,
+	pub method: AddPreloadScriptMethod,
 	#[serde(rename = "params")]
-	params: AddPreloadScriptParameters,
+	pub params: AddPreloadScriptParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AddPreloadScriptParameters {
 	#[serde(rename = "functionDeclaration")]
-	function_declaration: String,
+	pub function_declaration: String,
 	#[serde(rename = "arguments")]
-	arguments: Option<Vec<ChannelValue>>,
+	pub arguments: Option<Vec<ChannelValue>>,
 	#[serde(rename = "contexts")]
-	contexts: Option<Vec<BrowsingContext>>,
+	pub contexts: Option<Vec<BrowsingContext>>,
 	#[serde(rename = "userContexts")]
-	user_contexts: Option<Vec<UserContext>>,
+	pub user_contexts: Option<Vec<UserContext>>,
 	#[serde(rename = "sandbox")]
-	sandbox: Option<String>,
+	pub sandbox: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AddPreloadScriptResult {
 	#[serde(rename = "script")]
-	script: PreloadScript,
+	pub script: PreloadScript,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetRealmsResult {
 	#[serde(rename = "realms")]
-	realms: Vec<RealmInfo>,
+	pub realms: Vec<RealmInfo>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Disown {
 	#[serde(rename = "method")]
-	method: DisownMethod,
+	pub method: DisownMethod,
 	#[serde(rename = "params")]
-	params: DisownParameters,
+	pub params: DisownParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DisownParameters {
 	#[serde(rename = "handles")]
-	handles: Vec<Handle>,
+	pub handles: Vec<Handle>,
 	#[serde(rename = "target")]
-	target: Target,
+	pub target: Target,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CallFunction {
 	#[serde(rename = "method")]
-	method: CallFunctionMethod,
+	pub method: CallFunctionMethod,
 	#[serde(rename = "params")]
-	params: CallFunctionParameters,
+	pub params: CallFunctionParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CallFunctionParameters {
 	#[serde(rename = "functionDeclaration")]
-	function_declaration: String,
+	pub function_declaration: String,
 	#[serde(rename = "awaitPromise")]
-	await_promise: bool,
+	pub await_promise: bool,
 	#[serde(rename = "target")]
-	target: Target,
+	pub target: Target,
 	#[serde(rename = "arguments")]
-	arguments: Option<Vec<LocalValue>>,
+	pub arguments: Option<Vec<LocalValue>>,
 	#[serde(rename = "resultOwnership")]
-	result_ownership: Option<ResultOwnership>,
+	pub result_ownership: Option<ResultOwnership>,
 	#[serde(rename = "serializationOptions")]
-	serialization_options: Option<SerializationOptions>,
+	pub serialization_options: Option<SerializationOptions>,
 	#[serde(rename = "this")]
-	this: Option<LocalValue>,
+	pub this: Option<LocalValue>,
 	#[serde(rename = "userActivation", default = "default_user_activation")]
-	user_activation: bool,
+	pub user_activation: bool,
 }
 
 fn default_user_activation() -> bool {
@@ -139,54 +139,54 @@ fn default_user_activation() -> bool {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Evaluate {
 	#[serde(rename = "method")]
-	method: EvaluateMethod,
+	pub method: EvaluateMethod,
 	#[serde(rename = "params")]
-	params: EvaluateParameters,
+	pub params: EvaluateParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct EvaluateParameters {
 	#[serde(rename = "expression")]
-	expression: String,
+	pub expression: String,
 	#[serde(rename = "target")]
-	target: Target,
+	pub target: Target,
 	#[serde(rename = "awaitPromise")]
-	await_promise: bool,
+	pub await_promise: bool,
 	#[serde(rename = "resultOwnership")]
-	result_ownership: Option<ResultOwnership>,
+	pub result_ownership: Option<ResultOwnership>,
 	#[serde(rename = "serializationOptions")]
-	serialization_options: Option<SerializationOptions>,
+	pub serialization_options: Option<SerializationOptions>,
 	#[serde(rename = "userActivation", default = "default_user_activation")]
-	user_activation: bool,
+	pub user_activation: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetRealms {
 	#[serde(rename = "method")]
-	method: GetRealmsMethod,
+	pub method: GetRealmsMethod,
 	#[serde(rename = "params")]
-	params: GetRealmsParameters,
+	pub params: GetRealmsParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetRealmsParameters {
 	#[serde(rename = "context")]
-	context: Option<BrowsingContext>,
+	pub context: Option<BrowsingContext>,
 	#[serde(rename = "type")]
-	r#type: Option<RealmType>,
+	pub r#type: Option<RealmType>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemovePreloadScript {
 	#[serde(rename = "method")]
-	method: RemovePreloadScriptMethod,
+	pub method: RemovePreloadScriptMethod,
 	#[serde(rename = "params")]
-	params: RemovePreloadScriptParameters,
+	pub params: RemovePreloadScriptParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemovePreloadScriptParameters {
 	#[serde(rename = "script")]
-	script: PreloadScript,
+	pub script: PreloadScript,
 }
 

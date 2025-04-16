@@ -49,53 +49,53 @@ enum StorageKeyPartitionDescriptorType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetCookies {
 	#[serde(rename = "method")]
-	method: GetCookiesMethod,
+	pub method: GetCookiesMethod,
 	#[serde(rename = "params")]
-	params: GetCookiesParameters,
+	pub params: GetCookiesParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CookieFilter {
 	#[serde(rename = "name")]
-	name: Option<String>,
+	pub name: Option<String>,
 	#[serde(rename = "value")]
-	value: Option<BytesValue>,
+	pub value: Option<BytesValue>,
 	#[serde(rename = "domain")]
-	domain: Option<String>,
+	pub domain: Option<String>,
 	#[serde(rename = "path")]
-	path: Option<String>,
+	pub path: Option<String>,
 	#[serde(rename = "size")]
-	size: Option<u32>,
+	pub size: Option<u32>,
 	#[serde(rename = "httpOnly")]
-	http_only: Option<bool>,
+	pub http_only: Option<bool>,
 	#[serde(rename = "secure")]
-	secure: Option<bool>,
+	pub secure: Option<bool>,
 	#[serde(rename = "sameSite")]
-	same_site: Option<SameSite>,
+	pub same_site: Option<SameSite>,
 	#[serde(rename = "expiry")]
-	expiry: Option<u32>,
+	pub expiry: Option<u32>,
 	#[serde(flatten)]
-	extension: Option<serde_cbor::Value>,
+	pub extension: Option<serde_cbor::Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BrowsingContextPartitionDescriptor {
 	#[serde(rename = "type")]
-	r#type: BrowsingContextPartitionDescriptorType,
+	pub r#type: BrowsingContextPartitionDescriptorType,
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StorageKeyPartitionDescriptor {
 	#[serde(rename = "type")]
-	r#type: StorageKeyPartitionDescriptorType,
+	pub r#type: StorageKeyPartitionDescriptorType,
 	#[serde(rename = "userContext")]
-	user_context: Option<String>,
+	pub user_context: Option<String>,
 	#[serde(rename = "sourceOrigin")]
-	source_origin: Option<String>,
+	pub source_origin: Option<String>,
 	#[serde(flatten)]
-	extension: Option<serde_cbor::Value>,
+	pub extension: Option<serde_cbor::Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -107,63 +107,63 @@ pub enum PartitionDescriptor {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetCookiesParameters {
 	#[serde(rename = "filter")]
-	filter: Option<CookieFilter>,
+	pub filter: Option<CookieFilter>,
 	#[serde(rename = "partition")]
-	partition: Option<PartitionDescriptor>,
+	pub partition: Option<PartitionDescriptor>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetCookie {
 	#[serde(rename = "method")]
-	method: SetCookieMethod,
+	pub method: SetCookieMethod,
 	#[serde(rename = "params")]
-	params: SetCookieParameters,
+	pub params: SetCookieParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PartialCookie {
 	#[serde(rename = "name")]
-	name: String,
+	pub name: String,
 	#[serde(rename = "value")]
-	value: BytesValue,
+	pub value: BytesValue,
 	#[serde(rename = "domain")]
-	domain: String,
+	pub domain: String,
 	#[serde(rename = "path")]
-	path: Option<String>,
+	pub path: Option<String>,
 	#[serde(rename = "httpOnly")]
-	http_only: Option<bool>,
+	pub http_only: Option<bool>,
 	#[serde(rename = "secure")]
-	secure: Option<bool>,
+	pub secure: Option<bool>,
 	#[serde(rename = "sameSite")]
-	same_site: Option<SameSite>,
+	pub same_site: Option<SameSite>,
 	#[serde(rename = "expiry")]
-	expiry: Option<u32>,
+	pub expiry: Option<u32>,
 	#[serde(flatten)]
-	extension: Option<serde_cbor::Value>,
+	pub extension: Option<serde_cbor::Value>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetCookieParameters {
 	#[serde(rename = "cookie")]
-	cookie: PartialCookie,
+	pub cookie: PartialCookie,
 	#[serde(rename = "partition")]
-	partition: Option<PartitionDescriptor>,
+	pub partition: Option<PartitionDescriptor>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DeleteCookies {
 	#[serde(rename = "method")]
-	method: DeleteCookiesMethod,
+	pub method: DeleteCookiesMethod,
 	#[serde(rename = "params")]
-	params: DeleteCookiesParameters,
+	pub params: DeleteCookiesParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DeleteCookiesParameters {
 	#[serde(rename = "filter")]
-	filter: Option<CookieFilter>,
+	pub filter: Option<CookieFilter>,
 	#[serde(rename = "partition")]
-	partition: Option<PartitionDescriptor>,
+	pub partition: Option<PartitionDescriptor>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

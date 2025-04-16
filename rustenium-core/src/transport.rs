@@ -1,12 +1,12 @@
 use std::{error::Error, future::Future};
-
-use fastwebsockets::{handshake, Frame, WebSocket};
+use fastwebsockets::{handshake, Frame, OpCode, Role, WebSocket, WebSocketError,};
 use hyper::{
     body::Bytes,
     header::{CONNECTION, UPGRADE},
     upgrade::Upgraded,
     Request,
 };
+use hyper::client::conn::http1::handshake;
 use hyper_util::rt::TokioIo;
 use tokio::net::TcpStream;
 use url::Url;
@@ -46,7 +46,7 @@ impl ConnectionTransportConfig {
         let url = Url::parse(&self.endpoint);
         return url.unwrap().path().to_owned();
     }
-    
+
     pub fn extract_session_id(&self) -> Option<String> {
         if let Ok(url) = Url::parse(&self.endpoint) {
             let path = url.path();
@@ -79,7 +79,6 @@ impl ConnectionTransport for WebsocketConnectionTransport {
     }
 
     fn listen(&self) -> () {
-        
     }
 
     fn close(&self) -> () {
@@ -118,6 +117,28 @@ impl WebsocketConnectionTransport {
             client,
         })
     }
+
+    async fn listener_loop(&self, socket: &mut TcpStream) -> Result<(), WebSocketError> {
+        let mut ws = WebSocket::after_handshake(socket, Role::Client);
+        ws.set_writev(true);
+        ws.set_auto_close(true);
+        ws.set_auto_pong(true);
+
+        loop {
+            let frame = ws.read_frame().await?;
+
+            match frame.opcode {
+                OpCode::Close => break,
+                OpCode::Text | OpCode::Binary => {
+                    let frame = Frame::new(true, frame.opcode, None, frame.payload);
+                }
+                _ => {}
+            }
+        }
+
+        Ok(())
+    }
+
 } //
 
 struct SpawnExecutor;

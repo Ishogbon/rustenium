@@ -54,67 +54,67 @@ enum RemoveInterceptMethod {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AddIntercept {
 	#[serde(rename = "method")]
-	method: AddInterceptMethod,
+	pub method: AddInterceptMethod,
 	#[serde(rename = "params")]
-	params: AddInterceptParameters,
+	pub params: AddInterceptParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AddInterceptParameters {
 	#[serde(rename = "phases")]
-	phases: Vec<InterceptPhase>,
+	pub phases: Vec<InterceptPhase>,
 	#[serde(rename = "contexts")]
-	contexts: Option<Vec<BrowsingContext>>,
+	pub contexts: Option<Vec<BrowsingContext>>,
 	#[serde(rename = "urlPatterns")]
-	url_patterns: Option<Vec<UrlPattern>>,
+	pub url_patterns: Option<Vec<UrlPattern>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueRequest {
 	#[serde(rename = "method")]
-	method: ContinueRequestMethod,
+	pub method: ContinueRequestMethod,
 	#[serde(rename = "params")]
-	params: ContinueRequestParameters,
+	pub params: ContinueRequestParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueRequestParameters {
 	#[serde(rename = "request")]
-	request: Request,
+	pub request: Request,
 	#[serde(rename = "body")]
-	body: BytesValue,
+	pub body: BytesValue,
 	#[serde(rename = "cookies")]
-	cookies: Vec<CookieHeader>,
+	pub cookies: Vec<CookieHeader>,
 	#[serde(rename = "headers")]
-	headers: Vec<Header>,
+	pub headers: Vec<Header>,
 	#[serde(rename = "method")]
-	method: String,
+	pub method: String,
 	#[serde(rename = "url")]
-	url: String,
+	pub url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueResponse {
 	#[serde(rename = "method")]
-	method: ContinueResponseMethod,
+	pub method: ContinueResponseMethod,
 	#[serde(rename = "params")]
-	params: ContinueResponseParameters,
+	pub params: ContinueResponseParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ContinueResponseParameters {
 	#[serde(rename = "request")]
-	request: Request,
+	pub request: Request,
 	#[serde(rename = "cookies")]
-	cookies: Vec<SetCookieHeader>,
+	pub cookies: Vec<SetCookieHeader>,
 	#[serde(rename = "credentials")]
-	credentials: AuthCredentials,
+	pub credentials: AuthCredentials,
 	#[serde(rename = "headers")]
-	headers: Vec<Header>,
+	pub headers: Vec<Header>,
 	#[serde(rename = "reasonPhrase")]
-	reason_phrase: String,
+	pub reason_phrase: String,
 	#[serde(rename = "statusCode")]
-	status_code: u32,
+	pub status_code: u32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -179,53 +179,53 @@ pub struct ContinueWithAuth {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FailRequest {
 	#[serde(rename = "method")]
-	method: FailRequestMethod,
+	pub method: FailRequestMethod,
 	#[serde(rename = "params")]
-	params: FailRequestParameters,
+	pub params: FailRequestParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FailRequestParameters {
 	#[serde(rename = "request")]
-	request: Request,
+	pub request: Request,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProvideResponse {
 	#[serde(rename = "method")]
-	method: ProvideResponseMethod,
+	pub method: ProvideResponseMethod,
 	#[serde(rename = "params")]
-	params: ProvideResponseParameters,
+	pub params: ProvideResponseParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProvideResponseParameters {
 	#[serde(rename = "request")]
-	request: Request,
+	pub request: Request,
 	#[serde(rename = "body")]
-	body: BytesValue,
+	pub body: BytesValue,
 	#[serde(rename = "cookies")]
-	cookies: Vec<SetCookieHeader>,
+	pub cookies: Vec<SetCookieHeader>,
 	#[serde(rename = "headers")]
-	headers: Vec<Header>,
+	pub headers: Vec<Header>,
 	#[serde(rename = "reasonPhrase")]
-	reason_phrase: String,
+	pub reason_phrase: String,
 	#[serde(rename = "statusCode")]
-	status_code: u32,
+	pub status_code: u32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemoveIntercept {
 	#[serde(rename = "method")]
-	method: RemoveInterceptMethod,
+	pub method: RemoveInterceptMethod,
 	#[serde(rename = "params")]
-	params: RemoveInterceptParameters,
+	pub params: RemoveInterceptParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RemoveInterceptParameters {
 	#[serde(rename = "intercept")]
-	intercept: Intercept,
+	pub intercept: Intercept,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

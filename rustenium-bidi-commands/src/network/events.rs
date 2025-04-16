@@ -21,7 +21,7 @@ pub struct AuthRequired {
 	#[serde(rename = "method")]
 	pub method: AuthRequiredMethod,
 	#[serde(rename = "params")]
-	params: AuthRequiredParameters,
+	pub params: AuthRequiredParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

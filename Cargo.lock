@@ -732,6 +732,7 @@ dependencies = [
  "hyper",
  "hyper-util",
  "regex",
+ "rustenium-bidi-commands",
  "serde",
  "serde_json",
  "tokio",

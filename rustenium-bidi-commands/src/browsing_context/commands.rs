@@ -116,15 +116,15 @@ enum BoxClipRectangleType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Activate {
 	#[serde(rename = "method")]
-	method: ActivateMethod,
+	pub method: ActivateMethod,
 	#[serde(rename = "params")]
-	params: ActivateParameters,
+	pub params: ActivateParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ActivateParameters {
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -135,35 +135,35 @@ pub enum CaptureScreenshotParametersOrigin {
 }
 
 fn capture_screenshot_parameters_default_origin() -> CaptureScreenshotParametersOrigin {
-	CaptureScreenshotParametersOrigin::Viewport
+	pub CaptureScreenshotParametersOrigin::Viewport
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CaptureScreenshot {
 	#[serde(rename = "method")]
-	method: CaptureScreenshotMethod,
+	pub method: CaptureScreenshotMethod,
 	#[serde(rename = "params")]
-	params: CaptureScreenshotParameters,
+	pub params: CaptureScreenshotParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CaptureScreenshotParameters {
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 	#[serde(rename = "origin", default = "capture_screenshot_parameters_default_origin")]
-	origin: CaptureScreenshotParametersOrigin,
+	pub origin: CaptureScreenshotParametersOrigin,
 	#[serde(rename = "format")]
-	format: Option<ImageFormat>,
+	pub format: Option<ImageFormat>,
 	#[serde(rename = "clip")]
-	clip: Option<ClipRectangle>,
+	pub clip: Option<ClipRectangle>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ImageFormat {
 	#[serde(rename = "type")]
-	r#type: String,
+	pub r#type: String,
 	#[serde(rename = "quality")]
-	quality: Option<f32>,
+	pub quality: Option<f32>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -176,23 +176,23 @@ pub enum ClipRectangle {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ElementClipRectangle {
 	#[serde(rename = "type")]
-	r#type: ElementClipRectangleType,
+	pub r#type: ElementClipRectangleType,
 	#[serde(rename = "element")]
-	element: SharedReference,
+	pub element: SharedReference,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BoxClipRectangle {
 	#[serde(rename = "type")]
-	r#type: BoxClipRectangleType,
+	pub r#type: BoxClipRectangleType,
 	#[serde(rename = "x")]
-	x: f64,
+	pub x: f64,
 	#[serde(rename = "y")]
-	y: f64,
+	pub y: f64,
 	#[serde(rename = "width")]
-	width: f64,
+	pub width: f64,
 	#[serde(rename = "height")]
-	height: f64,
+	pub height: f64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -235,9 +235,9 @@ pub struct TraverseHistoryResult {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Close {
 	#[serde(rename = "method")]
-	method: CloseMethod,
+	pub method: CloseMethod,
 	#[serde(rename = "params")]
-	params: CloseParameters,
+	pub params: CloseParameters,
 }
 
 fn close_parameters_default_prompt_unload() -> bool {
@@ -253,9 +253,9 @@ pub struct CloseParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Create {
 	#[serde(rename = "method")]
-	method: CreateMethod,
+	pub method: CreateMethod,
 	#[serde(rename = "params")]
-	params: CreateParameters,
+	pub params: CreateParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -290,86 +290,86 @@ pub struct CreateResult {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetTree {
 	#[serde(rename = "method")]
-	method: GetTreeMethod,
+	pub method: GetTreeMethod,
 	#[serde(rename = "params")]
-	params: GetTreeParameters,
+	pub params: GetTreeParameters,
 }
 
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetTreeParameters {
 	#[serde(rename = "maxDepth")]
-	max_depth: Option<u32>,
+	pub max_depth: Option<u32>,
 	#[serde(rename = "root")]
-	root: Option<BrowsingContext>,
+	pub root: Option<BrowsingContext>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HandleUserPrompt {
 	#[serde(rename = "method")]
-	method: HandleUserPromptMethod,
+	pub method: HandleUserPromptMethod,
 	#[serde(rename = "params")]
-	params: HandleUserPromptParameters,
+	pub params: HandleUserPromptParameters,
 }
 
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HandleUserPromptParameters {
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 	#[serde(rename = "accept")]
-	accept: Option<bool>,
+	pub accept: Option<bool>,
 	#[serde(rename = "userText")]
-	user_text: Option<String>,
+	pub user_text: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LocateNodes {
 	#[serde(rename = "method")]
-	method: LocateNodesMethod,
+	pub method: LocateNodesMethod,
 	#[serde(rename = "params")]
-	params: LocateNodesParameters,
+	pub params: LocateNodesParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LocateNodesParameters {
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 	#[serde(rename = "locator")]
-	locator: Locator,
+	pub locator: Locator,
 	#[serde(rename = "maxNodeCount")]
-	max_node_count: Option<u64>,
+	pub max_node_count: Option<u64>,
 	#[serde(rename = "serializationOptions")]
-	serialization_options: Option<SerializationOptions>,
+	pub serialization_options: Option<SerializationOptions>,
 	#[serde(rename = "startNodes")]
-	start_nodes: Option<Vec<SharedReference>>,
+	pub start_nodes: Option<Vec<SharedReference>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Navigate {
 	#[serde(rename = "method")]
-	method: NavigateMethod,
+	pub method: NavigateMethod,
 	#[serde(rename = "params")]
-	params: NavigateParameters,
+	pub params: NavigateParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NavigateParameters {
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 	#[serde(rename = "url")]
-	url: String,
+	pub url: String,
 	#[serde(rename = "wait")]
-	wait: Option<ReadinessState>,
+	pub wait: Option<ReadinessState>,
 }
 
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Print {
 	#[serde(rename = "method")]
-	method: PrintMethod,
+	pub method: PrintMethod,
 	#[serde(rename = "params")]
-	params: PrintParameters,
+	pub params: PrintParameters,
 }
 
 fn print_parameters_default_background() -> bool {
@@ -384,7 +384,7 @@ pub enum PrintParametersOrientation {
 }
 
 fn print_parameters_default_orientation() -> PrintParametersOrientation {
-	PrintParametersOrientation::Portrait
+	pub PrintParametersOrientation::Portrait
 }
 
 fn print_parameters_default_scale() -> f64 {
@@ -405,15 +405,15 @@ pub enum PrintParametersPageRange {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PrintParameters {
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 	#[serde(rename = "background", default = "print_parameters_default_background")]
 	pub background: bool,
 	#[serde(rename = "margin")]
-	margin: Option<PrintMarginParameters>,
+	pub margin: Option<PrintMarginParameters>,
 	#[serde(rename="orientation", default = "print_parameters_default_orientation")]
 	pub orientation: PrintParametersOrientation,
 	#[serde(rename = "page")]
-	page: Option<PrintPageParameters>,
+	pub page: Option<PrintPageParameters>,
 	#[serde(rename = "pageRanges")]
 	pub page_ranges: Vec<PrintParametersPageRange>,
 	#[serde(rename = "scale", default = "print_parameters_default_scale")]
@@ -473,27 +473,27 @@ pub struct PrintPageParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Reload {
 	#[serde(rename = "method")]
-	method: ReloadMethod,
+	pub method: ReloadMethod,
 	#[serde(rename = "params")]
-	params: ReloadParameters,
+	pub params: ReloadParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ReloadParameters {
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 	#[serde(rename = "ignoreCache")]
-	ignore_cache: Option<bool>,
+	pub ignore_cache: Option<bool>,
 	#[serde(rename = "wait")]
-	wait: Option<ReadinessState>,
+	pub wait: Option<ReadinessState>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetViewport {
 	#[serde(rename = "method")]
-	method: SetViewportMethod,
+	pub method: SetViewportMethod,
 	#[serde(rename = "params")]
-	params: SetViewportParameters,
+	pub params: SetViewportParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -514,25 +514,25 @@ pub struct SetViewportParameters {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Viewport {
 	#[serde(rename = "width")]
-	width: u32,
+	pub width: u32,
 	#[serde(rename = "height")]
-	height: u32,
+	pub height: u32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TraverseHistory {
 	#[serde(rename = "method")]
-	method: TraverseHistoryMethod,
+	pub method: TraverseHistoryMethod,
 	#[serde(rename = "params")]
-	params: TraverseHistoryParameters,
+	pub params: TraverseHistoryParameters,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TraverseHistoryParameters {
 	#[serde(rename = "context")]
-	context: BrowsingContext,
+	pub context: BrowsingContext,
 	#[serde(rename = "delta")]
-	delta: i32,
+	pub delta: i32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

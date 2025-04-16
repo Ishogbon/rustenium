@@ -1,4 +1,6 @@
 use serde::{Deserialize, Serialize};
+use rustenium_bidi_commands::session::commands::{New as SessionNew, NewMethod as SessionNewMethod, NewParameters as SessionNewParameters};
+use rustenium_bidi_commands::session::types::CapabilitiesRequest;
 use crate::{
     connection::Connection,
     transport::{ConnectionTransport, ConnectionTransportConfig, WebsocketConnectionTransport},
@@ -24,14 +26,25 @@ impl<T: ConnectionTransport> Session<T> {
         return Session { id: session_id, connection };
     }
 
-    pub async fn create_new_session(self, connection_type: SessionConnectionType) -> Session<T> {
+    pub async fn create_new_session(&mut self, connection_type: SessionConnectionType) -> Session<T> {
         match connection_type {
             SessionConnectionType::WebSocket => {
+                let command = SessionNew {
+                    method: SessionNewMethod::SessionNew,
+                    params: SessionNewParameters {
+                        capabilities: CapabilitiesRequest {
+                            always_match: None,
+                            first_match: None,
+                        },
+                    }
+                };
+                self.send(command).await;
+                
             }
         }
     }
 
-    async fn send(&self, message: impl Serialize)  {
+    async fn send(&mut self, message: impl Serialize)  {
         let raw_message = serde_json::to_string(&message).unwrap();
         self.connection.send(raw_message);
     }

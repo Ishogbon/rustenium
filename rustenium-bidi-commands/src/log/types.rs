@@ -12,15 +12,15 @@ pub enum Entry {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BaseLogEntry {
 	#[serde(rename = "level")]
-	level: Level,
+	pub level: Level,
 	#[serde(rename = "source")]
-	source: Source,
+	pub source: Source,
 	#[serde(rename = "text")]
-	text: Option<String>,
+	pub text: Option<String>,
 	#[serde(rename = "timestamp")]
-	timestamp: u32,
+	pub timestamp: u32,
 	#[serde(rename = "stackTrace")]
-	stack_trace: Option<StackTrace>,
+	pub stack_trace: Option<StackTrace>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
