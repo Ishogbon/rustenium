@@ -135,7 +135,7 @@ pub enum CaptureScreenshotParametersOrigin {
 }
 
 fn capture_screenshot_parameters_default_origin() -> CaptureScreenshotParametersOrigin {
-	pub CaptureScreenshotParametersOrigin::Viewport
+	CaptureScreenshotParametersOrigin::Viewport
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -384,7 +384,7 @@ pub enum PrintParametersOrientation {
 }
 
 fn print_parameters_default_orientation() -> PrintParametersOrientation {
-	pub PrintParametersOrientation::Portrait
+	PrintParametersOrientation::Portrait
 }
 
 fn print_parameters_default_scale() -> f64 {

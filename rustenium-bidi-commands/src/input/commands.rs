@@ -260,7 +260,7 @@ enum WheelScrollActionType {
 }
 
 fn wheel_scroll_action_default_origin() -> Origin {
-	pub Origin::Viewport
+	Origin::Viewport
 }
 
 #[derive(Debug, Serialize, Deserialize)]
