@@ -62,7 +62,7 @@ impl ConnectionTransportConfig {
 }
 
 pub trait ConnectionTransport {
-    fn send(&mut self, message: String) -> ();
+    async fn send(&mut self, message: String) -> ();
     fn listen(&self) -> ();
     fn close(&self) -> ();
     fn on_close(&self) -> ();
@@ -73,9 +73,9 @@ pub struct WebsocketConnectionTransport {
     client: WebSocket<TokioIo<Upgraded>>,
 }
 impl ConnectionTransport for WebsocketConnectionTransport {
-    fn send(&mut self, message: String) -> () {
+    async fn send(&mut self, message: String) -> () {
         let frame = Frame::text(fastwebsockets::Payload::from(message.as_bytes()));
-        self.client.write_frame(frame);
+        self.client.write_frame(frame).await.unwrap();
     }
 
     fn listen(&self) -> () {

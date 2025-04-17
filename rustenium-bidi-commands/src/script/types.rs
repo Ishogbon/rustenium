@@ -398,13 +398,13 @@ enum WindowRealmInfoType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WindowRealmInfo {
 	#[serde(flatten)]
-	pub ase: BaseRealmInfo,
+	pub base: BaseRealmInfo,
 	#[serde(rename = "type")]
-	pub #type: WindowRealmInfoType,
+	pub r#type: WindowRealmInfoType,
 	#[serde(rename = "context")]
-	pub ontext: BrowsingContext,
+	pub context: BrowsingContext,
 	#[serde(rename = "sandbox")]
-	pub andbox: Option<String>,
+	pub sandbox: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -416,11 +416,11 @@ enum DedicatedWorkerRealmInfoType {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DedicatedWorkerRealmInfo {
 	#[serde(flatten)]
-	pub ase: BaseRealmInfo,
+	pub base: BaseRealmInfo,
 	#[serde(rename="type")]
-	pub #type: DedicatedWorkerRealmInfoType,
+	pub r#type: DedicatedWorkerRealmInfoType,
 	#[serde(rename = "owners")]
-	pub wners: Vec<Realm>
+	pub owners: Vec<Realm>
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -944,7 +944,7 @@ fn serialization_options_default_max_dom_depth() -> Option<u32> {
 }
 
 fn serialization_options_default_include_shadow_tree() -> IncludeShadowTree {
-	pub IncludeShadowTree::None
+	IncludeShadowTree::None
 }
 
 #[derive(Debug, Serialize, Deserialize)]
