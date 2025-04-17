@@ -1,8 +1,10 @@
+use std::error::Error;
 use rustenium_core::{
     process::Process,
     transport::{ConnectionTransport, ConnectionTransportConfig, WebsocketConnectionTransport},
     Session,
 };
+use rustenium_core::session::SessionConnectionType;
 
 const CDP_WEBSOCKET_ENDPOINT_REGEX: &str = r"^DevTools listening on (ws:\/\/.*)$";
 
@@ -22,5 +24,9 @@ pub trait Browser<T: ConnectionTransport> {
         )
         .expect("Something wong with created session");
         return (session, browser_process);
+    }
+
+    async fn new_session(&mut self, session: &mut Session<T>, connection_type: SessionConnectionType) -> Result<Ok(), dyn Error> {
+        session.create_new_bidi_session(connection_type).await;
     }
 }

@@ -146,7 +146,7 @@ pub struct ExceptionDetails {
 	pub column_number: u32,
 	#[serde(rename = "exception")]
 	pub exception: RemoteValue,
-	#[serde(rename = "linpub enumber")]
+	#[serde(rename = "lineNumber")]
 	pub line_number: u32,
 	#[serde(rename = "stackTrace")]
 	pub stack_trace: StackTrace,

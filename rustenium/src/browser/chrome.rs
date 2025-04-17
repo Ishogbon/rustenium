@@ -1,5 +1,6 @@
+use std::error::Error;
 use rustenium_core::{process::Process, transport::WebsocketConnectionTransport, Session};
-
+use rustenium_core::session::SessionConnectionType;
 use super::{browser::Browser as BrowserTrait, Browser};
 
 pub struct ChromeBrowser {
@@ -64,5 +65,10 @@ impl ChromeBrowser {
         let result = self.open().await;
         self.browser.session = Some(result.0);
         self.browser.browser_process = Some(result.1);
+    }
+
+    pub async fn create_new_session(&mut self, session_connection_type: SessionConnectionType) -> Result<Ok(), dyn Error> {
+        let primary_session = &mut self.browser.session.unwrap();
+        let session = self.new_session(primary_session, session_connection_type).await?;
     }
 }

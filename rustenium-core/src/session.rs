@@ -26,7 +26,7 @@ impl<T: ConnectionTransport> Session<T> {
         return Session { id: session_id, connection };
     }
 
-    pub async fn create_new_session(&mut self, connection_type: SessionConnectionType) -> Session<T> {
+    pub async fn create_new_bidi_session(&mut self, connection_type: SessionConnectionType) -> () {
         match connection_type {
             SessionConnectionType::WebSocket => {
                 let command = SessionNew {
@@ -39,7 +39,6 @@ impl<T: ConnectionTransport> Session<T> {
                     }
                 };
                 self.send(command).await;
-                
             }
         }
     }
