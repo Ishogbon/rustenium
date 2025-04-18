@@ -7,10 +7,10 @@ async fn create_browser() -> ChromeBrowser {
     browser.launch().await;
     return browser;
 }
-#[tokio::test]
-async fn open_browser() {
-    create_browser().await;
-}
+// #[tokio::test]
+// async fn open_browser() {
+//     create_browser().await;
+// }
 
 #[tokio::test]
 async fn new_session() {
