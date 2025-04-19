@@ -13,10 +13,10 @@ impl Process {
     pub fn create<S, I>(exe_path: S, args: I) -> Process
     where
         S: AsRef<str>,
-        I: IntoIterator<Item = S>,
+        I: IntoIterator<Item = String>,
     {
         let child = Command::new(exe_path.as_ref())
-            .args(args.into_iter().map(|s| s.as_ref().to_string()))
+            .args(args.into_iter().map(|s| s))
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .spawn()
@@ -27,6 +27,7 @@ impl Process {
         return Self { child };
     }
 
+    #[deprecated]
     pub async fn wait_for_pattern(&mut self, pattern: &str, timeout_secs: Option<u64>) -> String {
         let timeout_secs = timeout_secs.unwrap_or(20);
         let regex = Regex::new(pattern).expect("Invalid regex pattern");

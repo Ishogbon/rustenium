@@ -45,6 +45,6 @@ impl<T: ConnectionTransport> Session<T> {
 
     async fn send(&mut self, message: impl Serialize)  {
         let raw_message = serde_json::to_string(&message).unwrap();
-        self.connection.send(raw_message);
+        self.connection.send(raw_message).await;
     }
 }

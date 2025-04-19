@@ -6,6 +6,7 @@ pub mod transport;
 mod listeners;
 
 pub use session::Session;
+pub use connection::find_free_port;
 
 pub fn add(left: u64, right: u64) -> u64 {
     left + right

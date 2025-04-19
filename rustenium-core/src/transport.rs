@@ -1,18 +1,32 @@
 use std::{error::Error, future::Future};
 use std::sync::Arc;
-use fastwebsockets::{handshake, Frame, OpCode, Role, WebSocket, WebSocketError,};
+use fastwebsockets::{handshake, FragmentCollector, Frame, OpCode, Role, WebSocket, WebSocketError};
 use hyper::{
     body::Bytes,
     header::{CONNECTION, UPGRADE},
     upgrade::Upgraded,
     Request,
 };
-use hyper::client::conn::http1::handshake;
 use hyper_util::rt::TokioIo;
-use tokio::io::{AsyncRead, AsyncWrite};
 use tokio::net::TcpStream;
 use tokio::sync::Mutex;
 use url::Url;
+
+#[derive(Debug, Clone)]
+pub enum Http {
+    Http,
+    Https,
+}
+
+
+impl Http {
+    pub fn proto(&self) -> &'static str {
+        match self {
+            Http::Http => "http",
+            Http::Https => "https",
+        }
+    }
+}
 
 #[derive(Debug, Clone)]
 pub enum ConnectionTransportProtocol {
@@ -73,7 +87,7 @@ pub trait ConnectionTransport {
 
 pub struct WebsocketConnectionTransport {
     pub config: ConnectionTransportConfig,
-    client: Arc<Mutex<WebSocket<TokioIo<Upgraded>>>>,
+    client: Arc<Mutex<FragmentCollector<TokioIo<Upgraded>>>>,
 }
 impl ConnectionTransport for WebsocketConnectionTransport {
     async fn send(&mut self, message: String) -> () {
@@ -96,7 +110,7 @@ impl ConnectionTransport for WebsocketConnectionTransport {
 impl WebsocketConnectionTransport {
     pub async fn new(connection_config: ConnectionTransportConfig) -> Result<Self, Box<dyn Error>> {
         let addr_host = connection_config.endpoint_to_host_port().unwrap();
-        let mut stream = TcpStream::connect(&addr_host).await.unwrap();
+        let stream = TcpStream::connect(&addr_host).await.unwrap();
         let uri = connection_config.get_endpoint_path();
         let req = Request::builder()
             .method("GET")
@@ -111,9 +125,10 @@ impl WebsocketConnectionTransport {
             .header("Sec-WebSocket-Version", "13")
             .body(http_body_util::Empty::<Bytes>::new()).unwrap();
 
-        let result = handshake::client(&SpawnExecutor, req, stream).await.unwrap();
-        let client = Arc::new(Mutex::new(result.0));
-        WebsocketConnectionTransport::listener_loop(client.clone()).unwrap();
+        let (mut ws, _) = handshake::client(&SpawnExecutor, req, stream).await.unwrap();
+        ws = Self::configure_client(ws);
+        let client = Arc::new(Mutex::new(FragmentCollector::new(ws)));
+        WebsocketConnectionTransport::listener_loop(client.clone()).await.unwrap();
         println!("Successfully connected to browser");
 
         Ok(Self {
@@ -122,20 +137,24 @@ impl WebsocketConnectionTransport {
         })
     }
 
-    fn listener_loop(ws: Arc<Mutex<WebSocket<TokioIo<Upgraded>>>>) -> Result<(), WebSocketError> 
+    fn configure_client(mut ws: WebSocket<TokioIo<Upgraded>>) -> WebSocket<TokioIo<Upgraded>> {
+        ws.set_writev(true);
+        ws.set_auto_close(true);
+        ws.set_auto_pong(true);
+
+        ws
+    }
+    async fn listener_loop(ws: Arc<Mutex<FragmentCollector<TokioIo<Upgraded>>>>) -> Result<(), WebSocketError>
     {
         tokio::spawn(async move {
-            ws.lock().await.set_writev(true);
-            ws.lock().await.set_auto_close(true);
-            ws.lock().await.set_auto_pong(true);
-
             loop {
                 let frame = ws.lock().await.read_frame().await.unwrap();
 
                 match frame.opcode {
                     OpCode::Close => break,
                     OpCode::Text | OpCode::Binary => {
-                        let frame = Frame::new(true, frame.opcode, None, frame.payload);
+                        let incoming = Frame::new(true, frame.opcode, None, frame.payload);
+                        assert!(incoming.fin);
                     }
                     _ => {}
                 }
