@@ -1,3 +1,4 @@
+use tokio::time::{Duration, sleep};
 use rustenium::{Browser, ChromeBrowser};
 use rustenium_core::session::SessionConnectionType;
 
@@ -16,4 +17,5 @@ async fn create_browser() -> ChromeBrowser {
 async fn new_session() {
     let mut browser = create_browser().await;
     browser.create_new_session(SessionConnectionType::WebSocket).await.unwrap();
+    sleep(Duration::from_secs(3)).await;
 }
