@@ -12,7 +12,7 @@ async fn create_browser() -> ChromeBrowser {
 // async fn open_browser() {
 //     create_browser().await;
 // }
-
+// 
 #[tokio::test]
 async fn new_session() {
     let mut browser = create_browser().await;
