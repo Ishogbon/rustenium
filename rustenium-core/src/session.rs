@@ -7,7 +7,7 @@ use crate::{
 };
 
 pub struct Session<T: ConnectionTransport> {
-    id: String,
+    id: Option<String>,
     connection: Connection<T>,
 }
 
@@ -16,14 +16,14 @@ pub enum SessionConnectionType {
 }
 impl<T: ConnectionTransport> Session<T> {
     pub async fn ws_new(
-        connection_config: ConnectionTransportConfig,
+        connection_config: &ConnectionTransportConfig,
+        pre_session: bool,
     ) -> Session<WebsocketConnectionTransport> {
-        let session_id = connection_config.extract_session_id().unwrap();
         let connection_transport = WebsocketConnectionTransport::new(connection_config)
             .await
             .unwrap();
         let connection = Connection::new(connection_transport);
-        return Session { id: session_id, connection };
+        return Session { id: None, connection };
     }
 
     pub async fn create_new_bidi_session(&mut self, connection_type: SessionConnectionType) -> () {
