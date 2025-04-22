@@ -41,12 +41,16 @@ impl <'a>Default for ChromeDriver<'a> {
 }
 
 impl <'a>ChromeDriver<'a> {
-    pub async fn launch(&mut self, host: Option<&str>, port: Option<u16>) -> () {
+    pub async fn launch(&'a mut self, host: Option<&'a str>, port: Option<u16>) -> () {
+        let host = host.unwrap_or("localhost");
         let port = port.unwrap_or(find_free_port().unwrap());
+        self.connection_transport_config.host = host;
         self.connection_transport_config.port = port;
-        let result = self.start(&self.connection_transport_config).await;
+        let connection_transport_config = &self.connection_transport_config;
+        let result = self.start(connection_transport_config).await;
         self.driver.session = Some(result.0);
         self.driver.driver_process = Some(result.1);
+        let session = self.driver.new_session(SessionConnectionType::WebSocket).await.unwrap();
     }
 
     pub async fn create_new_session(&mut self, session_connection_type: SessionConnectionType) -> Result<(), Box<dyn Error>> {
