@@ -6,24 +6,24 @@ use crate::{
     transport::{ConnectionTransport, ConnectionTransportConfig, WebsocketConnectionTransport},
 };
 
-pub struct Session<T: ConnectionTransport> {
+pub struct Session<'a, T: ConnectionTransport<'a>> {
     id: Option<String>,
-    connection: Connection<T>,
+    connection: Connection<'a, T>,
 }
 
 pub enum SessionConnectionType {
     WebSocket
 }
-impl<T: ConnectionTransport> Session<T> {
+impl<'a, T: ConnectionTransport<'a>> Session<'a, T> {
     pub async fn ws_new(
-        connection_config: &ConnectionTransportConfig,
+        connection_config: &'a ConnectionTransportConfig<'a>,
         pre_session: bool,
-    ) -> Session<WebsocketConnectionTransport> {
+    ) -> Session<WebsocketConnectionTransport<'a>> {
         let connection_transport = WebsocketConnectionTransport::new(connection_config)
             .await
             .unwrap();
         let connection = Connection::new(connection_transport);
-        return Session { id: None, connection };
+        Session { id: None, connection }
     }
 
     pub async fn create_new_bidi_session(&mut self, connection_type: SessionConnectionType) -> () {

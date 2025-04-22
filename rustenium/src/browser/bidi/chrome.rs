@@ -7,11 +7,11 @@ use serde::Deserialize;
 use rustenium_core::transport::ConnectionTransportConfig;
 
 pub struct ChromeDriver<'a> {
-    connection_transport_config: ConnectionTransportConfig,
-    pub driver: Driver<WebsocketConnectionTransport<'a>>,
+    connection_transport_config: ConnectionTransportConfig<'a>,
+    pub driver: Driver<'a, WebsocketConnectionTransport<'a>>,
 }
 
-impl <'a>DriverTrait<WebsocketConnectionTransport<'a>> for ChromeDriver<'a> {
+impl <'a>DriverTrait<'a, WebsocketConnectionTransport<'a>> for ChromeDriver<'a> {
     fn exe_path(&self) -> &str {
         return &self.driver.exe_path;
     }

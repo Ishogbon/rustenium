@@ -39,25 +39,25 @@ pub enum UrlFormat {
 }
 
 #[derive(Debug, Clone)]
-pub struct ConnectionTransportConfig {
+pub struct ConnectionTransportConfig<'a> {
     pub protocol: ConnectionTransportProtocol,
-    pub host: String,
+    pub host: &'a str,
     pub port: u16,
-    pub path: String,
+    pub path:  &'a str,
 }
 
-impl Default for ConnectionTransportConfig {
+impl <'a>Default for ConnectionTransportConfig<'a> {
     fn default() -> Self {
         Self {
             protocol: ConnectionTransportProtocol::Ws,
-            host: String::from("localhost"),
+            host: "localhost",
             port: 0,
-            path: String::from("session"),
+            path: "session",
         }
     }
 }
 
-impl ConnectionTransportConfig {
+impl<'a> ConnectionTransportConfig<'a> {
     pub fn full_endpoint(&self) -> String {
         format!("{}://{}{}", self.protocol, self.host_port(), self.path())
     }
@@ -73,7 +73,7 @@ impl ConnectionTransportConfig {
 
 }
 
-pub trait ConnectionTransport {
+pub trait ConnectionTransport<'a> {
     async fn send(&mut self, message: String) -> ();
     fn listen(&self) -> ();
     fn close(&self) -> ();
@@ -81,10 +81,11 @@ pub trait ConnectionTransport {
 }
 
 pub struct WebsocketConnectionTransport<'a> {
-    pub config: &'a ConnectionTransportConfig,
+    pub config: &'a ConnectionTransportConfig<'a>,
     client: Arc<Mutex<FragmentCollector<TokioIo<Upgraded>>>>,
 }
-impl <'a>ConnectionTransport for WebsocketConnectionTransport<'a> {
+
+impl <'a>ConnectionTransport<'a> for WebsocketConnectionTransport<'a> {
     async fn send(&mut self, message: String) -> () {
         let frame = Frame::text(fastwebsockets::Payload::from(message.as_bytes()));
         self.client.lock().await.write_frame(frame).await.unwrap();
@@ -102,8 +103,8 @@ impl <'a>ConnectionTransport for WebsocketConnectionTransport<'a> {
     }
 }
 
-impl <'a>WebsocketConnectionTransport<'a> {
-    pub async fn new(connection_config: &'a ConnectionTransportConfig) -> Result<Self, Box<dyn Error>> {
+impl <'a> WebsocketConnectionTransport<'a> {
+    pub async fn new(connection_config: &'a ConnectionTransportConfig<'a>) -> Result<Self, Box<dyn Error>> {
         let addr_host = connection_config.host_port();
         let stream = TcpStream::connect(&addr_host).await.unwrap();
         let uri = connection_config.path();
