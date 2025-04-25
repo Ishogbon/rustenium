@@ -1,6 +1,8 @@
 use serde::{Serialize, Deserialize};
 
 use super::types::{CapabilitiesRequest, ProxyConfiguration, SubscriptionRequest, UnsubscribeByAttributesRequest, UnsubscribeByIDRequest, UserPromptHandler};
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum SessionCommand {
 	End(End),
 	New(New),
@@ -9,6 +11,7 @@ pub enum SessionCommand {
 	Unsubscribe(Unsubscribe),
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum SessionResult {
 	NewResult(NewResult),
 	StatusResult(StatusResult),

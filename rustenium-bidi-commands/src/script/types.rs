@@ -103,6 +103,7 @@ pub struct ChannelProperties {
 	pub ownership: Option<ResultOwnership>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum EvaluateResult {
 	EvaluateResultSuccess(EvaluateResultSuccess),
 	EvaluateResultException(EvaluateResultException),

@@ -3,6 +3,7 @@ use serde_cbor;
 use crate::browser::types::{ClientWindow, UserContext, UserContextInfo};
 pub type CreateUserContextResult = UserContextInfo;
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum BrowserCommand {
 	Close(Close),
 	CreateUserContext(CreateUserContext),

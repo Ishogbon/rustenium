@@ -12,6 +12,6 @@ fastwebsockets = { version = "0.10.0", features = ["upgrade"] }
 hyper = "1.6.0"
 http-body-util = "0.1.2"
 hyper-util = "0.1.10"
-ctrlc = "3.4.5"
 regex = "1.11.1"
 url = "2.5.4"
+rand = "0.9.1"

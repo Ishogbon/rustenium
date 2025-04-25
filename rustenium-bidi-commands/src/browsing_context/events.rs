@@ -2,6 +2,8 @@ use serde::{Serialize, Deserialize};
 use super::types::{BaseNavigationInfo, BrowsingContext, Info, NavigationInfo, UserPromptType};
 
 use super::types::UserPromptHandlerType;
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum BrowsingContextEvent {
 	ContextCreated(ContextCreated),
 	ContextDestroyed(ContextDestroyed),

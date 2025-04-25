@@ -4,12 +4,15 @@ use crate::{browsing_context::types::BrowsingContext, network::types::{BytesValu
 
 use super::types::PartitionKey;
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum StorageCommand {
 	DeleteCookies(DeleteCookies),
 	GetCookies(GetCookies),
 	SetCookie(SetCookie),
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum StorageResult {
 	DeleteCookiesResult(DeleteCookiesResult),
 	GetCookiesResult(GetCookiesResult),

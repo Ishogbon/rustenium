@@ -3,6 +3,8 @@ use crate::{browser::types::UserContext, browsing_context::types::BrowsingContex
 
 use super::types::{InfoList, Locator, Navigation};
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum BrowsingContextCommand {
 	Activate(Activate),
 	CaptureScreenshot(CaptureScreenshot),
@@ -18,6 +20,8 @@ pub enum BrowsingContextCommand {
 	TraverseHistory(TraverseHistory),
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum BrowsingContextResult {
 	CaptureScreenshotResult(CaptureScreenshotResult),
 	CreateResult(CreateResult),

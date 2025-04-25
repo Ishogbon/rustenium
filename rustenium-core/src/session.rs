@@ -1,5 +1,6 @@
-use serde::{Deserialize, Serialize};
-use rustenium_bidi_commands::session::commands::{New as SessionNew, NewMethod as SessionNewMethod, NewParameters as SessionNewParameters};
+use rand::Rng;
+use rustenium_bidi_commands::{Command, CommandData};
+use rustenium_bidi_commands::session::commands::{New as SessionNew, NewMethod as SessionNewMethod, NewParameters as SessionNewParameters, SessionCommand};
 use rustenium_bidi_commands::session::types::CapabilitiesRequest;
 use crate::{
     connection::Connection,
@@ -38,13 +39,18 @@ impl<'a, T: ConnectionTransport<'a>> Session<'a, T> {
                         },
                     }
                 };
-                self.send(command).await;
+                self.send(CommandData::SessionCommand(SessionCommand::New(command))).await;
             }
         }
     }
 
-    async fn send(&mut self, message: impl Serialize)  {
-        let raw_message = serde_json::to_string(&message).unwrap();
+    async fn send(&mut self, command_data: CommandData)  {
+        let command = Command {
+            id : rand::rng().random::<u32>(),
+            command_data,
+            extension: None
+        };
+        let raw_message = serde_json::to_string(&command).unwrap();
         self.connection.send(raw_message).await;
     }
 }

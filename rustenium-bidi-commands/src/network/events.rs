@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use super::types::{BaseParameters, Initiator, ResponseData};
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum NetworkEvent {
 	AuthRequired(AuthRequired),
 	BeforeRequestSent(BeforeRequestSent),

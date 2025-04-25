@@ -5,6 +5,8 @@ use crate::{browsing_context::types::BrowsingContext, script::types::SharedRefer
 use super::types::ElementOrigin;
 
 pub type NoneSourceAction = PauseAction;
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum InputCommand {
 	PerformActions(PerformActions),
 	ReleaseActions(ReleaseActions),

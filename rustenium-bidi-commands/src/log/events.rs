@@ -3,6 +3,11 @@ use serde::{Serialize, Deserialize};
 use super::types::Entry;
 
 #[derive(Debug, Serialize, Deserialize)]
+pub enum LogEvent {
+	EntryAdded(EntryAdded),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 enum EntryAddedMethod {
 	#[serde(rename = "log.entryAdded")]
 	EntryAdded,

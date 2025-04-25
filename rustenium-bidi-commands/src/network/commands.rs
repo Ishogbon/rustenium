@@ -4,6 +4,7 @@ use crate::browsing_context::types::BrowsingContext;
 
 use super::types::{BytesValue, CookieHeader, Header, Intercept, Request, SetCookieHeader, UrlPattern};
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum NetworkCommand {
 	AddIntercept(AddIntercept),
 	ContinueRequest(ContinueRequest),
@@ -15,6 +16,8 @@ pub enum NetworkCommand {
 	SetCacheBehavior(SetCacheBehavior),
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum NetworkResult {
 	AddInterceptResult(AddInterceptResult),
 }

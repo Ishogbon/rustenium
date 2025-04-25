@@ -4,8 +4,12 @@ use crate::browsing_context::types::BrowsingContext;
 use crate::script::types::SharedReference;
 
 #[derive(Debug, Serialize, Deserialize)]
+pub enum InputEvent {
+	FileDialogOpened(FileDialogOpened),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 enum FileDialogOpenedMethod {
-	#[serde(rename = "input.fileDialogOpened")]
 	InputFileDialogOpened,
 }
 

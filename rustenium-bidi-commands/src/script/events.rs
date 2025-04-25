@@ -1,6 +1,7 @@
 use serde::{Serialize, Deserialize};
 use crate::script::types::{Channel, Realm, RealmInfo, RemoteValue, Source};
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ScriptEvent {
 	Message(Message),
 	RealmCreated(RealmCreated),

@@ -2,6 +2,11 @@ use serde::{Serialize, Deserialize};
 
 use crate::{browser::types::UserContext, browsing_context::types::BrowsingContext};
 
+#[derive(Debug, Serialize, Deserialize)]
+pub enum EmulationCommand {
+	SetGeolocationOverride(SetGeolocationOverride),
+}
+
 fn geolocation_coordinates_default_accuracy() -> f64 {
 	1.0
 }

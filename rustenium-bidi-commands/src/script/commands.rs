@@ -3,6 +3,7 @@ use crate::script::types::{ChannelValue, EvaluateResult, Handle, LocalValue, Pre
 use crate::browser::types::UserContext;
 use crate::browsing_context::types::BrowsingContext;
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ScriptCommand {
 	AddPreloadScript(AddPreloadScript),
 	CallFunction(CallFunction),
@@ -12,6 +13,7 @@ pub enum ScriptCommand {
 	RemovePreloadScript(RemovePreloadScript),
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ScriptResult {
 	AddPreloadScriptResult(AddPreloadScriptResult),
 	EvaluateResult(EvaluateResult),
