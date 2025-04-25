@@ -25,6 +25,7 @@ impl<'a, T: ConnectionTransport<'a>> Session<'a, T> {
             .await
             .unwrap();
         let connection = Connection::new(connection_transport);
+        connection.start_listeners();
         Session { id: None, connection }
     }
 
@@ -64,7 +65,7 @@ impl<'a, T: ConnectionTransport<'a>> Session<'a, T> {
     async fn send(&mut self, command_data: CommandData) -> Result<CommandResult, ErrorResponse>  {
         let command_id = loop {
             let id = rand::rng().random::<u32>();
-            if !self.connection.commmands_results_subscriptions.contains_key(&id) {
+            if !self.connection.commands_response_subscriptions.lock().await.contains_key(&id) {
                 break id;
             }
         };
@@ -74,7 +75,7 @@ impl<'a, T: ConnectionTransport<'a>> Session<'a, T> {
             extension: None
         };
         let (tx, rx) = oneshot::channel::<CommandResponseState>();
-        self.connection.commmands_results_subscriptions.insert(command_id, tx);
+        self.connection.commands_response_subscriptions.lock().await.insert(command_id, tx);
         let raw_message = serde_json::to_string(&command).unwrap();
         self.connection.send(raw_message).await;
         match rx.await {

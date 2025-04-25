@@ -1,12 +1,15 @@
 use std::{collections::HashMap, net::TcpListener};
-use rustenium_bidi_commands::CommandResult;
-use tokio::sync::oneshot;
+use std::sync::Arc;
+use tokio::sync::mpsc::unbounded_channel;
+use rustenium_bidi_commands::{CommandResult, Event};
+use tokio::sync::{oneshot, Mutex};
 
 use crate::{listeners::CommandResponseState, transport::ConnectionTransport};
+use crate::listeners::{CommandResponseListener, Listener};
 
 pub struct Connection<'a, T: ConnectionTransport<'a>> {
     transport: T,
-    pub commmands_results_subscriptions: HashMap<u32, oneshot::Sender<CommandResponseState>>,
+    pub commands_response_subscriptions: Arc<Mutex<HashMap<u32, oneshot::Sender<CommandResponseState>>>>,
     _marker: std::marker::PhantomData<&'a ()>,
 }
 
@@ -24,9 +27,20 @@ where
     pub fn new(connection_transport: T) -> Self {
         Self {
             transport: connection_transport,
-            commmands_results_subscriptions: HashMap::new(),
+            commands_response_subscriptions: Arc::new(Mutex::new(HashMap::new())),
             _marker: std::marker::PhantomData,
         }
+    }
+
+    pub fn start_listeners(&self) -> () {
+        let (listener_tx, listener_rx) = unbounded_channel::<String>();
+        let (command_response_tx, command_response_rx) = unbounded_channel::<CommandResponseState>();
+        let (event_tx, event_rx) = unbounded_channel::<Event>();
+
+        let listener = Listener::new(listener_rx, command_response_tx, event_tx);
+        listener.start();
+        let commands_response_listener = CommandResponseListener::new(command_response_rx, self.commands_response_subscriptions.clone());
+        commands_response_listener.start();
     }
 
     pub async fn send(&mut self, data: String) {

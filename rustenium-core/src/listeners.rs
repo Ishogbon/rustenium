@@ -1,42 +1,42 @@
-use std::{collections::HashMap, sync::{Arc, Mutex}};
+use std::{collections::HashMap, sync::{Arc}};
 
-use rustenium_bidi_commands::{CommandResponse, CommandResult, ErrorResponse, EventData, Message};
+use rustenium_bidi_commands::{CommandResponse, CommandResult, ErrorResponse, Event, EventData, Message};
 use serde::{Deserialize, Serialize};
-use tokio::sync::{mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender}, oneshot};
+use tokio::sync::{mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender}, oneshot, Mutex};
 
 pub struct Listener {
     rx: UnboundedReceiver<String>,
-    pub command_result_tx: UnboundedSender<CommandResponseState>,
-    pub event_tx: UnboundedSender<EventData>,
+    pub command_response_tx: UnboundedSender<CommandResponseState>,
+    pub event_tx: UnboundedSender<Event>,
 }
 
 impl Listener {
     pub fn new(
         rx: UnboundedReceiver<String>,
-        command_result_tx: UnboundedSender<CommandResponseState>,
-        event_tx: UnboundedSender<EventData>,
+        command_response_tx: UnboundedSender<CommandResponseState>,
+        event_tx: UnboundedSender<Event>,
     ) -> Self {
         Self {
             rx,
-            command_result_tx,
+            command_response_tx,
             event_tx,
         }
     }
-    fn start(mut self) {
+    pub fn start(mut self) {
         tokio::spawn(async move {
             while let Some(message) = self.rx.recv().await {
                 let parsed_message: Message = serde_json::from_str::<Message>(&message).unwrap();
                 match parsed_message {
                     Message::CommandResponse(command_response) => {
-                        self.command_result_tx
+                        self.command_response_tx
                             .send(CommandResponseState::Success(command_response))
                             .unwrap();
                     }
                     Message::Event(event) => {
-                        self.event_tx.send(event.event_data).unwrap();
+                        self.event_tx.send(event).unwrap();
                     }
                     Message::ErrorResponse(error_response) => {
-                        self.command_result_tx
+                        self.command_response_tx
                             .send(CommandResponseState::Error(error_response))
                             .unwrap();
                     }
@@ -51,30 +51,30 @@ pub enum CommandResponseState {
     Success(CommandResponse),
     Error(ErrorResponse),
 }
-pub struct CommandResultListener {
+pub struct CommandResponseListener {
     subscriptions: Arc<Mutex<HashMap<u32, oneshot::Sender<CommandResponseState>>>>,
     rx: UnboundedReceiver<CommandResponseState>,
 }
 
-impl CommandResultListener {
+impl CommandResponseListener {
     pub fn new(rx: UnboundedReceiver<CommandResponseState>, subscriptions: Arc<Mutex<HashMap<u32, oneshot::Sender<CommandResponseState>>>>) -> Self {
         Self { rx, subscriptions }
     }
-    fn start(mut self) {
+    pub fn start(mut self) {
         tokio::spawn(async move {
             while let Some(command_response) = self.rx.recv().await {
                 match command_response {
                     CommandResponseState::Success(command_response) => {
-                        let sender = self.subscriptions.lock().unwrap().remove(&command_response.id);
+                        let sender = self.subscriptions.lock().await.remove(&command_response.id);
                         if let Some(sender) = sender {
-                            sender.send(CommandResponseState::Success(command_response));
+                            sender.send(CommandResponseState::Success(command_response)).unwrap();
                         }
                     }
                     CommandResponseState::Error(error_response) => {
                         let id = error_response.id;
                         if let Some(id) = id {
-                            if let Some(sender) = self.subscriptions.lock().unwrap().remove(&id) {
-                                sender.send(CommandResponseState::Error(error_response));
+                            if let Some(sender) = self.subscriptions.lock().await.remove(&id) {
+                                sender.send(CommandResponseState::Error(error_response)).unwrap();
                             }
                         }
                     }
