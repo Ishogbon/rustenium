@@ -15,6 +15,10 @@ pub enum NetworkCommand {
 	SetCacheBehavior(SetCacheBehavior),
 }
 
+pub enum NetworkResult {
+	AddInterceptResult(AddInterceptResult),
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 enum AddInterceptMethod {
 	#[serde(rename = "network.addIntercept")]
@@ -67,6 +71,12 @@ pub struct AddInterceptParameters {
 	pub contexts: Option<Vec<BrowsingContext>>,
 	#[serde(rename = "urlPatterns")]
 	pub url_patterns: Option<Vec<UrlPattern>>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AddInterceptResult {
+	#[serde(rename = "intercept")]
+	intercept: Intercept
 }
 
 #[derive(Debug, Serialize, Deserialize)]

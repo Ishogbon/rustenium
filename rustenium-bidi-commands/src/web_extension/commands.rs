@@ -7,6 +7,10 @@ pub enum WebExtensionCommand {
 	Uninstall(Uninstall),
 }
 
+pub enum WebExtensionResult {
+	InstallResult(InstallResult)
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InstallResult {
 	#[serde(rename = "extension")]
