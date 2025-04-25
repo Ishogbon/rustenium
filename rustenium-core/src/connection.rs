@@ -1,8 +1,12 @@
-use std::net::TcpListener;
+use std::{collections::HashMap, net::TcpListener};
+use rustenium_bidi_commands::CommandResult;
+use tokio::sync::oneshot;
+
 use crate::transport::ConnectionTransport;
 
 pub struct Connection<'a, T: ConnectionTransport<'a>> {
     transport: T,
+    commmands_results_subscriptions: HashMap<u32, Vec<oneshot::Sender<CommandResult>>>,
     _marker: std::marker::PhantomData<&'a ()>,
 }
 
@@ -20,6 +24,7 @@ where
     pub fn new(connection_transport: T) -> Self {
         Self {
             transport: connection_transport,
+            commmands_results_subscriptions: HashMap::new(),
             _marker: std::marker::PhantomData,
         }
     }
