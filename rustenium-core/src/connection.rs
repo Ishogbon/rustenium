@@ -2,11 +2,11 @@ use std::{collections::HashMap, net::TcpListener};
 use rustenium_bidi_commands::CommandResult;
 use tokio::sync::oneshot;
 
-use crate::transport::ConnectionTransport;
+use crate::{listeners::CommandResponseState, transport::ConnectionTransport};
 
 pub struct Connection<'a, T: ConnectionTransport<'a>> {
     transport: T,
-    commmands_results_subscriptions: HashMap<u32, Vec<oneshot::Sender<CommandResult>>>,
+    pub commmands_results_subscriptions: HashMap<u32, oneshot::Sender<CommandResponseState>>,
     _marker: std::marker::PhantomData<&'a ()>,
 }
 

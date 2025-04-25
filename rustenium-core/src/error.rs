@@ -1,4 +1,5 @@
 use std::fmt;
+use rustenium_bidi_commands::ErrorResponse as BidiErrorResponse;
 
 /// Error codes that can be returned by the browser automation API
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -123,4 +124,28 @@ pub fn parse_error_code(code: &str) -> Option<ErrorCode> {
         "unsupported operation" => Some(ErrorCode::UnsupportedOperation),
         _ => None,
     }
-} 
+}
+
+/// A wrapper for the BidiErrorResponse that implements Display
+#[derive(Debug)]
+pub struct ErrorResponseWrapper(pub BidiErrorResponse);
+
+impl fmt::Display for ErrorResponseWrapper {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Error: {:?}", self.0.error)?;
+        
+        if let Some(id) = self.0.id {
+            write!(f, " (ID: {})", id)?;
+        }
+        
+        write!(f, " - {}", self.0.message)?;
+        
+        if let Some(stacktrace) = &self.0.stacktrace {
+            write!(f, "\nStacktrace:\n{}", stacktrace)?;
+        }
+        
+        Ok(())
+    }
+}
+
+impl std::error::Error for ErrorResponseWrapper {} 

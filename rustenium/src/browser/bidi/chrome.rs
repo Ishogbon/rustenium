@@ -50,8 +50,6 @@ impl <'a>ChromeDriver<'a> {
         let result = self.start(connection_transport_config).await;
         self.driver.session = Some(result.0);
         self.driver.driver_process = Some(result.1);
-        let session = self.driver.new_session(SessionConnectionType::WebSocket).await.unwrap();
-        self.driver.session = session;
     }
 
     pub async fn create_new_session(&mut self, session_connection_type: SessionConnectionType) -> Result<(), Box<dyn Error>> {

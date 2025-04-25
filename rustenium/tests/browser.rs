@@ -7,11 +7,11 @@ async fn create_browser() -> ChromeDriver<'static> {
     browser.driver.exe_path = "D:/Documents/m-workspace/rustenium/apps/browsers/chrome-win64/chrome.exe";
     browser
 }
-// #[tokio::test]
-// async fn open_browser() {
-//     create_browser().await;
-// }
-// 
+#[tokio::test]
+async fn open_browser() {
+    create_browser().await;
+}
+
 #[tokio::test]
 async fn new_session() {
     let mut browser = create_browser().await;

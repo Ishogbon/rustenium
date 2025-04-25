@@ -81,7 +81,7 @@ pub struct CommandResponse {
     #[serde(rename = "type")]
     pub r#type: CommandResponseType,
     #[serde(rename = "id")]
-    pub id: i32,
+    pub id: u32,
     #[serde(rename = "result")]
     pub result: CommandResult,
     #[serde(rename = "extension")]
@@ -169,20 +169,66 @@ pub enum ErrorCode {
     UnsupportedOperation,
 }
 
+impl std::fmt::Display for ErrorCode {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ErrorCode::InvalidArgument => write!(f, "invalid argument"),
+            ErrorCode::InvalidSelector => write!(f, "invalid selector"),
+            ErrorCode::InvalidSessionId => write!(f, "invalid session id"),
+            ErrorCode::InvalidWebExtension => write!(f, "invalid web extension"),
+            ErrorCode::MoveTargetOutOfBounds => write!(f, "move target out of bounds"),
+            ErrorCode::NoSuchAlert => write!(f, "no such alert"),
+            ErrorCode::NoSuchElement => write!(f, "no such element"),
+            ErrorCode::NoSuchFrame => write!(f, "no such frame"),
+            ErrorCode::NoSuchHandle => write!(f, "no such handle"),
+            ErrorCode::NoSuchHistoryEntry => write!(f, "no such history entry"),
+            ErrorCode::NoSuchIntercept => write!(f, "no such intercept"),
+            ErrorCode::NoSuchNode => write!(f, "no such node"),
+            ErrorCode::NoSuchRequest => write!(f, "no such request"),
+            ErrorCode::NoSuchScript => write!(f, "no such script"),
+            ErrorCode::NoSuchStoragePartition => write!(f, "no such storage partition"),
+            ErrorCode::NoSuchUserContext => write!(f, "no such user context"),
+            ErrorCode::NoSuchWebExtension => write!(f, "no such web extension"),
+            ErrorCode::SessionNotCreated => write!(f, "session not created"),
+            ErrorCode::UnableToCaptureScreen => write!(f, "unable to capture screen"),
+            ErrorCode::UnableToCloseBrowser => write!(f, "unable to close browser"),
+            ErrorCode::UnableToSetCookie => write!(f, "unable to set cookie"),
+            ErrorCode::UnableToSetFileInput => write!(f, "unable to set file input"),
+            ErrorCode::UnderspecifiedStoragePartition => write!(f, "underspecified storage partition"),
+            ErrorCode::UnknownCommand => write!(f, "unknown command"),
+            ErrorCode::UnknownError => write!(f, "unknown error"),
+            ErrorCode::UnsupportedOperation => write!(f, "unsupported operation"),
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ErrorResponse {
     #[serde(rename = "type")]
-    r#type: ErrorResponseType,
+    pub r#type: ErrorResponseType,
     #[serde(rename = "id")]
-    id: Option<u32>,
+    pub id: Option<u32>,
     #[serde(rename = "error")]
-    error: ErrorCode,
+    pub error: ErrorCode,
     #[serde(rename = "message")]
-    message: String,
+    pub message: String,
     #[serde(rename = "stacktrace")]
-    stacktrace: Option<String>,
+    pub stacktrace: Option<String>,
     #[serde(rename = "extension")]
-    extension: Option<serde_cbor::Value>
+    pub extension: Option<serde_cbor::Value>
+}
+
+impl std::fmt::Display for ErrorResponse {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Error[{}]: {} (ID: {}){}", 
+            self.error,
+            self.message,
+            self.id.map_or("None".to_string(), |id| id.to_string()),
+            self.stacktrace.as_ref().map_or("".to_string(), |st| format!("\nStacktrace:\n{}", st))
+        )
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

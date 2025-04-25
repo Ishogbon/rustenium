@@ -21,7 +21,7 @@ pub trait Driver<'a, T: ConnectionTransport<'a>> {
     async fn start(& self, connection_transport_config: &'a ConnectionTransportConfig<'a>) -> (Session<'a, WebsocketConnectionTransport<'a>>, Process) {
         let driver_process = Process::create(self.exe_path(), self.flags());
         let session =
-            Session::<T>::ws_new(connection_transport_config, true)
+            Session::<T>::ws_new(connection_transport_config)
                 .await;
         (session, driver_process)
     }

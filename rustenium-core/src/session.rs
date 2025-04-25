@@ -1,7 +1,9 @@
 use rand::Rng;
-use rustenium_bidi_commands::{Command, CommandData};
-use rustenium_bidi_commands::session::commands::{New as SessionNew, NewMethod as SessionNewMethod, NewParameters as SessionNewParameters, SessionCommand};
+use rustenium_bidi_commands::{Command, CommandData, CommandResult, ErrorResponse};
+use rustenium_bidi_commands::session::commands::{New as SessionNew, NewMethod as SessionNewMethod, NewParameters as SessionNewParameters, SessionCommand, SessionResult};
 use rustenium_bidi_commands::session::types::CapabilitiesRequest;
+use tokio::sync::oneshot;
+use crate::listeners::CommandResponseState;
 use crate::{
     connection::Connection,
     transport::{ConnectionTransport, ConnectionTransportConfig, WebsocketConnectionTransport},
@@ -18,7 +20,6 @@ pub enum SessionConnectionType {
 impl<'a, T: ConnectionTransport<'a>> Session<'a, T> {
     pub async fn ws_new(
         connection_config: &'a ConnectionTransportConfig<'a>,
-        pre_session: bool,
     ) -> Session<WebsocketConnectionTransport<'a>> {
         let connection_transport = WebsocketConnectionTransport::new(connection_config)
             .await
@@ -39,18 +40,49 @@ impl<'a, T: ConnectionTransport<'a>> Session<'a, T> {
                         },
                     }
                 };
-                self.send(CommandData::SessionCommand(SessionCommand::New(command))).await;
+                let command_result = self.send(CommandData::SessionCommand(SessionCommand::New(command))).await;
+                match command_result {
+                    Ok(command_result) => {
+                        match command_result {
+                            CommandResult::SessionResult(session_result) => {
+                                match session_result {
+                                    SessionResult::NewResult(new_session_result) => {
+                                        self.id = Some(new_session_result.session_id);
+                                    }
+                                    _ => panic!("Invalid session result: {:?}", session_result)
+                                }
+                            }
+                            _ => panic!("Invalid command result: {:?}", command_result)
+                        }
+                    }
+                    Err(e) => panic!("Error creating new session: {}", e)
+                }
             }
         }
     }
 
-    async fn send(&mut self, command_data: CommandData)  {
+    async fn send(&mut self, command_data: CommandData) -> Result<CommandResult, ErrorResponse>  {
+        let command_id = loop {
+            let id = rand::rng().random::<u32>();
+            if !self.connection.commmands_results_subscriptions.contains_key(&id) {
+                break id;
+            }
+        };
         let command = Command {
-            id : rand::rng().random::<u32>(),
+            id : command_id,
             command_data,
             extension: None
         };
+        let (tx, rx) = oneshot::channel::<CommandResponseState>();
+        self.connection.commmands_results_subscriptions.insert(command_id, tx);
         let raw_message = serde_json::to_string(&command).unwrap();
         self.connection.send(raw_message).await;
+        match rx.await {
+            Ok(command_result) => match command_result {
+                CommandResponseState::Success(response) => Ok(response.result),
+                CommandResponseState::Error(err) => Err(err)
+            }
+            Err(err) => panic!("A recv error occurred: {}", err)
+        }
     }
 }
