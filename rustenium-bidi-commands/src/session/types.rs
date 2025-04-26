@@ -6,26 +6,26 @@ pub type Subscription = String;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CapabilitiesRequest {
-	#[serde(rename = "alwaysMatch")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "alwaysMatch")]
 	pub always_match: Option<CapabilityRequest>,
-	#[serde(rename = "firstMatch")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "firstMatch")]
 	pub first_match: Option<Vec<CapabilityRequest>>,
 }
 
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CapabilityRequest {
-	#[serde(rename = "acceptInsecureCerts")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "acceptInsecureCerts")]
 	pub accept_insecure_certs: Option<bool>,
-	#[serde(rename = "browserName")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "browserName")]
 	pub browser_name: Option<String>,
-	#[serde(rename = "browserVersion")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "browserVersion")]
 	pub browser_version: Option<String>,
-	#[serde(rename = "platformName")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "platformName")]
 	pub platform_name: Option<String>,
-	#[serde(rename = "proxy")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "proxy")]
 	pub proxy: Option<ProxyConfiguration>,
-	#[serde(rename = "unhandledPromptBehavior")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "unhandledPromptBehavior")]
 	pub unhandled_prompt_behavior: Option<UserPromptHandler>,
 	#[serde(flatten)]
 	pub extension: Option<serde_cbor::Value>,

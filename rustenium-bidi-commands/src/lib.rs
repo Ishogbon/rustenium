@@ -3,16 +3,16 @@ use input::events::InputEvent;
 use log::events::LogEvent;
 use network::events::NetworkEvent;
 use script::events::ScriptEvent;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize, Deserializer};
 use crate::browser::commands::BrowserCommand;
-use crate::browsing_context::commands::BrowsingContextResult;
+use crate::browsing_context::commands::{BrowsingContextCommand, BrowsingContextResult};
 use crate::emulation::commands::EmulationCommand;
 use crate::input::commands::InputCommand;
 use crate::network::commands::{NetworkCommand, NetworkResult};
 use crate::script::commands::{ScriptCommand, ScriptResult};
 use crate::session::commands::{SessionCommand, SessionResult};
 use crate::storage::commands::{StorageCommand, StorageResult};
-use crate::web_extension::commands::WebExtensionResult;
+use crate::web_extension::commands::{WebExtensionCommand, WebExtensionResult};
 
 pub mod browser;
 pub mod session;
@@ -25,6 +25,26 @@ pub mod network;
 pub mod storage;
 pub mod web_extension;
 
+fn float_or_int_to_i32<'de, D>(deserializer: D) -> Result<u32, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let value = serde_json::Value::deserialize(deserializer)?;
+
+    match value {
+        serde_json::Value::Number(num) => {
+            if let Some(i) = num.as_i64() {
+                Ok(i as u32)
+            } else if let Some(f) = num.as_f64() {
+                Ok(f as u32)
+            } else {
+                Err(serde::de::Error::custom("Invalid number"))
+            }
+        }
+        _ => Err(serde::de::Error::custom("Expected a number")),
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Command {
     pub id: u32,
@@ -36,16 +56,17 @@ pub struct Command {
 
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum CommandData {
     BrowserCommand(BrowserCommand),
-    BrowsingContextCommand(BrowserCommand),
+    BrowsingContextCommand(BrowsingContextCommand),
     EmulationCommand(EmulationCommand),
     InputCommand(InputCommand),
     NetworkCommand(NetworkCommand),
     ScriptCommand(ScriptCommand),
     SessionCommand(SessionCommand),
     StorageCommand(StorageCommand),
-    WebExtensionCommand(WebExtensionResult),
+    WebExtensionCommand(WebExtensionCommand),
 }
 #[derive(Debug, Serialize, Deserialize)]
 pub struct EmptyResult {
@@ -54,6 +75,7 @@ pub struct EmptyResult {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum CommandResult {
     BrowsingContextResult(BrowsingContextResult),
     NetworkResult(NetworkResult),
@@ -80,7 +102,7 @@ pub enum ErrorResponseType {
 pub struct CommandResponse {
     #[serde(rename = "type")]
     pub r#type: CommandResponseType,
-    #[serde(rename = "id")]
+    #[serde(deserialize_with = "float_or_int_to_i32", rename = "id")]
     pub id: u32,
     #[serde(rename = "result")]
     pub result: CommandResult,
@@ -232,6 +254,7 @@ impl std::fmt::Display for ErrorResponse {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum Message {
     CommandResponse(CommandResponse),
     ErrorResponse(ErrorResponse),

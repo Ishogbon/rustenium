@@ -155,8 +155,8 @@ impl <'a> WebsocketConnectionTransport<'a> {
                         let incoming = Frame::new(true, frame.opcode, None, frame.payload);
                         assert!(incoming.fin);
                         let string_payload = String::from_utf8(incoming.payload.to_owned());
-                        if let Ok(string_payload) = string_payload {
-                            tx.send(string_payload).unwrap()
+                        if let Ok(str_payload) = string_payload {
+                            tx.send(str_payload).unwrap()
                         }
                     }
                     _ => {}

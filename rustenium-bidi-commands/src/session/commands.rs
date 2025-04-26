@@ -3,6 +3,7 @@ use serde::{Serialize, Deserialize};
 use super::types::{CapabilitiesRequest, ProxyConfiguration, SubscriptionRequest, UnsubscribeByAttributesRequest, UnsubscribeByIDRequest, UserPromptHandler};
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum SessionCommand {
 	End(End),
 	New(New),
@@ -12,6 +13,7 @@ pub enum SessionCommand {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum SessionResult {
 	NewResult(NewResult),
 	StatusResult(StatusResult),

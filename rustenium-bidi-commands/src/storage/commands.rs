@@ -6,6 +6,7 @@ use super::types::PartitionKey;
 
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum StorageCommand {
 	DeleteCookies(DeleteCookies),
 	GetCookies(GetCookies),
@@ -13,6 +14,7 @@ pub enum StorageCommand {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum StorageResult {
 	DeleteCookiesResult(DeleteCookiesResult),
 	GetCookiesResult(GetCookiesResult),

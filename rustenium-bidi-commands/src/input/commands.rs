@@ -7,6 +7,7 @@ use super::types::ElementOrigin;
 pub type NoneSourceAction = PauseAction;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum InputCommand {
 	PerformActions(PerformActions),
 	ReleaseActions(ReleaseActions),

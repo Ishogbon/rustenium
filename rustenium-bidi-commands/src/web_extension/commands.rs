@@ -3,12 +3,14 @@ use serde::{Deserialize, Serialize};
 pub type Extension = String;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum WebExtensionCommand {
 	Install(Install),
 	Uninstall(Uninstall),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum WebExtensionResult {
 	InstallResult(InstallResult)
 }

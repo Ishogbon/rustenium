@@ -4,6 +4,7 @@ use crate::browser::types::UserContext;
 use crate::browsing_context::types::BrowsingContext;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum ScriptCommand {
 	AddPreloadScript(AddPreloadScript),
 	CallFunction(CallFunction),
@@ -14,6 +15,7 @@ pub enum ScriptCommand {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum ScriptResult {
 	AddPreloadScriptResult(AddPreloadScriptResult),
 	EvaluateResult(EvaluateResult),

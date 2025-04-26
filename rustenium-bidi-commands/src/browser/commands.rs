@@ -4,6 +4,7 @@ use crate::browser::types::{ClientWindow, UserContext, UserContextInfo};
 pub type CreateUserContextResult = UserContextInfo;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum BrowserCommand {
 	Close(Close),
 	CreateUserContext(CreateUserContext),

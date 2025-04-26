@@ -3,6 +3,7 @@ use serde::{Serialize, Deserialize};
 use crate::{browser::types::UserContext, browsing_context::types::BrowsingContext};
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum EmulationCommand {
 	SetGeolocationOverride(SetGeolocationOverride),
 }
