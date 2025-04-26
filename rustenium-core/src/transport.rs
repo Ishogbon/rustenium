@@ -1,5 +1,6 @@
 use std::{error::Error, future::Future};
 use std::fmt::Display;
+use std::ops::Deref;
 use std::sync::Arc;
 use fastwebsockets::{handshake, FragmentCollector, Frame, OpCode, Role, WebSocket, WebSocketError};
 use hyper::{
@@ -10,8 +11,10 @@ use hyper::{
 };
 use hyper_util::rt::TokioIo;
 use tokio::net::TcpStream;
+use tokio::sync::mpsc::UnboundedSender;
 use tokio::sync::Mutex;
 use url::Url;
+use crate::listeners::Listener;
 
 #[derive(Debug, Clone)]
 pub enum ConnectionTransportProtocol {
@@ -75,7 +78,7 @@ impl<'a> ConnectionTransportConfig<'a> {
 
 pub trait ConnectionTransport<'a> {
     async fn send(&mut self, message: String) -> ();
-    fn listen(&self) -> ();
+    fn listen(&self, listener: UnboundedSender<String>) -> ();
     fn close(&self) -> ();
     fn on_close(&self) -> ();
 }
@@ -91,7 +94,8 @@ impl <'a>ConnectionTransport<'a> for WebsocketConnectionTransport<'a> {
         self.client.lock().await.write_frame(frame).await.unwrap();
     }
 
-    fn listen(&self) -> () {
+    fn listen(&self, listener: UnboundedSender<String>) -> () {
+        WebsocketConnectionTransport::listener_loop(self.client.clone(), listener);
     }
 
     fn close(&self) -> () {
@@ -124,7 +128,6 @@ impl <'a> WebsocketConnectionTransport<'a> {
         let (mut ws, _) = handshake::client(&SpawnExecutor, req, stream).await.unwrap();
         ws = Self::configure_client(ws);
         let client = Arc::new(Mutex::new(FragmentCollector::new(ws)));
-        WebsocketConnectionTransport::listener_loop(client.clone()).await.unwrap();
         println!("Successfully connected to browser");
 
         Ok(Self {
@@ -140,7 +143,7 @@ impl <'a> WebsocketConnectionTransport<'a> {
 
         ws
     }
-    async fn listener_loop(ws: Arc<Mutex<FragmentCollector<TokioIo<Upgraded>>>>) -> Result<(), WebSocketError>
+    pub fn listener_loop(ws: Arc<Mutex<FragmentCollector<TokioIo<Upgraded>>>>, tx: UnboundedSender<String>) -> Result<(), WebSocketError>
     {
         tokio::spawn(async move {
             loop {
@@ -151,6 +154,10 @@ impl <'a> WebsocketConnectionTransport<'a> {
                     OpCode::Text | OpCode::Binary => {
                         let incoming = Frame::new(true, frame.opcode, None, frame.payload);
                         assert!(incoming.fin);
+                        let string_payload = String::from_utf8(incoming.payload.to_owned());
+                        if let Ok(string_payload) = string_payload {
+                            tx.send(string_payload).unwrap()
+                        }
                     }
                     _ => {}
                 }

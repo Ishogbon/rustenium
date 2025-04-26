@@ -6,6 +6,7 @@ use tokio::sync::{oneshot, Mutex};
 
 use crate::{listeners::CommandResponseState, transport::ConnectionTransport};
 use crate::listeners::{CommandResponseListener, Listener};
+use crate::transport::WebsocketConnectionTransport;
 
 pub struct Connection<'a, T: ConnectionTransport<'a>> {
     transport: T,
@@ -37,8 +38,11 @@ where
         let (command_response_tx, command_response_rx) = unbounded_channel::<CommandResponseState>();
         let (event_tx, event_rx) = unbounded_channel::<Event>();
 
+        self.transport.listen(listener_tx);
+        
         let listener = Listener::new(listener_rx, command_response_tx, event_tx);
         listener.start();
+        
         let commands_response_listener = CommandResponseListener::new(command_response_rx, self.commands_response_subscriptions.clone());
         commands_response_listener.start();
     }
