@@ -31,11 +31,11 @@ pub struct AuthCredentials {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BaseParameters {
-	#[serde(rename = "context")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "context")]
 	pub context: Option<BrowsingContext>,
 	#[serde(rename = "isBlocked")]
 	pub is_blocked: bool,
-	#[serde(rename = "navigation")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "navigation")]
 	pub navigation: Option<Navigation>,
 	#[serde(rename = "redirectCount")]
 	pub redirect_count: u32,
@@ -43,7 +43,7 @@ pub struct BaseParameters {
 	pub request: RequestData,
 	#[serde(rename = "timestamp")]
 	pub timestamp: u32,
-	#[serde(rename = "intercepts")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "intercepts")]
 	pub intercepts: Option<Vec<Intercept>>,
 }
 
@@ -94,9 +94,9 @@ pub struct Cookie {
 	pub secure: bool,
 	#[serde(rename = "sameSite")]
 	pub same_site: SameSite,
-	#[serde(rename = "expiry")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "expiry")]
 	pub expiry: Option<u32>,
-	#[serde(flatten)]
+	#[serde(skip_serializing_if = "Option::is_none", flatten)]
 	pub extension: Option<serde_cbor::Value>,
 }
 
@@ -157,15 +157,15 @@ pub enum InitiatorType {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Initiator {
-	#[serde(rename = "columnNumber")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "columnNumber")]
 	pub column_number: Option<u32>,
-	#[serde(rename = "lineNumber")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "lineNumber")]
 	pub line_number: Option<u32>,
-	#[serde(rename = "request")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "request")]
 	pub request: Option<Request>,
-	#[serde(rename = "stackTrace")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "stackTrace")]
 	pub stack_trace: Option<StackTrace>,
-	#[serde(rename = "type")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "type")]
 	pub r#type: Option<InitiatorType>,
 }
 
@@ -233,19 +233,19 @@ pub struct SetCookieHeader {
 	pub name: String,
 	#[serde(rename = "value")]
 	pub value: BytesValue,
-	#[serde(rename = "domain")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "domain")]
 	pub domain: Option<String>,
-	#[serde(rename = "httpOnly")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "httpOnly")]
 	pub http_only: Option<bool>,
-	#[serde(rename = "expiry")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "expiry")]
 	pub expiry: Option<String>,
-	#[serde(rename = "maxAge")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "maxAge")]
 	pub max_age: Option<i32>,
-	#[serde(rename = "path")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "path")]
 	pub path: Option<String>,
-	#[serde(rename = "sameSite")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "sameSite")]
 	pub same_site: Option<SameSite>,
-	#[serde(rename = "secure")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "secure")]
 	pub secure: Option<bool>,
 }
 

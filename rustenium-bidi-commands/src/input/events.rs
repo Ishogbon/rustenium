@@ -25,7 +25,7 @@ pub struct FileDialogOpened {
 pub struct FileDialogInfo {
 	#[serde(rename = "context")]
 	pub context: BrowsingContext,
-	#[serde(rename = "element")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "element")]
 	pub element: Option<SharedReference>,
 	#[serde(rename = "multiple")]
 	pub multiple: bool,

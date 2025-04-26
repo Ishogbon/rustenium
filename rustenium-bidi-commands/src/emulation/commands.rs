@@ -36,13 +36,13 @@ pub struct GeolocationCoordinates {
 	pub longitude: f64,
 	#[serde(rename = "accuracy", default = "geolocation_coordinates_default_accuracy")]
 	pub accuracy: f64,
-	#[serde(rename = "altitude", default = "geolocation_coordinates_default_altitude")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "altitude", default = "geolocation_coordinates_default_altitude")]
 	pub altitude: Option<f64>,
-	#[serde(rename = "altitudeAccuracy", default = "geolocation_coordinates_default_altitude_accuracy")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "altitudeAccuracy", default = "geolocation_coordinates_default_altitude_accuracy")]
 	pub altitude_accuracy: Option<f64>,
-	#[serde(rename = "heading", default = "geolocation_coordinates_default_heading")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "heading", default = "geolocation_coordinates_default_heading")]
 	pub heading: Option<f64>,
-	#[serde(rename = "speed", default = "geolocation_coordinates_default_speed")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "speed", default = "geolocation_coordinates_default_speed")]
 	pub speed: Option<f64>,
 }
 
@@ -56,9 +56,9 @@ pub enum SetGeolocationOverrideMethod {
 pub struct SetGeolocationOverrideParameters {
 	#[serde(rename = "coordinates")]
 	pub coordinates: Option<GeolocationCoordinates>,
-	#[serde(rename = "contexts")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "contexts")]
 	pub contexts: Option<Vec<BrowsingContext>>,
-	#[serde(rename = "userContexts")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "userContexts")]
 	pub user_contexts: Option<Vec<UserContext>>,
 }
 

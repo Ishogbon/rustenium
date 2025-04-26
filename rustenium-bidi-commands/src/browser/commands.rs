@@ -123,13 +123,13 @@ pub struct ClientWindowNamedState {
 pub struct ClientWindowRectState {
 	#[serde(rename = "state")]
 	pub state: ClientWindowRectStateType,
-	#[serde(rename = "width")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "width")]
 	pub width: Option<u32>,
-	#[serde(rename = "height")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "height")]
 	pub height: Option<u32>,
-	#[serde(rename = "x")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "x")]
 	pub x: Option<i32>,
-	#[serde(rename = "y")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "y")]
 	pub y: Option<i32>,
 }
 

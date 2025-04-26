@@ -7,28 +7,7 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="acd4cd92-3cd4-4ffc-893e-f9b41f484d38" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/rustenium.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium-bidi-commands/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium-bidi-commands/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium-bidi-commands/src/browser/commands.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium-bidi-commands/src/browser/commands.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium-bidi-commands/src/browsing_context/commands.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium-bidi-commands/src/browsing_context/commands.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium-bidi-commands/src/emulation/commands.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium-bidi-commands/src/emulation/commands.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium-bidi-commands/src/input/commands.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium-bidi-commands/src/input/commands.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium-bidi-commands/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium-bidi-commands/src/lib.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium-bidi-commands/src/network/commands.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium-bidi-commands/src/network/commands.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium-bidi-commands/src/script/commands.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium-bidi-commands/src/script/commands.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium-bidi-commands/src/session/commands.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium-bidi-commands/src/session/commands.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium-bidi-commands/src/session/types.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium-bidi-commands/src/session/types.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium-bidi-commands/src/storage/commands.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium-bidi-commands/src/storage/commands.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium-bidi-commands/src/web_extension/commands.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium-bidi-commands/src/web_extension/commands.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium-core/src/listeners.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium-core/src/listeners.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium-core/src/transport.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium-core/src/transport.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium/src/browser/bidi/chrome.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium/src/browser/bidi/chrome.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rustenium/tests/browser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/rustenium/tests/browser.rs" afterDir="false" />
-    </list>
+    <list default="true" id="acd4cd92-3cd4-4ffc-893e-f9b41f484d38" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -96,7 +75,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1745689098646</updated>
-      <workItem from="1745689100615" duration="6979000" />
+      <workItem from="1745689100615" duration="7189000" />
     </task>
     <servers />
   </component>

@@ -42,11 +42,11 @@ pub struct Capabilities {
     pub set_window_rect: bool,
     #[serde(rename = "userAgent")]
     pub user_agent: String,
-    #[serde(rename = "proxy")]
+    #[serde(skip_serializing_if = "Option::is_none", rename = "proxy")]
     pub proxy: Option<ProxyConfiguration>,
-    #[serde(rename = "unhandledPromptBehavior")]
+    #[serde(skip_serializing_if = "Option::is_none", rename = "unhandledPromptBehavior")]
     pub unhandled_prompt_behavior: Option<UserPromptHandler>,
-    #[serde(rename = "webSocketUrl")]
+    #[serde(skip_serializing_if = "Option::is_none", rename = "webSocketUrl")]
     pub web_socket_url: Option<String>,
     #[serde(flatten)]
     pub extension: Option<serde_cbor::Value>,

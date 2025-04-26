@@ -61,23 +61,23 @@ pub struct GetCookies {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CookieFilter {
-	#[serde(rename = "name")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "name")]
 	pub name: Option<String>,
-	#[serde(rename = "value")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "value")]
 	pub value: Option<BytesValue>,
-	#[serde(rename = "domain")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "domain")]
 	pub domain: Option<String>,
-	#[serde(rename = "path")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "path")]
 	pub path: Option<String>,
-	#[serde(rename = "size")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "size")]
 	pub size: Option<u32>,
-	#[serde(rename = "httpOnly")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "httpOnly")]
 	pub http_only: Option<bool>,
-	#[serde(rename = "secure")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "secure")]
 	pub secure: Option<bool>,
-	#[serde(rename = "sameSite")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "sameSite")]
 	pub same_site: Option<SameSite>,
-	#[serde(rename = "expiry")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "expiry")]
 	pub expiry: Option<u32>,
 	#[serde(flatten)]
 	pub extension: Option<serde_cbor::Value>,
@@ -95,9 +95,9 @@ pub struct BrowsingContextPartitionDescriptor {
 pub struct StorageKeyPartitionDescriptor {
 	#[serde(rename = "type")]
 	pub r#type: StorageKeyPartitionDescriptorType,
-	#[serde(rename = "userContext")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "userContext")]
 	pub user_context: Option<String>,
-	#[serde(rename = "sourceOrigin")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "sourceOrigin")]
 	pub source_origin: Option<String>,
 	#[serde(flatten)]
 	pub extension: Option<serde_cbor::Value>,
@@ -111,9 +111,9 @@ pub enum PartitionDescriptor {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetCookiesParameters {
-	#[serde(rename = "filter")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "filter")]
 	pub filter: Option<CookieFilter>,
-	#[serde(rename = "partition")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "partition")]
 	pub partition: Option<PartitionDescriptor>,
 }
 
@@ -133,15 +133,15 @@ pub struct PartialCookie {
 	pub value: BytesValue,
 	#[serde(rename = "domain")]
 	pub domain: String,
-	#[serde(rename = "path")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "path")]
 	pub path: Option<String>,
-	#[serde(rename = "httpOnly")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "httpOnly")]
 	pub http_only: Option<bool>,
-	#[serde(rename = "secure")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "secure")]
 	pub secure: Option<bool>,
-	#[serde(rename = "sameSite")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "sameSite")]
 	pub same_site: Option<SameSite>,
-	#[serde(rename = "expiry")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "expiry")]
 	pub expiry: Option<u32>,
 	#[serde(flatten)]
 	pub extension: Option<serde_cbor::Value>,
@@ -151,7 +151,7 @@ pub struct PartialCookie {
 pub struct SetCookieParameters {
 	#[serde(rename = "cookie")]
 	pub cookie: PartialCookie,
-	#[serde(rename = "partition")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "partition")]
 	pub partition: Option<PartitionDescriptor>,
 }
 
@@ -165,9 +165,9 @@ pub struct DeleteCookies {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DeleteCookiesParameters {
-	#[serde(rename = "filter")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "filter")]
 	pub filter: Option<CookieFilter>,
-	#[serde(rename = "partition")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "partition")]
 	pub partition: Option<PartitionDescriptor>,
 }
 

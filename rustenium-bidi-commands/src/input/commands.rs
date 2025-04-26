@@ -100,7 +100,7 @@ pub struct PointerSourceActions {
 	pub r#type: PointerSourceActionsType,
 	#[serde(rename = "id")]
 	pub id: String,
-	#[serde(rename = "parameters")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "parameters")]
 	pub parameters: Option<PointerParameters>,
 	#[serde(rename = "actions")]
 	pub actions: Vec<PointerSourceAction>,
@@ -119,12 +119,12 @@ pub enum PointerType {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PointerParameters {
-    #[serde(rename = "pointerType", default = "pointer_parameters_default_pointer_type")]
-    pointer_type: PointerType,
+    #[serde(skip_serializing_if = "Option::is_none", rename = "pointerType", default = "pointer_parameters_default_pointer_type")]
+    pointer_type: Option<PointerType>,
 }
 
-fn pointer_parameters_default_pointer_type() -> PointerType {
-    PointerType::Mouse
+fn pointer_parameters_default_pointer_type() -> Option<PointerType> {
+    Some(PointerType::Mouse)
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -167,7 +167,7 @@ enum PauseActionType {
 pub struct PauseAction {
 	#[serde(rename = "type")]
 	pub r#type: PauseActionType,
-	#[serde(rename = "duration")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "duration")]
 	pub duration: Option<u32>,
 }
 
@@ -247,9 +247,9 @@ pub struct PointerMoveAction {
 	pub x: f64,
 	#[serde(rename = "y")]
 	pub y: f64,
-	#[serde(rename = "duration")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "duration")]
 	pub duration: Option<u32>,
-	#[serde(rename = "origin")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "origin")]
 	pub origin: Option<Origin>,
 	#[serde(flatten)]
 	pub extension: PointerCommonProperties,
@@ -278,62 +278,62 @@ pub struct WheelScrollAction {
 	pub delta_x: i32,
 	#[serde(rename = "deltaY")]
 	pub delta_y: i32,
-	#[serde(rename = "duration")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "duration")]
 	pub duration: Option<u32>,
 	#[serde(rename = "origin", default = "wheel_scroll_action_default_origin")]
 	pub origin: Origin,
 }
 
-fn pointer_common_properties_default_width() -> u32 {
-    1
+fn pointer_common_properties_default_width() -> Option<u32> {
+    Some(1)
 }
 
-fn pointer_common_properties_default_height() -> u32 {
-    1
+fn pointer_common_properties_default_height() -> Option<u32> {
+    Some(1)
 }
 
-fn pointer_common_properties_default_pressure() -> f64 {
-    0.0
+fn pointer_common_properties_default_pressure() -> Option<f64> {
+    Some(0.0)
 }
 
-fn pointer_common_properties_default_tangential_pressure() -> f64 {
-    0.0
+fn pointer_common_properties_default_tangential_pressure() -> Option<f64> {
+    Some(0.0)
 }
 
-fn pointer_common_properties_default_twist() -> u32 {
-    0
+fn pointer_common_properties_default_twist() -> Option<u32> {
+    Some(0)
 }
 
-fn pointer_common_properties_default_altitude_angle() -> f64 {
-    0.0
+fn pointer_common_properties_default_altitude_angle() -> Option<f64> {
+    Some(0.0)
 }
 
-fn pointer_common_properties_default_azimuth_angle() -> f64 {
-    0.0
+fn pointer_common_properties_default_azimuth_angle() -> Option<f64> {
+    Some(0.0)
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PointerCommonProperties {
-    #[serde(rename = "width", default = "pointer_common_properties_default_width")]
-    pub width: u32,
+    #[serde(skip_serializing_if = "Option::is_none", rename = "width", default = "pointer_common_properties_default_width")]
+    pub width: Option<u32>,
 
-    #[serde(rename = "height", default = "pointer_common_properties_default_height")]
-    pub height: u32,
+    #[serde(skip_serializing_if = "Option::is_none", rename = "height", default = "pointer_common_properties_default_height")]
+    pub height: Option<u32>,
 
-    #[serde(rename = "pressure", default = "pointer_common_properties_default_pressure")]
-    pub pressure: f64,
+    #[serde(skip_serializing_if = "Option::is_none", rename = "pressure", default = "pointer_common_properties_default_pressure")]
+    pub pressure: Option<f64>,
 
-    #[serde(rename = "tangentialPressure", default = "pointer_common_properties_default_tangential_pressure")]
-    pub tangential_pressure: f64,
+    #[serde(skip_serializing_if = "Option::is_none", rename = "tangentialPressure", default = "pointer_common_properties_default_tangential_pressure")]
+    pub tangential_pressure: Option<f64>,
 
-    #[serde(rename = "twist", default = "pointer_common_properties_default_twist")]
-    pub twist: u32,
+    #[serde(skip_serializing_if = "Option::is_none", rename = "twist", default = "pointer_common_properties_default_twist")]
+    pub twist: Option<u32>,
 
-    #[serde(rename = "altitudeAngle", default = "pointer_common_properties_default_altitude_angle")]
-    pub altitude_angle: f64,
+    #[serde(skip_serializing_if = "Option::is_none", rename = "altitudeAngle", default = "pointer_common_properties_default_altitude_angle")]
+    pub altitude_angle: Option<f64>,
 
-    #[serde(rename = "azimuthAngle", default = "pointer_common_properties_default_azimuth_angle")]
-    pub azimuth_angle: f64,
+    #[serde(skip_serializing_if = "Option::is_none", rename = "azimuthAngle", default = "pointer_common_properties_default_azimuth_angle")]
+    pub azimuth_angle: Option<f64>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

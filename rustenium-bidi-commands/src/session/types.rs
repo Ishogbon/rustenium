@@ -91,15 +91,15 @@ pub struct DirectProxyConfiguration {
 pub struct ManualProxyConfiguration {
 	#[serde(rename = "proxyType")]
 	pub proxy_type: ManualProxyConfigurationType,
-	#[serde(rename = "ftpProxy")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "ftpProxy")]
 	pub ftp_proxy: Option<String>,
-	#[serde(rename = "httpProxy")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "httpProxy")]
 	pub http_proxy: Option<String>,
-	#[serde(rename = "sslProxy")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "sslProxy")]
 	pub ssl_proxy: Option<String>,
-	#[serde(rename = "SocksProxyConfiguration")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "SocksProxyConfiguration")]
 	pub socks_proxy_configuration: Option<SocksProxyConfiguration>,
-	#[serde(rename = "noProxy")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "noProxy")]
 	pub no_proxy: Option<Vec<String>>,
 	#[serde(flatten)]
 	pub extension: Option<serde_cbor::Value>,
@@ -134,17 +134,17 @@ pub struct SystemProxyConfiguration {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserPromptHandler {
-	#[serde(rename = "alert")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "alert")]
 	pub alert: Option<UserPromptHandlerType>,
-	#[serde(rename = "beforeUnload")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "beforeUnload")]
 	pub before_unload: Option<UserPromptHandlerType>,
-	#[serde(rename = "confirm")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "confirm")]
 	pub confirm: Option<UserPromptHandlerType>,
-	#[serde(rename = "default")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "default")]
 	pub default: Option<UserPromptHandlerType>,
-	#[serde(rename = "file")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "file")]
 	pub file: Option<UserPromptHandlerType>,
-	#[serde(rename = "prompt")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "prompt")]
 	pub prompt: Option<UserPromptHandlerType>,
 }
 
@@ -152,9 +152,9 @@ pub struct UserPromptHandler {
 pub struct SubscriptionRequest {
 	#[serde(rename = "events")]
 	pub events: Vec<String>,
-	#[serde(rename = "contexts")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "contexts")]
 	pub contexts: Option<Vec<BrowsingContext>>,
-	#[serde(rename = "userContexts")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "userContexts")]
 	pub user_contexts: Option<Vec<UserContext>>,
 }
 
@@ -169,7 +169,7 @@ pub struct UnsubscribeByIDRequest {
 pub struct UnsubscribeByAttributesRequest {
 	#[serde(rename = "events")]
 	pub events: Vec<String>,
-	#[serde(rename = "contexts")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "contexts")]
 	pub contexts: Option<Vec<BrowsingContext>>,
 }
 

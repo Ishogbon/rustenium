@@ -24,19 +24,19 @@ pub enum UserPromptHandlerType {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Info {
-	#[serde(rename = "children")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "children")]
 	pub children: Option<InfoList>,
 	#[serde(rename = "clientWindow")]
 	pub client_window: ClientWindow,
 	#[serde(rename = "context")]
 	pub context: BrowsingContext,
-	#[serde(rename = "originalOpener")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "originalOpener")]
 	pub original_opener: Option<BrowsingContext>,
 	#[serde(rename = "url")]
 	pub url: String,
 	#[serde(rename = "userContext")]
 	pub user_context: UserContext,
-	#[serde(rename = "parent")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "parent")]
 	pub parent: Option<BrowsingContext>,
 }
 
@@ -82,7 +82,9 @@ enum XPathLocatorType {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AccessibilityLocatorValue {
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub name: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub role: Option<String>,
 }
 #[derive(Debug, Serialize, Deserialize)]
@@ -91,9 +93,9 @@ pub struct AccessibilityLocator {
 	pub r#type: AccessibilityLocatorType,
 	#[serde(rename = "value")]
 	pub value: AccessibilityLocatorValue,
-	#[serde(rename = "name")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "name")]
 	pub name: Option<String>,
-	#[serde(rename = "role")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "role")]
 	pub role: Option<String>,
 }
 
@@ -125,11 +127,11 @@ pub struct InnerTextLocator {
 	pub r#type: InnerTextLocatorType,
 	#[serde(rename = "value")]
 	pub value: String,
-	#[serde(rename = "ignoreCase")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "ignoreCase")]
 	pub ignore_case: Option<bool>,
-	#[serde(rename = "matchType")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "matchType")]
 	pub match_type: Option<String>,
-	#[serde(rename = "maxDepth")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "maxDepth")]
 	pub max_depth: Option<u32>,
 }
 

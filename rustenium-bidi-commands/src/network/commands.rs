@@ -72,9 +72,9 @@ pub struct AddIntercept {
 pub struct AddInterceptParameters {
 	#[serde(rename = "phases")]
 	pub phases: Vec<InterceptPhase>,
-	#[serde(rename = "contexts")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "contexts")]
 	pub contexts: Option<Vec<BrowsingContext>>,
-	#[serde(rename = "urlPatterns")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "urlPatterns")]
 	pub url_patterns: Option<Vec<UrlPattern>>,
 }
 
@@ -260,8 +260,7 @@ pub enum CacheBehavior {
 pub struct SetCacheBehaviorParameters {
 	#[serde(rename = "cacheBehavior")]
 	pub cache_behavior: CacheBehavior,
-
-	#[serde(rename = "contexts")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "contexts")]
 	pub contexts: Option<Vec<BrowsingContext>>,
 }
 

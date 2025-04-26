@@ -217,7 +217,7 @@ pub struct UserPromptClosedParameters {
 	pub accepted: bool,
 	#[serde(rename = "type")]
 	pub r#type: UserPromptType,
-	#[serde(rename = "userText")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "userText")]
 	pub user_text: Option<String>,
 }
 
@@ -239,7 +239,7 @@ pub struct UserPromptOpenedParameters {
 	pub message: String,
 	#[serde(rename = "type")]
 	pub r#type: UserPromptType,
-	#[serde(rename = "defaultValue")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "defaultValue")]
 	pub default_value: Option<String>,
 }
 

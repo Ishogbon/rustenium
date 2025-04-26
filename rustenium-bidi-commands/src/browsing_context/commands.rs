@@ -158,9 +158,9 @@ pub struct CaptureScreenshotParameters {
 	pub context: BrowsingContext,
 	#[serde(rename = "origin", default = "capture_screenshot_parameters_default_origin")]
 	pub origin: CaptureScreenshotParametersOrigin,
-	#[serde(rename = "format")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "format")]
 	pub format: Option<ImageFormat>,
-	#[serde(rename = "clip")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "clip")]
 	pub clip: Option<ClipRectangle>,
 }
 
@@ -168,7 +168,7 @@ pub struct CaptureScreenshotParameters {
 pub struct ImageFormat {
 	#[serde(rename = "type")]
 	pub r#type: String,
-	#[serde(rename = "quality")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "quality")]
 	pub quality: Option<f32>,
 }
 
@@ -279,11 +279,11 @@ fn create_parameters_default_background() -> bool {
 pub struct CreateParameters {
 	#[serde(rename = "type")]
 	pub r#type: CreateType,
-	#[serde(rename = "referenceContext")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "referenceContext")]
 	pub reference_context: Option<BrowsingContext>,
 	#[serde(rename = "background", default = "create_parameters_default_background")]
 	pub background: bool,
-	#[serde(rename = "userContext")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "userContext")]
 	pub user_context: Option<UserContext>,
 }
 
@@ -304,9 +304,9 @@ pub struct GetTree {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetTreeParameters {
-	#[serde(rename = "maxDepth")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "maxDepth")]
 	pub max_depth: Option<u32>,
-	#[serde(rename = "root")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "root")]
 	pub root: Option<BrowsingContext>,
 }
 
@@ -323,9 +323,9 @@ pub struct HandleUserPrompt {
 pub struct HandleUserPromptParameters {
 	#[serde(rename = "context")]
 	pub context: BrowsingContext,
-	#[serde(rename = "accept")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "accept")]
 	pub accept: Option<bool>,
-	#[serde(rename = "userText")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "userText")]
 	pub user_text: Option<String>,
 }
 
@@ -343,11 +343,11 @@ pub struct LocateNodesParameters {
 	pub context: BrowsingContext,
 	#[serde(rename = "locator")]
 	pub locator: Locator,
-	#[serde(rename = "maxNodeCount")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "maxNodeCount")]
 	pub max_node_count: Option<u64>,
-	#[serde(rename = "serializationOptions")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "serializationOptions")]
 	pub serialization_options: Option<SerializationOptions>,
-	#[serde(rename = "startNodes")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "startNodes")]
 	pub start_nodes: Option<Vec<SharedReference>>,
 }
 
@@ -365,7 +365,7 @@ pub struct NavigateParameters {
 	pub context: BrowsingContext,
 	#[serde(rename = "url")]
 	pub url: String,
-	#[serde(rename = "wait")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "wait")]
 	pub wait: Option<ReadinessState>,
 }
 
@@ -414,11 +414,11 @@ pub struct PrintParameters {
 	pub context: BrowsingContext,
 	#[serde(rename = "background", default = "print_parameters_default_background")]
 	pub background: bool,
-	#[serde(rename = "margin")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "margin")]
 	pub margin: Option<PrintMarginParameters>,
 	#[serde(rename="orientation", default = "print_parameters_default_orientation")]
 	pub orientation: PrintParametersOrientation,
-	#[serde(rename = "page")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "page")]
 	pub page: Option<PrintPageParameters>,
 	#[serde(rename = "pageRanges")]
 	pub page_ranges: Vec<PrintParametersPageRange>,
@@ -488,9 +488,9 @@ pub struct Reload {
 pub struct ReloadParameters {
 	#[serde(rename = "context")]
 	pub context: BrowsingContext,
-	#[serde(rename = "ignoreCache")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "ignoreCache")]
 	pub ignore_cache: Option<bool>,
-	#[serde(rename = "wait")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "wait")]
 	pub wait: Option<ReadinessState>,
 }
 
@@ -504,16 +504,16 @@ pub struct SetViewport {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetViewportParameters {
-    #[serde(rename = "context")]
+    #[serde(skip_serializing_if = "Option::is_none", rename = "context")]
     pub context: Option<BrowsingContext>,
 
-    #[serde(rename = "viewport")]
+    #[serde(skip_serializing_if = "Option::is_none", rename = "viewport")]
     pub viewport: Option<Viewport>,
 
-    #[serde(rename = "devicePixelRatio")]
+    #[serde(skip_serializing_if = "Option::is_none", rename = "devicePixelRatio")]
     pub device_pixel_ratio: Option<f64>,
 
-    #[serde(rename = "userContexts")]
+    #[serde(skip_serializing_if = "Option::is_none", rename = "userContexts")]
     pub user_contexts: Option<Vec<UserContext>>,  // [+] means non-empty array, but this would need runtime validation
 }
 

@@ -234,7 +234,7 @@ pub struct ErrorResponse {
     pub error: ErrorCode,
     #[serde(rename = "message")]
     pub message: String,
-    #[serde(rename = "stacktrace")]
+    #[serde(skip_serializing_if = "Option::is_none", rename = "stacktrace")]
     pub stacktrace: Option<String>,
     #[serde(rename = "extension")]
     pub extension: Option<serde_cbor::Value>

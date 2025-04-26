@@ -43,7 +43,7 @@ pub enum BeforeRequestSentMethod {
 pub struct BeforeRequestSentParameters {
 	#[serde(flatten)]
 	pub base: BaseParameters,
-	#[serde(rename = "initiator")]
+	#[serde(skip_serializing_if = "Option::is_none", rename = "initiator")]
 	pub initiator: Option<Initiator>,
 }
 
