@@ -25,15 +25,12 @@ impl Listener {
     pub fn start(mut self) {
         tokio::spawn(async move {
             while let Some(message) = self.rx.recv().await {
-                let message_result = serde_json::from_str::<Message>(&message);
-                let err;
-                if let Err(e) = &message_result {
-                    err = e.to_string();
-                    println!("Failed to parse message: {:?}", e);
-                }
-                let parsed_message = match message_result {
-                    Ok(parsed) => parsed,
-                    Err(_) => return,
+                let parsed_message = match serde_json::from_str::<Message>(&message) {
+                    Ok(result) => result,
+                    Err(e) => {
+                        println!("Failed to parse message: {:?}", e.to_string());
+                        return;
+                    }
                 };
                 match parsed_message {
                     Message::CommandResponse(command_response) => {

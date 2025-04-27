@@ -10,7 +10,7 @@ use crate::emulation::commands::EmulationCommand;
 use crate::input::commands::InputCommand;
 use crate::network::commands::{NetworkCommand, NetworkResult};
 use crate::script::commands::{ScriptCommand, ScriptResult};
-use crate::session::commands::{SessionCommand, SessionResult};
+use crate::session::commands::{NewResult, SessionCommand, SessionResult};
 use crate::storage::commands::{StorageCommand, StorageResult};
 use crate::web_extension::commands::{WebExtensionCommand, WebExtensionResult};
 
@@ -75,15 +75,21 @@ pub struct EmptyResult {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct EmptyParams {
+    #[serde(rename = "extension")]
+    extension: Option<serde_cbor::Value>
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CommandResult {
-    BrowsingContextResult(BrowsingContextResult),
     NetworkResult(NetworkResult),
     ScriptResult(ScriptResult),
     SessionResult(SessionResult),
     StorageResult(StorageResult),
     WebExtensionResult(WebExtensionResult),
     EmptyResult(EmptyResult),
+    BrowsingContextResult(BrowsingContextResult),
 }
 
 #[derive(Debug, Serialize, Deserialize)]

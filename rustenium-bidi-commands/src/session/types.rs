@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 
-use crate::{browser::types::UserContext, browsing_context::types::{BrowsingContext, UserPromptHandlerType}};
+use crate::{browser::types::UserContext, browsing_context::types::{BrowsingContext, UserPromptHandlerType}, EmptyParams};
 
 pub type Subscription = String;
 
@@ -23,12 +23,19 @@ pub struct CapabilityRequest {
 	pub browser_version: Option<String>,
 	#[serde(skip_serializing_if = "Option::is_none", rename = "platformName")]
 	pub platform_name: Option<String>,
-	#[serde(skip_serializing_if = "Option::is_none", rename = "proxy")]
-	pub proxy: Option<ProxyConfiguration>,
-	#[serde(skip_serializing_if = "Option::is_none", rename = "unhandledPromptBehavior")]
-	pub unhandled_prompt_behavior: Option<UserPromptHandler>,
+	#[serde(rename = "proxy")]
+	pub proxy: ProxyConfigurationOption,
+	#[serde(rename = "unhandledPromptBehavior")]
+	pub unhandled_prompt_behavior: UserPromptHandlerOption,
 	#[serde(flatten)]
 	pub extension: Option<serde_cbor::Value>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum ProxyConfigurationOption {
+	ProxyConfiguration(ProxyConfiguration),
+	EmptyProxyConfiguration(EmptyParams),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -97,12 +104,19 @@ pub struct ManualProxyConfiguration {
 	pub http_proxy: Option<String>,
 	#[serde(skip_serializing_if = "Option::is_none", rename = "sslProxy")]
 	pub ssl_proxy: Option<String>,
-	#[serde(skip_serializing_if = "Option::is_none", rename = "SocksProxyConfiguration")]
-	pub socks_proxy_configuration: Option<SocksProxyConfiguration>,
+	#[serde(rename = "SocksProxyConfiguration")]
+	pub socks_proxy_configuration: SocksProxyConfigurationOption,
 	#[serde(skip_serializing_if = "Option::is_none", rename = "noProxy")]
 	pub no_proxy: Option<Vec<String>>,
 	#[serde(flatten)]
 	pub extension: Option<serde_cbor::Value>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum SocksProxyConfigurationOption {
+	SocksProxyConfiguration(SocksProxyConfiguration),
+	EmptySocksProxyConfiguration(EmptyParams),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -131,6 +145,13 @@ pub struct SystemProxyConfiguration {
 	pub extension: Option<serde_cbor::Value>,
 }
 
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UserPromptHandlerOption {
+	UserPromptHandler(UserPromptHandler),
+	UnknownUserPromptHandler(String),
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserPromptHandler {

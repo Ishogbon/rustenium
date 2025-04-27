@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 
-use super::types::{CapabilitiesRequest, ProxyConfiguration, SubscriptionRequest, UnsubscribeByAttributesRequest, UnsubscribeByIDRequest, UserPromptHandler};
+use super::types::{CapabilitiesRequest, ProxyConfiguration, ProxyConfigurationOption, SubscriptionRequest, UnsubscribeByAttributesRequest, UnsubscribeByIDRequest, UserPromptHandler, UserPromptHandlerOption};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -41,11 +41,12 @@ pub struct Capabilities {
     #[serde(rename = "setWindowRect")]
     pub set_window_rect: bool,
     #[serde(rename = "userAgent")]
-    pub user_agent: String,
-    #[serde(skip_serializing_if = "Option::is_none", rename = "proxy")]
-    pub proxy: Option<ProxyConfiguration>,
-    #[serde(skip_serializing_if = "Option::is_none", rename = "unhandledPromptBehavior")]
-    pub unhandled_prompt_behavior: Option<UserPromptHandler>,
+    // TODO: Remove Option from UserAgent, CDDL Definition Specified it's always going to be present, however, It was absent during testing which might have been because I wasn't using the right chrome version for the driver, Once ChromeOptions has been created to help with this and confirms it's present, remove.
+    pub user_agent: Option<String>,
+    #[serde(rename = "proxy")]
+    pub proxy: ProxyConfigurationOption,
+    #[serde(rename = "unhandledPromptBehavior")]
+    pub unhandled_prompt_behavior: UserPromptHandlerOption,
     #[serde(skip_serializing_if = "Option::is_none", rename = "webSocketUrl")]
     pub web_socket_url: Option<String>,
     #[serde(flatten)]
